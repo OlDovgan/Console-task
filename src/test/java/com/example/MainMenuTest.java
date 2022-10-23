@@ -9,6 +9,7 @@ import com.example.menu.Menu;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.sql.SQLException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,7 +17,7 @@ import org.mockito.Mockito;
 
 class MainMenuTest {
   @Test
-    void addMenuItem_ShouldAddMenuItemAndRunMenuItem() {
+    void addMenuItem_ShouldAddMenuItemAndRunMenuItem() throws SQLException {
     System.setIn(new ByteArrayInputStream(String.format("1%n").getBytes()));
     MainMenu menu = new MainMenu(new Settings());
     Menu test = mock(Menu.class);
@@ -27,7 +28,7 @@ class MainMenuTest {
     verify(test, times(1)).executeMenu();
   }
   @Test
-  void executeMenu(){
+  void executeMenu() throws SQLException {
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     String separator= System.lineSeparator();
     System.setOut(new PrintStream(output));

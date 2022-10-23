@@ -12,7 +12,6 @@ version="2.2">
     <property name="javax.persistence.jdbc.user" value="dovgan"/>
     <property name="javax.persistence.jdbc.password" value="655007"/>
     <property name="hibernate.hbm2ddl.auto" value="update" /> <!-- create / create-drop / update -->
-
     <property name="hibernate.show_sql" value="true" /> <!-- Show SQL in console -->
     <property name="hibernate.format_sql" value="true" /> <!-- Show SQL formatted -->
   </properties>

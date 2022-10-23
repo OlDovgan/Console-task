@@ -1,0 +1,19 @@
+package com.example.dao;
+
+import com.example.model.Course;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import org.springframework.jdbc.core.RowMapper;
+
+public class CourseMapper implements RowMapper<Course> {
+
+  @Override
+  public Course mapRow(ResultSet result, int rowNum) throws SQLException {
+    Course course = new Course();
+    course.setCourseId(result.getInt(1));
+    course.setCourseName(result.getString(2));
+    course.setCourseDescription(result.getString(3));
+
+    return course;
+  }
+}

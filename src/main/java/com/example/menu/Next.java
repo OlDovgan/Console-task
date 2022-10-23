@@ -1,5 +1,8 @@
 package com.example.menu;
 
+import org.springframework.stereotype.Component;
+
+@Component ("next")
 public class Next implements Menu {
 
   @Override

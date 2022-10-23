@@ -4,7 +4,7 @@ import static com.example.extra.TestUtils.clearData;
 import static com.example.extra.TestUtils.isExistInStudents;
 import static com.example.extra.TestUtils.isExistStudentId;
 import static com.example.extra.TestUtils.isExistStudentWithCourse;
-import com.example.dao.StudentDao;
+
 import com.example.testcontainers.config.ContainerProperties;
 import com.example.testcontainers.config.ContainersEnvironment;
 import java.io.IOException;
@@ -15,75 +15,69 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-class RequestTest extends ContainersEnvironment {
+public class RequestTest extends ContainersEnvironment {
 
-
-  private final JDBC jdbc = new JDBC(new ContainerProperties().getProperties(container));
-  private final StudentDao studentDao = new StudentDao();
-  private final Request request = new Request(jdbc, studentDao);
+  public static final JdbcTemplate jdbcTemplateTest =
+      new JdbcTemplate(new ContainerProperties().getDataSource(container));
+  private final Request request = new Request(jdbcTemplateTest);
   private final String s = System.lineSeparator();
   private final Data data = new Data(new Random(42));
 
   @BeforeEach
-  void start () throws SQLException, IOException, URISyntaxException {
-    data.createAll(jdbc);
+  void start () throws IOException, URISyntaxException {
+    data.createAll(jdbcTemplateTest);
   }
   @AfterEach
-  void end() throws SQLException {
-    clearData(jdbc);
+  void end() {
+    clearData();
   }
 
   @Test
-  void addStudent_ShouldAddStudentToDb() throws SQLException {
+  void addStudent_ShouldAddStudentToDb() {
     request.addStudent("John", "Smite");
-    Assertions.assertTrue(isExistInStudents(jdbc, "John", "Smite"));
+    Assertions.assertTrue(isExistInStudents( "John", "Smite"));
 
   }
 
   @Test
   void deleteStudent_ShouldDeleteStudentFromDb()
       throws SQLException {
-    boolean before = isExistStudentId(jdbc, 1);
+    boolean before = isExistStudentId( 1);
     request.deleteStudent(1);
-    Assertions.assertTrue(before && !isExistStudentId(jdbc, 1));
+    Assertions.assertTrue(before && !isExistStudentId( 1));
   }
 
   @Test
-  void addStudentToCourse_ShouldAddStudentToCourse()
-      throws SQLException {
+  void addStudentToCourse_ShouldAddStudentToCourse() {
     boolean exist = false;
-    if (!isExistStudentWithCourse(jdbc, 4, 4)) {
+    if (!isExistStudentWithCourse(4, 4)) {
       request.addStudentToCourse(4, 4);
-      exist=isExistStudentWithCourse(jdbc, 4, 4);
+      exist=isExistStudentWithCourse(4, 4);
     }
     Assertions.assertTrue(exist);
   }
 
   @Test
-  void deleteStudentFromCourse_ShouldDeleteStudentFromCourse()
-      throws SQLException {
+  void deleteStudentFromCourse_ShouldDeleteStudentFromCourse() {
     boolean exist=true;
-      if (isExistStudentWithCourse(jdbc, 4, 2)) {
+      if (isExistStudentWithCourse( 4, 2)) {
       request.deleteStudentFromCourse(4, 2);
-      exist=isExistStudentWithCourse(jdbc, 4, 2);
+      exist=isExistStudentWithCourse(4, 2);
     }
     Assertions.assertFalse(exist);
   }
 
     @Test
-  void findStudentsWithCourse_ShouldFindStudentWithCourse()
-        throws SQLException {
-    String expect = "1  | Bonnie      | Stone       " + s
-                  + "2  | Bonnie      | Reynolds    " + s
-                  + "3  | Alvin       | Holland     " +s
-                  + "5  | Evangeline  | Mcdonald    ";
-    Assertions.assertEquals(expect, request.findStudentsWithOutCourse(3));
+  void findStudentsWithCourse_ShouldFindStudentWithCourseNumber() {
+    String expect = "2  | Bonnie      | Reynolds    | Maths  | Jp-04" + s
+                  + "5  | Evangeline  | Mcdonald    | Maths  | cP-50";
+    Assertions.assertEquals(expect, request.findStudentsWithCourse("Maths"));
   }
 
     @Test
-  void findStudentsWithOutCourse_ShouldFindStudentWithOutCourse()
-        throws SQLException {
+  void findStudentsWithOutCourse_ShouldFindStudentWithOutCourse() {
     String expect = "2  | Bonnie      | Reynolds    " + s
                   + "3  | Alvin       | Holland     "+ s
                   + "5  | Evangeline  | Mcdonald    " ;
@@ -91,8 +85,7 @@ class RequestTest extends ContainersEnvironment {
   }
 
     @Test
-  void studentsWhereCourseIsExists_ShouldFindStudentWhereCourseIsExists()
-        throws SQLException {
+  void studentsWhereCourseIsExists_ShouldFindStudentWhereCourseIsExists() {
       String expect = "1   | Bonnie       Stone       " + s
                     + "2   | Bonnie       Reynolds    " + s
                     + "3   | Alvin        Holland     " + s
@@ -102,14 +95,12 @@ class RequestTest extends ContainersEnvironment {
   }
 
     @Test
-  void studentsWhereCourseIsNotExists_ShouldFindStudentWhereCourseIsNotExists()
-        throws SQLException {
+  void studentsWhereCourseIsNotExists_ShouldFindStudentWhereCourseIsNotExists() {
     Assertions.assertTrue(request.studentsWhereCourseIsNotExists(4, 6));
   }
 
    @Test
-  void studentInfoPrint_ShouldPrintInfoAboutStudents()
-       throws SQLException {
+  void studentInfoPrint_ShouldPrintInfoAboutStudents() {
     String expect = "ID  | Firs name     Last name  " + s
         + "----+--------------------------" + s
         + "1   | Bonnie       Stone       " + s
@@ -120,17 +111,16 @@ class RequestTest extends ContainersEnvironment {
     Assertions.assertEquals(expect, request.studentInfoPrint());
   }
     @Test
-  void findCoursesOfStudent_ShouldFindStudentsCourse()
-        throws SQLException {
-    String expect = "4 | Marie  Zimmerman |  2 |  English " + s
-                  + "4 | Marie  Zimmerman |  3 |  History " + s
-                  + "4 | Marie  Zimmerman |  5 |  Informatics ";
-    Assertions.assertEquals(expect, request.findCoursesOfStudent(4));
+  void findCoursesOfStudent_ShouldFindStudentsCourse() {
+    String expect = "1 | Bonnie  Stone |  4 |  Probability theory" + s
+                  + "1 | Bonnie  Stone |  5 |  Informatics" + s
+                  + "1 | Bonnie  Stone |  9 |  Hydrodynamics";
+    Assertions.assertEquals(expect, request.findCoursesOfStudent(1));
   }
 
     @Test
   void findGroups_ShouldFindGroupsWhereStudentsNumberLessOrEqualsNumber() throws SQLException, IOException, URISyntaxException {
-      data.createAll(jdbc);
+      data.createAll(jdbcTemplateTest);
     String expect = "2 | nA-51" + s
                   + "2 | cP-50";
     Assertions.assertEquals(expect, request.findGroups(2));

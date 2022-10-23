@@ -1,12 +1,7 @@
 package com.example.spring_boot;
 
 
-import static com.example.Main.firstMenu;
-import static com.example.Main.secondMenu;
-
-import com.example.JDBC;
-import com.example.Request;
-import com.example.Settings;
+import com.example.SpringConfig;
 import com.example.menu.AddNewStudent;
 import com.example.menu.AddStudentToCourse;
 import com.example.menu.CreateData;
@@ -15,45 +10,48 @@ import com.example.menu.Exit;
 import com.example.menu.FindAllGroups;
 import com.example.menu.FindStudentsWithCourse;
 import com.example.menu.MainMenu;
-import com.example.dao.StudentDao;
 import com.example.menu.Next;
 import com.example.menu.RemoveStudentFromCourse;
+import java.sql.SQLException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootApplication
 public class Application {
 
-	public static void main(String[] args)  {
-		SpringApplication.run(Application.class, args);
-	  Settings settings = new Settings();
-		MainMenu firstMenu = new MainMenu(settings);
-		MainMenu secondMenu = new MainMenu(settings);
-		JDBC jdbc = new JDBC(settings.properties("DB.properties"));
-		StudentDao studentDao = new StudentDao();
-		Request request = new Request(jdbc, studentDao);
-		firstMenu(firstMenu,jdbc);
-		firstMenu.executeMenu();
-		secondMenu(secondMenu, settings, request, jdbc);
-		while (true) {
-			secondMenu.executeMenu();
-		}
-	}
-	public static void firstMenu(MainMenu menu, JDBC jdbc) {
-		menu.addMenuItem(new CreateData(jdbc));
-		menu.addMenuItem(new Next());
-	}
+ public static final AnnotationConfigApplicationContext context =
+    new AnnotationConfigApplicationContext(
+    SpringConfig.class);
+ public static final JdbcTemplate JDBC_TEMPLATE =
+     context.getBean("jdbcTemplate", JdbcTemplate.class);
 
-	public static void secondMenu(MainMenu menu, Settings settings, Request request, JDBC jdbc) {
-		menu.addMenuItem(new FindAllGroups(settings,request));
-		menu.addMenuItem(new FindStudentsWithCourse(settings,request));
-		menu.addMenuItem(new AddNewStudent(settings,request ));
-		menu.addMenuItem(new DeleteStudent(settings, request));
-		menu.addMenuItem(new AddStudentToCourse(settings, request));
-		menu.addMenuItem(new RemoveStudentFromCourse(request));
-		menu.addMenuItem(new Exit());
+  public static void main(String[] args) throws SQLException {
+    SpringApplication.run(Application.class, args);
 
-	}
+    MainMenu firstMenu = context.getBean("mainMenu", MainMenu.class);
+    MainMenu secondMenu = context.getBean("mainMenu", MainMenu.class);
+    firstMenu(firstMenu);
+    firstMenu.executeMenu();
+    secondMenu(secondMenu);
+		context.close();
+    while (true) {
+      secondMenu.executeMenu();
+    }
+  }
+  public static void firstMenu(MainMenu menu) {
+    menu.addMenuItem(context.getBean("createData", CreateData.class));
+    menu.addMenuItem(context.getBean("next", Next.class));
+  }
 
-
+  public static void secondMenu(MainMenu menu) {
+    menu.addMenuItem(context.getBean("findGroup", FindAllGroups.class));
+    menu.addMenuItem(context.getBean("findStudWithCourse",FindStudentsWithCourse.class));
+    menu.addMenuItem(context.getBean("addStudent", AddNewStudent.class));
+    menu.addMenuItem(context.getBean("deleteStudent", DeleteStudent.class));
+    menu.addMenuItem(context.getBean("addStuToCourse", AddStudentToCourse.class));
+    menu.addMenuItem(context.getBean("removeStudentFromCourse", RemoveStudentFromCourse.class));
+    menu.addMenuItem(context.getBean("exit", Exit.class));
+  }
 }

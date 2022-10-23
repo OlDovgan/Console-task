@@ -2,17 +2,21 @@ package com.example.menu;
 
 import com.example.Request;
 import com.example.Settings;
-import java.sql.SQLException;
 import java.util.StringJoiner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component ("removeStudentFromCourse")
 public class RemoveStudentFromCourse implements Menu {
   private static final String FORMAT = "%-" + 4 + "s| %-" + 12 + "s %-" + 12 + "s";
 
-  private final Settings setup = new Settings();
-  private final Request request;
+  private final Settings setup;
 
-  public RemoveStudentFromCourse(Request request) {
+  private final Request request;
+@Autowired
+  public RemoveStudentFromCourse(Request request, Settings setup) {
     this.request = request;
+    this.setup=setup;
   }
 
   @Override
@@ -23,20 +27,17 @@ public class RemoveStudentFromCourse implements Menu {
   @Override
   public void executeMenu() {
     StringJoiner title = new StringJoiner(System.lineSeparator());
-    try {
 
-      title.add(String.format(FORMAT, "ID", "Firs name", " Last name"));
-      title.add(String.format(FORMAT, "-", "-", " -")
-          .replace('|', '+')
-          .replace(' ', '-'));
-      System.out.println(request.studentsWhereCourseIsExists());
-      int studentId = setup.readInt("Please, select a student ID to delete the course");
-      System.out.println(request.findCoursesOfStudent(studentId));
-      int courseId = setup.readInt("Please, select a course ID to delete" );
-      request.deleteStudentFromCourse(studentId, courseId);
-      System.out.println(request.findCoursesOfStudent(studentId));
-      setup.endExecution();
-    } catch (SQLException e) {
-    }
+    title.add(String.format(FORMAT, "ID", "Firs name", " Last name"));
+    title.add(String.format(FORMAT, "-", "-", " -")
+        .replace('|', '+')
+        .replace(' ', '-'));
+    System.out.println(request.studentsWhereCourseIsExists());
+    int studentId = setup.readInt("Please, select a student ID to delete the course");
+    System.out.println(request.findCoursesOfStudent(studentId));
+    int courseId = setup.readInt("Please, select a course ID to delete" );
+    request.deleteStudentFromCourse(studentId, courseId);
+    System.out.println(request.findCoursesOfStudent(studentId));
+    setup.endExecution();
   }
 }

@@ -1,16 +1,20 @@
 package com.example.testcontainers.config;
 
+import static com.example.testcontainers.config.ContainersEnvironment.container;
+
 import java.util.Properties;
+import javax.sql.DataSource;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 public class ContainerProperties {
 
-   public Properties getProperties(PostgreSQLContainer container) {
-    Properties properties = new Properties();
-    properties.setProperty("db-url", container.getJdbcUrl());
-    properties.setProperty("db-username", container.getUsername());
-    properties.setProperty("db-password", container.getPassword());
-    return properties;
+  public final DataSource getDataSource(PostgreSQLContainer container) {
+    DriverManagerDataSource dataSource = new DriverManagerDataSource();
+    dataSource.setDriverClassName(container.getDriverClassName());
+    dataSource.setUrl(container.getJdbcUrl());
+    dataSource.setUsername(container.getUsername());
+    dataSource.setPassword(container.getPassword());
+    return dataSource;
   }
-
 }

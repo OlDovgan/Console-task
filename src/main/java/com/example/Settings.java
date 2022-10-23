@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Scanner;
+import org.springframework.stereotype.Component;
 
+@Component ("settings")
 public class Settings {
 
 
@@ -40,7 +42,7 @@ public class Settings {
     return scanner.nextInt();
   }
 
-  public final Properties properties(String nameFile) {
+  public final Properties setProperties(String nameFile) {
 
     String rootPath = Objects.requireNonNull(
         Thread.currentThread().getContextClassLoader().getResource("")).getPath();

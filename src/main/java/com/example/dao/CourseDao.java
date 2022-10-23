@@ -1,39 +1,45 @@
 package com.example.dao;
 
-import com.example.JDBC;
-import com.example.entity.Course;
-import java.sql.Connection;
+import com.example.model.Course;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CourseDao {
 
-  public void add(JDBC jdbc, List<Course> courseList) throws SQLException {
-    try (Connection connection = jdbc.getDbConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(
-            "INSERT INTO courses (course_name,course_description) VALUES (?,?);")) {
-      for (Course course : courseList) {
-        preparedStatement.setString(1, course.getCourseName());
-        preparedStatement.setString(2, course.getCourseDescription());
-        preparedStatement.addBatch();
-      }
-      preparedStatement.executeBatch();
-    }
+  private final JdbcTemplate jdbcTemplate;
+
+  @Autowired
+  public CourseDao(JdbcTemplate jdbcTemplate) {
+    this.jdbcTemplate = jdbcTemplate;
   }
 
-  public List<Course> getCourse(JDBC jdbc) throws SQLException {
-    List<Course> list = new ArrayList<>();
-    try (Connection connection = jdbc.getDbConnection();
-        ResultSet res = connection.createStatement()
-            .executeQuery("SELECT * FROM courses ORDER BY course_id;")) {
-      while (res.next()) {
-        list.add(new Course(res.getInt(1), res.getString(2),
-            res.getString(3)));
-      }
-      return list;
-    }
+  public void add(Course course) {
+    jdbcTemplate.update("INSERT INTO courses (course_name,course_description) VALUES (?,?);",
+        course.getCourseName(), course.getCourseDescription());
+  }
+
+  public void add(List<Course> courseList) {
+    jdbcTemplate.batchUpdate("INSERT INTO courses (course_name,course_description) VALUES (?,?);",
+        new BatchPreparedStatementSetter() {
+          public void setValues(PreparedStatement ps, int i) throws SQLException {
+            ps.setString(1, courseList.get(i).getCourseName());
+            ps.setString(2, courseList.get(i).getCourseDescription());
+          }
+
+          public int getBatchSize() {
+            return courseList.size();
+          }
+        }
+    );
+  }
+
+  public List<Course> getCourse() {
+    return jdbcTemplate.query("SELECT * FROM courses ORDER BY course_id;", new CourseMapper());
   }
 }

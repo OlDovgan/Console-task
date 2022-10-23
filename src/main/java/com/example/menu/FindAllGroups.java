@@ -3,13 +3,17 @@ package com.example.menu;
 import com.example.Request;
 import com.example.Settings;
 import java.sql.SQLException;
+import java.util.StringJoiner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-
+@Component("findGroup")
 public class FindAllGroups implements Menu {
 
   private final Settings settings;
   private final Request request;
 
+  @Autowired
   public FindAllGroups(Settings settings, Request request) {
     this.request = request;
     this.settings = settings;
@@ -21,15 +25,15 @@ public class FindAllGroups implements Menu {
   }
 
   @Override
-  public void executeMenu() {
-    try {
-      String sep = System.lineSeparator();
-      int amount = settings.readInt("Please enter the number of students in the group ");
-      System.out.println(String.format("%s%s%s%s%s", "Num| Groups", sep, "---+-------",
-          sep, request.findGroups(amount)));
-      settings.endExecution();
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+  public void executeMenu() throws SQLException {
+    String s = System.lineSeparator();
+    int amount = settings.readInt("Please enter the number of students in the group ");
+    StringJoiner stringJoiner = new StringJoiner(s);
+    System.out.println(amount);
+    stringJoiner.add("Num| Groups%n");
+    stringJoiner.add("---+-------");
+    stringJoiner.add(request.findGroups(amount));
+    System.out.println(stringJoiner.toString());
+    settings.endExecution();
   }
 }

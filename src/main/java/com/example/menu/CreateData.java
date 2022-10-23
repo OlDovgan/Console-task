@@ -1,22 +1,16 @@
 package com.example.menu;
 
-
+import static com.example.spring_boot.Application.JDBC_TEMPLATE;
 import com.example.Data;
-import com.example.JDBC;
 import com.example.Table;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.Random;
+import org.springframework.stereotype.Component;
 
+@Component ("createData")
 public class CreateData implements Menu {
-
-  private final JDBC jdbc;
-
-  public CreateData(JDBC jdbc) {
-    this.jdbc = jdbc;
-  }
-
   public String getItemName() {
     return "Create new data ";
   }
@@ -25,12 +19,12 @@ public class CreateData implements Menu {
   public void executeMenu() {
     try {
       System.out.println("Please wait...");
-      new Table(jdbc).create("Table.sql");
+      new Table(JDBC_TEMPLATE).create("Table.sql");
       System.out.println("Tables created successfully");
       System.out.println("Please wait...");
-      new Data(new Random()).createAll(jdbc);
+      new Data(new Random()).createAll(JDBC_TEMPLATE);
       System.out.println("Data entered into database successfully" + System.lineSeparator());
-    } catch (SQLException | URISyntaxException | IOException e) {
+    } catch (URISyntaxException | IOException e) {
       throw new RuntimeException(e);
     }
   }
