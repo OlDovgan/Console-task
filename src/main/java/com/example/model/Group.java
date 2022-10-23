@@ -13,7 +13,7 @@ public class Group {
 
   public Group(String groupName, int numberStudent) {
     this.groupName = groupName;
-    this.numberStudent=numberStudent;
+    this.numberStudent = numberStudent;
   }
   public Group() {
   }

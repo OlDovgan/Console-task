@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class StudentDao {
 
   private final JdbcTemplate jdbcTemplate;
-
+@Autowired
   public StudentDao(JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
   }
@@ -44,7 +46,9 @@ public class StudentDao {
   }
 
   public List<Student> getStudent() {
-    return jdbcTemplate.query("SELECT * FROM students;", new StudentMapper());
+    //  return jdbcTemplate.query("SELECT * FROM students;", new StudentMapper());
+    return jdbcTemplate.query("SELECT * FROM students;",
+        new BeanPropertyRowMapper<>(Student.class));
   }
 
   public List<Student> getStudentWithCourse(String courseName) {

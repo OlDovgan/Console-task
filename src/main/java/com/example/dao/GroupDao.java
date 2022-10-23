@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +31,7 @@ public class GroupDao {
           public void setValues(PreparedStatement ps, int i) throws SQLException {
             ps.setString(1, groupList.get(i).getGroupName());
           }
+
           public int getBatchSize() {
             return groupList.size();
           }
@@ -39,7 +41,7 @@ public class GroupDao {
 
   public List<Group> groupList() {
 
-    return jdbcTemplate.query("SELECT * FROM groups;", new GroupMapper());
+    return jdbcTemplate.query("SELECT * FROM groups;", new BeanPropertyRowMapper<>(Group.class));
   }
 
   public List<Group> getCoursesOfStudent(int number) {

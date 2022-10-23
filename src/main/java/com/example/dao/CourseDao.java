@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +41,7 @@ public class CourseDao {
   }
 
   public List<Course> getCourse() {
-    return jdbcTemplate.query("SELECT * FROM courses ORDER BY course_id;", new CourseMapper());
+    return jdbcTemplate.query("SELECT * FROM courses ORDER BY course_id;",
+        new BeanPropertyRowMapper<>(Course.class));
   }
 }

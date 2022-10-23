@@ -14,5 +14,4 @@ public class StudentsCourse {
     this.studentId = studentId;
     this.courseId = courseId;
   }
-  public StudentsCourse() {}
 }

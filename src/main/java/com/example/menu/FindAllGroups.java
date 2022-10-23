@@ -26,14 +26,13 @@ public class FindAllGroups implements Menu {
 
   @Override
   public void executeMenu() throws SQLException {
-    String s = System.lineSeparator();
     int amount = settings.readInt("Please enter the number of students in the group ");
-    StringJoiner stringJoiner = new StringJoiner(s);
+    StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     System.out.println(amount);
     stringJoiner.add("Num| Groups%n");
     stringJoiner.add("---+-------");
     stringJoiner.add(request.findGroups(amount));
-    System.out.println(stringJoiner.toString());
+    System.out.println(stringJoiner);
     settings.endExecution();
   }
 }
