@@ -1,35 +1,51 @@
 package com.example;
 
-import com.example.dao.CourseDao;
-import com.example.dao.GroupDao;
-import com.example.dao.StudentDao;
-import com.example.dao.StudentsCourseDao;
+import static com.example.spring_boot.Application.COURSE_DAO;
+import static com.example.spring_boot.Application.DATA;
+import static com.example.spring_boot.Application.GROUP_DAO;
+import static com.example.spring_boot.Application.STUDENT_DAO;
+
 import com.example.model.Course;
 import com.example.model.Group;
 import com.example.model.Student;
-import com.example.model.StudentsCourse;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Random;
-import java.util.Set;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
+
+@Component
+@PropertySource("classpath:Task.properties")
 public class Data {
 
   private final FileReader fileReader = new FileReader();
-  private static final String FIRST_NAME_FILE = "Firstname.txt";
-  private static final String LAST_NAME_FILE = "Lastname.txt";
   private final Random random;
 
+  @Value("${groups}")
+  private String groupsNumProp;
+  @Value("${courses}")
+  private String courses;
+  @Value("${students-total}")
+  public String studTotal;
+  @Value("${first-name-file}")
+  private String firstNameFile;
+  @Value("${last-name-file}")
+  private String lastNameFile;
+  @Value("${number-student-min}")
+  private String numberStudentMin;
+  @Value("${number-student-max}")
+  private String numberStudentMax;
+  @Value("${students-courses-min}")
+  private String studentsCoursesMin;
+  @Value("${students-courses-max}")
+  private String studentsCoursesMax;
+
+  @Autowired
   public Data(Random random) {
     this.random = random;
   }
@@ -48,20 +64,18 @@ public class Data {
         RandomStringUtils.
             random(digitCount, 0, 0, false, true, null, random);
   }
+  private void addGroups() {
 
-  private void addGroups(JdbcTemplate jdbcTemplate,Properties config) {
-    GroupDao groupDao = new GroupDao(jdbcTemplate);
     List<Group> groupList = new ArrayList<>();
-    for (int i = 0; i < Math.min(Integer.valueOf(config.getProperty("groups")),
-        Integer.valueOf(config.getProperty("students-total"))); i++) {
-      groupList.add(new Group(groupName(random, 2, 2),0));
+    for (int i = 0; i < Math.min(Integer.valueOf(groupsNumProp),
+        Integer.valueOf(studTotal)); i++) {
+      groupList.add(new Group(0, groupName(random, 2, 2)));
     }
-    groupDao.add(groupList);
+    GROUP_DAO.add(groupList);
   }
 
-  private void addCourses(JdbcTemplate jdbcTemplate)
-
-      throws  IOException, URISyntaxException {
+  private void addCourses()
+      throws IOException, URISyntaxException {
     Map<String, String> courses = new LinkedHashMap<>();
     List<String> element = fileReader.readFile("Courses.txt");
     String join = String.join(" ", element);
@@ -73,21 +87,21 @@ public class Data {
     List<Course> courseList = new ArrayList<>();
     for (Entry<String, String> entry : courses.entrySet()) {
       courseList.add(new Course(entry.getKey(), entry.getValue()));
-
     }
-    new CourseDao(jdbcTemplate).add(courseList);
+    COURSE_DAO.add(courseList);
   }
 
-  private void addStudents( JdbcTemplate jdbcTemplate, Properties config)
-      throws  IOException, URISyntaxException {
-    GroupDao groupDao = new GroupDao(jdbcTemplate);
+  private void addStudents()
+      throws IOException, URISyntaxException {
     List<Student> studentList = new ArrayList<>();
-    int studTotal = Integer.valueOf(config.getProperty("students-total"));
-    String[] firstNames = fileReader.readFile(FIRST_NAME_FILE).toArray(new String[]{});
-    String[] lastNames = fileReader.readFile(LAST_NAME_FILE).toArray(new String[]{});
+    int studTotal = Integer.valueOf(DATA.studTotal);
+    String[] firstNames = fileReader.readFile(firstNameFile)
+        .toArray(new String[]{});
+    String[] lastNames = fileReader.readFile(lastNameFile)
+        .toArray(new String[]{});
     List<Integer> groupsId = new ArrayList<>();
-    for (Group group : groupDao.groupList()) {
-      groupsId.add(group.getGroupId());
+    for (Group group : GROUP_DAO.getAll()) {
+      groupsId.add(group.getGroup_id());
     }
     Set<Integer> set = new HashSet<>();
     for (int i = 0; i < groupsId.size(); i++) {
@@ -96,14 +110,14 @@ public class Data {
     int studentsWithGroup = 0;
     for (Integer d : set) {
       int number = randomInt(random,
-          Integer.valueOf(config.getProperty("number-student-min")),
-          Integer.valueOf(config.getProperty("number-student-max")));
+          Integer.valueOf(numberStudentMin),
+          Integer.valueOf(numberStudentMax));
       int i = 0;
       while (studentsWithGroup < studTotal && i <= number) {
         Student student = new Student();
-        student.setGroupId(d);
-        student.setFirstName(firstNames[randomInt(random, 0, firstNames.length - 1)]);
-        student.setLastName(lastNames[randomInt(random, 0, lastNames.length - 1)]);
+        student.setGroup_id(d);
+        student.setFirst_name(firstNames[randomInt(random, 0, firstNames.length - 1)]);
+        student.setLast_name(lastNames[randomInt(random, 0, lastNames.length - 1)]);
         studentList.add(student);
         studentsWithGroup++;
         i++;
@@ -111,44 +125,45 @@ public class Data {
     }
     for (int i = 0; i < studTotal - studentsWithGroup; i++) {
       Student student = new Student();
-      student.setFirstName(firstNames[randomInt(random, 0, firstNames.length - 1)]);
-      student.setLastName(lastNames[randomInt(random, 0, lastNames.length - 1)]);
+      student.setFirst_name(firstNames[randomInt(random, 0, firstNames.length - 1)]);
+      student.setLast_name(lastNames[randomInt(random, 0, lastNames.length - 1)]);
       studentList.add(student);
     }
-    new StudentDao(jdbcTemplate).add(studentList);
+    STUDENT_DAO.add(studentList);
   }
 
-  private void addStudentsCourses(JdbcTemplate jdbcTemplate, Properties config) {
-    StudentDao studentDao = new StudentDao(jdbcTemplate);
-    StudentsCourseDao studentsCourseDao = new StudentsCourseDao(jdbcTemplate);
-    List<StudentsCourse> studentsCourseList = new ArrayList<>();
-
-    BitSet bitSet = new BitSet(Integer.valueOf(config.getProperty("courses")));
-
-    for (Integer integer : studentDao.getId()) {
-      int k = randomInt(random, Integer.valueOf(config.getProperty("students-courses-min")),
-          Integer.valueOf(config.getProperty("students-courses-max")));
+  private void addStudentsCourses() {
+    List<Course> courseList = COURSE_DAO.getAll();
+    List<Student> studentList = STUDENT_DAO.getStudent();
+    List<Student> studentListNew = new ArrayList<>();
+    BitSet bitSet = new BitSet(Integer.valueOf(courses));
+    for (Student student : studentList) {
+      List<Course> courseListNew = new ArrayList<>();
+      int k = randomInt(random,
+          Integer.valueOf(studentsCoursesMin),
+          Integer.valueOf(studentsCoursesMax));
       int i = 0;
       bitSet.clear();
-
       while (i < k) {
-        int course = randomInt(random, 1, Integer.valueOf(config.getProperty("courses")));
+        int course = randomInt(random, 1,
+            Integer.valueOf(courses));
         if (!bitSet.get(course)) {
           bitSet.set(course);
           i++;
-         studentsCourseList.add(new StudentsCourse(integer, course));
+          courseListNew.add(courseList.get(course - 1));
         }
       }
+      student.setCourseList(courseListNew);
+      studentListNew.add(student);
     }
-    studentsCourseDao.add(studentsCourseList);
+    STUDENT_DAO.addStudentsCourse(studentListNew);
   }
 
-  public void createAll(JdbcTemplate jdbcTemplate)
+  public void createAll()
       throws IOException, URISyntaxException {
-    Properties config = new Settings().setProperties("Task.properties");
-    addGroups(jdbcTemplate, config);
-    addCourses(jdbcTemplate);
-    addStudents(jdbcTemplate,config);
-    addStudentsCourses(jdbcTemplate,config);
+    addGroups();
+    addCourses();
+    addStudents();
+    addStudentsCourses();
   }
 }

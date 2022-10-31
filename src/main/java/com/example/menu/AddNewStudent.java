@@ -1,20 +1,22 @@
 package com.example.menu;
 
-import com.example.Request;
-import com.example.Settings;
-import java.util.Scanner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import static com.example.spring_boot.Application.STUDENT_DAO;
 
-@Component ("addStudent")
+import com.example.Settings;
+import com.example.menu.MainMenu.SecondMenu;
+import com.example.model.Student;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+@Component
+@SecondMenu
+@Order(3)
 public class AddNewStudent implements Menu {
 
   private final Settings settings;
-  private final Request request;
 
-  @Autowired
-  public AddNewStudent(Settings settings, Request request) {
-    this.request = request;
+@Autowired
+  public AddNewStudent(Settings settings) {
     this.settings = settings;
   }
   @Override
@@ -24,9 +26,13 @@ public class AddNewStudent implements Menu {
 
   @Override
   public void executeMenu() {
+
     System.out.println("Please enter name and surname of the student");
-    String[] nameStudent = new Scanner(System.in).nextLine().split(" ", 2);
-    request.addStudent(nameStudent[0], nameStudent[1]);
+    String[] nameStudent = settings.readString("").split(" ", 2);
+    Student student = new Student();
+    student.setFirst_name(nameStudent[0]);
+    student.setLast_name(nameStudent[1]);
+    STUDENT_DAO.add(student);
     System.out.println(
         "Student " + nameStudent[0] + " " + nameStudent[1] + " has been successfully added");
     settings.endExecution();

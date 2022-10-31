@@ -1,6 +1,6 @@
 package com.example.extra;
 
-import static com.example.RequestTest.jdbcTemplateTest;
+import static com.example.ResultTest.jdbcTemplateTest;
 
 import com.example.testcontainers.config.ContainersEnvironment;
 

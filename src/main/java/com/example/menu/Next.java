@@ -1,8 +1,12 @@
 package com.example.menu;
 
+import com.example.menu.MainMenu.FirstMenu;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Component ("next")
+@Component
+@Order(2)
+@FirstMenu
 public class Next implements Menu {
 
   @Override

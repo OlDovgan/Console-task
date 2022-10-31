@@ -11,14 +11,16 @@ public class Table {
 
   private final FileReader file = new FileReader();
   private final JdbcTemplate jdbcTemplate;
-@Autowired
+
+  @Autowired
   public Table(JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
   }
+
   public void create(String fileName)
       throws IOException, URISyntaxException {
     for (String strSql : String.join(" ", file.readFile(fileName)).split(";")) {
-   jdbcTemplate.execute(strSql+";");
+      jdbcTemplate.execute(strSql + ";");
     }
   }
 }

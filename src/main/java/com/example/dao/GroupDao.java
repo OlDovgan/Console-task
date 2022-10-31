@@ -3,9 +3,9 @@ package com.example.dao;
 import com.example.model.Group;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,21 +15,24 @@ import org.springframework.stereotype.Component;
 public class GroupDao {
 
   private final JdbcTemplate jdbcTemplate;
+  private final BeanPropertyRowMapper<Group> mapper;
 
   @Autowired
-  public GroupDao(JdbcTemplate jdbcTemplate) {
+  public GroupDao(JdbcTemplate jdbcTemplate,
+      @Qualifier("mapperGroup") BeanPropertyRowMapper<Group> mapper) {
     this.jdbcTemplate = jdbcTemplate;
+    this.mapper = mapper;
   }
 
   public void add(Group group) {
-    jdbcTemplate.update("INSERT INTO groups (group_name) VALUES (?);", group.getGroupName());
+    jdbcTemplate.update("INSERT INTO groups (group_name) VALUES (?);", group.getGroup_name());
   }
 
   public void add(List<Group> groupList) {
     jdbcTemplate.batchUpdate("INSERT INTO groups (group_name) VALUES (?);",
         new BatchPreparedStatementSetter() {
           public void setValues(PreparedStatement ps, int i) throws SQLException {
-            ps.setString(1, groupList.get(i).getGroupName());
+            ps.setString(1, groupList.get(i).getGroup_name());
           }
 
           public int getBatchSize() {
@@ -39,31 +42,22 @@ public class GroupDao {
     );
   }
 
-  public List<Group> groupList() {
+  public List<Group> getAll() {
 
-    return jdbcTemplate.query("SELECT * FROM groups;", new BeanPropertyRowMapper<>(Group.class));
+    return jdbcTemplate.query("SELECT * FROM groups;", mapper);
   }
 
-  public List<Group> getCoursesOfStudent(int number) {
-    List<Group> list = new ArrayList<>();
-    String sql = "SELECT  myCount, stud.group " +
-        "FROM(SELECT groups.group_name AS group,students.group_id,"
-        + " COUNT (students.group_id) AS myCount "
+  public List<Group> getGroupsByStudentCount(int number) {
+    String sql = "SELECT  number_student, stud.group_name " +
+        "FROM(SELECT groups.group_name AS group_name,students.group_id,"
+        + " COUNT (students.group_id) AS number_student "
         + "FROM students "
         + "JOIN groups "
         + "ON students.group_id= groups.group_id "
         + "GROUP BY students.group_id, groups.group_name ) AS stud "
-        + "WHERE myCount <= ? "
-        + "ORDER BY myCount;";
-    return jdbcTemplate.query(sql, rs -> {
+        + "WHERE number_student <= ? "
+        + "ORDER BY number_student;";
 
-      while (rs.next()) {
-        Group group = new Group();
-        group.setGroupName(rs.getString(2));
-        group.setNumberStudent(rs.getInt(1));
-        list.add(group);
-      }
-      return list;
-    }, number);
+    return jdbcTemplate.query(sql, mapper, number);
   }
 }

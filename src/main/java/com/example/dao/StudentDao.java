@@ -1,11 +1,17 @@
 package com.example.dao;
 
+import static com.example.spring_boot.Application.COURSE_DAO;
+import static com.example.spring_boot.Application.GROUP_DAO;
+
+import com.example.model.Course;
+import com.example.model.Group;
 import com.example.model.Student;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,20 +21,24 @@ import org.springframework.stereotype.Component;
 public class StudentDao {
 
   private final JdbcTemplate jdbcTemplate;
-@Autowired
-  public StudentDao(JdbcTemplate jdbcTemplate) {
+  private final BeanPropertyRowMapper<Student> mapper;
+
+  @Autowired
+
+  public StudentDao(JdbcTemplate jdbcTemplate,
+      @Qualifier("mapperStud") BeanPropertyRowMapper<Student> mapper) {
     this.jdbcTemplate = jdbcTemplate;
+    this.mapper = mapper;
   }
 
   public void add(List<Student> studentList) {
     jdbcTemplate.batchUpdate("INSERT INTO students(group_id, first_name, last_name)VALUES(?,?,?);",
         new BatchPreparedStatementSetter() {
           public void setValues(PreparedStatement ps, int i) throws SQLException {
-            ps.setInt(1, studentList.get(i).getGroupId());
-            ps.setString(2, studentList.get(i).getFirstName());
-            ps.setString(3, studentList.get(i).getLastName());
+            ps.setInt(1, studentList.get(i).getGroup_id());
+            ps.setString(2, studentList.get(i).getFirst_name());
+            ps.setString(3, studentList.get(i).getLast_name());
           }
-
           public int getBatchSize() {
             return studentList.size();
           }
@@ -37,121 +47,105 @@ public class StudentDao {
 
   public void add(Student student) {
     jdbcTemplate.update("INSERT INTO students(group_id, first_name, last_name)VALUES(?,?,?);",
-        student.getCourseId(), student.getFirstName(), student.getLastName());
-  }
-
-  public List<Integer> getId() {
-    return jdbcTemplate.queryForList("SELECT student_id FROM students;", Integer.class);
-
+        student.getGroup_id(), student.getFirst_name(), student.getLast_name());
   }
 
   public List<Student> getStudent() {
-    //  return jdbcTemplate.query("SELECT * FROM students;", new StudentMapper());
-    return jdbcTemplate.query("SELECT * FROM students;",
-        new BeanPropertyRowMapper<>(Student.class));
+    List<Course> courseListFull = COURSE_DAO.getAll();
+    List<Student> studentList = jdbcTemplate.query("SELECT * FROM students;", mapper);
+    List<Group> groupList = GROUP_DAO.getAll();
+    List<Integer[]> studentsCoursesLinks = jdbcTemplate.query("SELECT * FROM students_courses ;",
+        (rs, rowNum) -> {
+          Integer[] studentsCourse = new Integer[2];
+          studentsCourse[0] = rs.getInt(1);
+          studentsCourse[1] = rs.getInt(2);
+          return studentsCourse;
+        });
+    List<Student> studentListNew = new ArrayList<>();
+    for (Student stud : studentList) {
+      for (Group group : groupList) {
+        if (stud.getGroup_id() == group.getGroup_id()) {
+          stud.setGroup_name(group.getGroup_name());
+        }
+      }
+
+      List<Course> courseListTemp = new ArrayList<>();
+      for (Integer[] i : studentsCoursesLinks) {
+
+        if (i[0].equals(stud.getStudent_id())) {
+          courseListTemp.add(courseListFull.get(i[1] - 1));
+        }
+        stud.setCourseList(courseListTemp);
+      }
+      studentListNew.add(stud);
+    }
+    return studentListNew;
   }
 
-  public List<Student> getStudentWithCourse(String courseName) {
-    String sql = "SELECT students.student_id,first_name, last_name,"
-        + " courses.course_name, groups.group_name "
-        + " FROM students JOIN groups "
-        + " ON students.group_id= groups.group_id "
-        + " JOIN students_courses "
-        + " ON students.student_id=students_courses.student_id "
-        + " JOIN courses "
-        + " ON students_courses.course_id= courses.course_id "
-        + " WHERE courses.course_name= ? ;";
-    return jdbcTemplate.query(sql, rs -> {
-      List<Student> list = new ArrayList<>();
-      while (rs.next()) {
-        Student student = new Student();
-        student.setStudentId(rs.getInt(1));
-        student.setFirstName(rs.getString(2));
-        student.setLastName(rs.getString(3));
-        student.setCourseName(rs.getString(4));
-        student.setGroupName(rs.getString(5));
-        list.add(student);
+  public List<Student> getStudentWithOutCourse(int courseId) {
+    List<Student> studentList = new ArrayList<>();
+    for (Student stud : getStudent()) {
+      List<Integer> courseIdList = new ArrayList<>();
+      for (Course course : stud.getCourseList()) {
+        courseIdList.add(course.getCourse_id());
       }
-      return list;
-    }, courseName);
+      if (!courseIdList.contains(courseId)) {
+        studentList.add(stud);
+      }
+    }
+    return studentList;
   }
 
-  public List<Student> getCoursesOfStudent(int studentId) {
-
-    String sql = " SELECT students.student_id,students.first_name, students.last_name,"
-        + " courses.course_id, courses.course_name "
-        + " FROM students"
-        + " JOIN students_courses"
-        + " ON students.student_id=students_courses.student_id"
-        + " JOIN courses"
-        + " ON students_courses.course_id= courses.course_id"
-        + " WHERE students.student_id = ? ;";
-    return jdbcTemplate.query(sql, rs -> {
-      List<Student> list = new ArrayList<>();
-      while (rs.next()) {
-        Student student = new Student();
-        student.setStudentId(rs.getInt(1));
-        student.setFirstName(rs.getString(2));
-        student.setLastName(rs.getString(3));
-        student.setCourseId(rs.getInt(4));
-        student.setCourseName(rs.getString(5));
-        list.add(student);
+  public List<Student> getStudentWithCourse() {
+    List<Student> studentList = new ArrayList<>();
+    for (Student stud : getStudent()) {
+      if (stud.getCourseList() != null) {
+        studentList.add(stud);
       }
-      return list;
-    }, studentId);
-  }
-
-  public List<Student> getStudentsWithOutCourse(int course) {
-    String sql = "SELECT student_id, first_name, last_name"
-        + " FROM students WHERE NOT EXISTS (SELECT * FROM students_courses "
-        + " WHERE students_courses.student_id=students.student_id "
-        + " AND students_courses.course_id = ? );";
-
-    return jdbcTemplate.query(sql, rs -> {
-      List<Student> list = new ArrayList<>();
-      while (rs.next()) {
-        Student student = new Student();
-        student.setStudentId(rs.getInt(1));
-        student.setFirstName(rs.getString(2));
-        student.setLastName(rs.getString(3));
-        list.add(student);
-      }
-      return list;
-    }, course);
-  }
-
-  public List<Student> getStudentsWhereCourseIsExists() {
-    String sql = "SELECT student_id, first_name, last_name FROM students WHERE EXISTS"
-        + " (SELECT course_id FROM students_courses "
-        + " WHERE students_courses.student_id=students.student_id  );";
-    return jdbcTemplate.query(sql, rs -> {
-      List<Student> list = new ArrayList<>();
-      while (rs.next()) {
-        Student student = new Student();
-        student.setStudentId(rs.getInt(1));
-        student.setFirstName(rs.getString(2));
-        student.setLastName(rs.getString(3));
-        list.add(student);
-      }
-      return list;
-    });
-  }
-
-  public boolean getStudentsWhereCourseIsNotExists(int studId, int courseId) {
-    String sql = "SELECT EXISTS"
-        + " (SELECT student_id FROM students WHERE student_id = ? AND NOT EXISTS"
-        + " (SELECT * FROM students_courses WHERE students_courses.student_id=students.student_id"
-        + " AND students_courses.course_id = ? ));";
-
-    return Boolean.TRUE.equals(jdbcTemplate.query(sql, rs -> {
-      if (rs.next()) {
-        return rs.getBoolean(1);
-      }
-      throw new IllegalStateException("Zero rows returned from the DB");
-    }, studId, courseId));
+    }
+    return studentList;
   }
 
   public void delete(int id) {
     jdbcTemplate.update("DELETE FROM students  WHERE student_id = ? ;", id);
+  }
+
+  public void addStudentsCourse(List<Student> studentList) {
+    List<Integer[]> studentsCoursesList = new ArrayList<>();
+    for (Student stud : studentList) {
+      if (stud.getCourseList() != null) {
+        for (Course course : stud.getCourseList()) {
+          studentsCoursesList.add(new Integer[]{stud.getStudent_id(), course.getCourse_id()});
+        }
+      }
+    }
+    String sql = "INSERT INTO students_courses (student_id, course_id ) VALUES (?,?);";
+    jdbcTemplate.batchUpdate(sql,
+        new BatchPreparedStatementSetter() {
+          public void setValues(PreparedStatement ps, int i) throws SQLException {
+            ps.setInt(1, studentsCoursesList.get(i)[0]);
+            ps.setInt(2, studentsCoursesList.get(i)[1]);
+          }
+          public int getBatchSize() {
+            return studentsCoursesList.size();
+          }
+        });
+  }
+
+
+  public void addStudentsCourse(int studentId, int courseId) {
+
+    String sql = "INSERT INTO students_courses (student_id, course_id ) VALUES (?,?);";
+    List<Student> studentList = getStudentWithOutCourse(courseId);
+    for (Student stud : studentList) {
+      if (stud.getStudent_id() == studentId) {
+        jdbcTemplate.update(sql, studentId, courseId);
+      }
+    }
+  }
+
+  public void deleteStudentFromCourse(int studentId, int courseId) {
+    jdbcTemplate.update("DELETE FROM students_courses WHERE student_id =? AND  course_id=? ;",
+        studentId, courseId);
   }
 }

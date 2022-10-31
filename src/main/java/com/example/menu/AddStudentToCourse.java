@@ -1,20 +1,27 @@
 package com.example.menu;
 
-import com.example.Request;
+import static com.example.spring_boot.Application.STUDENT_DAO;
+
+import com.example.Result;
 import com.example.Settings;
+import com.example.menu.MainMenu.SecondMenu;
 import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Component("addStuToCourse")
+@Component
+@SecondMenu
+@Order(5)
 public class AddStudentToCourse implements Menu {
 
   private final String separator = System.lineSeparator();
   private final Settings settings;
-  private final Request request;
-@Autowired
-  public AddStudentToCourse(Settings settings, Request request) {
-    this.request = request;
+  private final Result result;
+
+  @Autowired
+  public AddStudentToCourse(Settings settings, Result result) {
+    this.result = result;
     this.settings = settings;
   }
 
@@ -25,9 +32,9 @@ public class AddStudentToCourse implements Menu {
 
   @Override
   public void executeMenu() {
-    System.out.println(request.coursesInfoPrint());
+    System.out.println(result.coursesInfoPrint());
     int course = 0;
-    while (course < 1 || course > request.courses.size()) {
+    while (course < 1 || course > result.courses.size()) {
       course = settings.readInt(
           "Please, select the course you want to add the student to" + separator);
     }
@@ -36,18 +43,15 @@ public class AddStudentToCourse implements Menu {
     stringJoiner.add(String.format(format, "ID", "First name", "Last mame"));
     stringJoiner.add(String.format(format, "-", "-", "-").replace('|', '+')
         .replace(' ', '-'));
-    System.out.println(request.findStudentsWithOutCourse(course) + separator);
+    System.out.println(result.studentsWithOutCourse(course) + separator);
     System.out.println(
-        "You are going to add a student to course of " + request.courses.get(course - 1));
-    int stuId = settings.readInt("Please, select a student ID to add to course of "
-        + request.courses.get(course - 1));
-    while (!request.studentsWhereCourseIsNotExists(course, stuId)) {
-      stuId = settings.readInt(
-          "Please, select a student ID to add to course of" + request.courses.get(
-              course - 1));
-    }
-    request.addStudentToCourse(stuId, course);
-    System.out.println(request.findCoursesOfStudent(stuId));
+        "You are going to add a student to course of " + result.courses.get(course - 1));
+    int studId = settings.readInt("Please, select a student ID to add to course of "
+        + result.courses.get(course - 1));
+    STUDENT_DAO.addStudentsCourse(studId, course);
+    System.out.println(result.studentsCourse(studId));
     settings.endExecution();
   }
+
+
 }

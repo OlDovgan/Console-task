@@ -1,21 +1,27 @@
 package com.example.menu;
 
-import com.example.Request;
+import static com.example.spring_boot.Application.STUDENT_DAO;
+
+import com.example.Result;
 import com.example.Settings;
+import com.example.menu.MainMenu.SecondMenu;
 import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Component ("removeStudentFromCourse")
+@Component
+@SecondMenu
+@Order(6)
 public class RemoveStudentFromCourse implements Menu {
   private static final String FORMAT = "%-" + 4 + "s| %-" + 12 + "s %-" + 12 + "s";
 
   private final Settings setup;
 
-  private final Request request;
+  private final Result result;
 @Autowired
-  public RemoveStudentFromCourse(Request request, Settings setup) {
-    this.request = request;
+  public RemoveStudentFromCourse(Result result, Settings setup) {
+    this.result = result;
     this.setup=setup;
   }
 
@@ -32,12 +38,12 @@ public class RemoveStudentFromCourse implements Menu {
     title.add(String.format(FORMAT, "-", "-", " -")
         .replace('|', '+')
         .replace(' ', '-'));
-    System.out.println(request.studentsWhereCourseIsExists());
+    System.out.println(result.studentsWhereCourseIsExists());
     int studentId = setup.readInt("Please, select a student ID to delete the course");
-    System.out.println(request.findCoursesOfStudent(studentId));
+    System.out.println(result.studentsCourse(studentId));
     int courseId = setup.readInt("Please, select a course ID to delete" );
-    request.deleteStudentFromCourse(studentId, courseId);
-    System.out.println(request.findCoursesOfStudent(studentId));
+    STUDENT_DAO.deleteStudentFromCourse(studentId, courseId);
+    System.out.println(result.studentsCourse(studentId));
     setup.endExecution();
   }
 }

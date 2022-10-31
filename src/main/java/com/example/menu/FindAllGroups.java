@@ -1,21 +1,28 @@
 package com.example.menu;
 
-import com.example.Request;
+import static com.example.spring_boot.Application.GROUP_DAO;
+
+import com.example.Result;
 import com.example.Settings;
+import com.example.menu.MainMenu.SecondMenu;
+import com.example.model.Group;
 import java.sql.SQLException;
 import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Component("findGroup")
+@Component
+@SecondMenu
+@Order(1)
 public class FindAllGroups implements Menu {
 
   private final Settings settings;
-  private final Request request;
+  private final Result result;
 
-  @Autowired
-  public FindAllGroups(Settings settings, Request request) {
-    this.request = request;
+@Autowired
+  public FindAllGroups(Settings settings, Result result) {
+    this.result = result;
     this.settings = settings;
   }
 
@@ -28,11 +35,17 @@ public class FindAllGroups implements Menu {
   public void executeMenu() throws SQLException {
     int amount = settings.readInt("Please enter the number of students in the group ");
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
-    System.out.println(amount);
     stringJoiner.add("Num| Groups%n");
     stringJoiner.add("---+-------");
-    stringJoiner.add(request.findGroups(amount));
+    stringJoiner.add(findGroups(amount));
     System.out.println(stringJoiner);
     settings.endExecution();
+  }
+  public String findGroups(int number) {
+    StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
+    for (Group group : GROUP_DAO.getGroupsByStudentCount(number)) {
+      stringJoiner.add(group.getNumber_student() + " | " + group.getGroup_name());
+    }
+    return stringJoiner.toString();
   }
 }

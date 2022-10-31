@@ -1,20 +1,23 @@
 package com.example;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Objects;
-import java.util.Properties;
 import java.util.Scanner;
 import org.springframework.stereotype.Component;
 
-@Component ("settings")
+@Component
 public class Settings {
 
-
   public final Scanner scanner = new Scanner(System.in);
+
   public void numberCheck() {
     while (!scanner.hasNextInt()) {
       System.out.print("Please, enter number ");
+      scanner.next();
+    }
+  }
+
+  public void stringCheck() {
+    while (!scanner.hasNextLine()) {
+      System.out.print("Please, enter string ");
       scanner.next();
     }
   }
@@ -42,16 +45,9 @@ public class Settings {
     return scanner.nextInt();
   }
 
-  public final Properties setProperties(String nameFile) {
-
-    String rootPath = Objects.requireNonNull(
-        Thread.currentThread().getContextClassLoader().getResource("")).getPath();
-    Properties properties = new Properties();
-    try {
-      properties.load(new FileInputStream(rootPath + nameFile));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    return properties;
+  public String readString(String message) {
+    System.out.println(message);
+    stringCheck();
+    return scanner.nextLine();
   }
 }

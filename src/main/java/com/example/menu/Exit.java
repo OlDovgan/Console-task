@@ -1,10 +1,13 @@
 package com.example.menu;
 
+import com.example.menu.MainMenu.SecondMenu;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Component ("exit")
+@Component
+@SecondMenu
+@Order(7)
 public class Exit implements Menu {
-
   public String getItemName() {
     return "Exit";
   }
