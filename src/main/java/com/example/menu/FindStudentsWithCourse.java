@@ -30,7 +30,7 @@ public class FindStudentsWithCourse implements Menu {
 
   @Override
   public void executeMenu() throws SQLException {
-    System.out.println(result.coursesInfoPrint());
+    System.out.println(result.coursesInfo());
     int course = 0;
     while (course < 1 || course > result.courses.size()) {
       course = settings.readInt("Please select a course name from the list");

@@ -4,18 +4,14 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class Table {
-
-  private final FileReader file = new FileReader();
-  private final JdbcTemplate jdbcTemplate;
-
+@Autowired
+  private FileReader file ;
   @Autowired
-  public Table(JdbcTemplate jdbcTemplate) {
-    this.jdbcTemplate = jdbcTemplate;
-  }
+  private  JdbcTemplate jdbcTemplate;
 
   public void create(String fileName)
       throws IOException, URISyntaxException {

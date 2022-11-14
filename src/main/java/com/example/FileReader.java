@@ -7,7 +7,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FileReader {
 
   public List<String> readFile(String fileName)
@@ -25,4 +27,5 @@ public class FileReader {
       }
     }
   }
+
 }

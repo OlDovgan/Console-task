@@ -1,9 +1,9 @@
 package com.example.menu;
 
-import static com.example.spring_boot.Application.STUDENT_DAO;
 
 import com.example.Result;
 import com.example.Settings;
+import com.example.dao.StudentDao;
 import com.example.menu.MainMenu.SecondMenu;
 import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +15,15 @@ import org.springframework.stereotype.Component;
 @Order(5)
 public class AddStudentToCourse implements Menu {
 
+  private final StudentDao studentDao;
+
   private final String separator = System.lineSeparator();
   private final Settings settings;
   private final Result result;
 
   @Autowired
-  public AddStudentToCourse(Settings settings, Result result) {
+  public AddStudentToCourse(StudentDao studentDao, Settings settings, Result result) {
+    this.studentDao = studentDao;
     this.result = result;
     this.settings = settings;
   }
@@ -32,7 +35,7 @@ public class AddStudentToCourse implements Menu {
 
   @Override
   public void executeMenu() {
-    System.out.println(result.coursesInfoPrint());
+    System.out.println(result.coursesInfo());
     int course = 0;
     while (course < 1 || course > result.courses.size()) {
       course = settings.readInt(
@@ -48,7 +51,7 @@ public class AddStudentToCourse implements Menu {
         "You are going to add a student to course of " + result.courses.get(course - 1));
     int studId = settings.readInt("Please, select a student ID to add to course of "
         + result.courses.get(course - 1));
-    STUDENT_DAO.addStudentsCourse(studId, course);
+    studentDao.addStudentsCourse(studId, course);
     System.out.println(result.studentsCourse(studId));
     settings.endExecution();
   }

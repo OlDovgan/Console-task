@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public class GroupDao {
 
-  private final JdbcTemplate jdbcTemplate;
-  private final BeanPropertyRowMapper<Group> mapper;
+  private  JdbcTemplate jdbcTemplate;
+  private  BeanPropertyRowMapper<Group> mapper;
 
   @Autowired
   public GroupDao(JdbcTemplate jdbcTemplate,
@@ -23,16 +23,16 @@ public class GroupDao {
     this.jdbcTemplate = jdbcTemplate;
     this.mapper = mapper;
   }
-
+public GroupDao(){}
   public void add(Group group) {
-    jdbcTemplate.update("INSERT INTO groups (group_name) VALUES (?);", group.getGroup_name());
+    jdbcTemplate.update("INSERT INTO groups (group_name) VALUES (?);", group.getGroupName());
   }
 
   public void add(List<Group> groupList) {
     jdbcTemplate.batchUpdate("INSERT INTO groups (group_name) VALUES (?);",
         new BatchPreparedStatementSetter() {
           public void setValues(PreparedStatement ps, int i) throws SQLException {
-            ps.setString(1, groupList.get(i).getGroup_name());
+            ps.setString(1, groupList.get(i).getGroupName());
           }
 
           public int getBatchSize() {

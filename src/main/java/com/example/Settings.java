@@ -14,14 +14,6 @@ public class Settings {
       scanner.next();
     }
   }
-
-  public void stringCheck() {
-    while (!scanner.hasNextLine()) {
-      System.out.print("Please, enter string ");
-      scanner.next();
-    }
-  }
-
   public void endExecution() {
     scanner.nextLine();
     System.out.println("Please, press enter to continue");
@@ -46,8 +38,13 @@ public class Settings {
   }
 
   public String readString(String message) {
+    String pattern = "[A-Z][a-z]+\\s+[A-Z][a-z]+";
     System.out.println(message);
-    stringCheck();
-    return scanner.nextLine();
+    String resultString = scanner.nextLine();
+    while (!resultString.matches(pattern)) {
+      System.out.print("Please enter name and surname of the student ");
+      resultString = scanner.nextLine();
+    }
+    return resultString;
   }
 }

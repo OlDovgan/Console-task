@@ -1,9 +1,7 @@
 package com.example.menu;
 
-import static com.example.spring_boot.Application.GROUP_DAO;
-
-import com.example.Result;
 import com.example.Settings;
+import com.example.dao.GroupDao;
 import com.example.menu.MainMenu.SecondMenu;
 import com.example.model.Group;
 import java.sql.SQLException;
@@ -18,12 +16,12 @@ import org.springframework.stereotype.Component;
 public class FindAllGroups implements Menu {
 
   private final Settings settings;
-  private final Result result;
+  private final GroupDao groupDao;
 
-@Autowired
-  public FindAllGroups(Settings settings, Result result) {
-    this.result = result;
+  @Autowired
+  public FindAllGroups(Settings settings, GroupDao groupDao) {
     this.settings = settings;
+    this.groupDao = groupDao;
   }
 
   @Override
@@ -35,16 +33,17 @@ public class FindAllGroups implements Menu {
   public void executeMenu() throws SQLException {
     int amount = settings.readInt("Please enter the number of students in the group ");
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
-    stringJoiner.add("Num| Groups%n");
+    stringJoiner.add("Num| Groups");
     stringJoiner.add("---+-------");
     stringJoiner.add(findGroups(amount));
     System.out.println(stringJoiner);
     settings.endExecution();
   }
+
   public String findGroups(int number) {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
-    for (Group group : GROUP_DAO.getGroupsByStudentCount(number)) {
-      stringJoiner.add(group.getNumber_student() + " | " + group.getGroup_name());
+    for (Group group : groupDao.getGroupsByStudentCount(number)) {
+      stringJoiner.add(group.getNumberStudent() + " | " + group.getGroupName());
     }
     return stringJoiner.toString();
   }

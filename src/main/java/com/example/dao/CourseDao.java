@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public class CourseDao {
 
-  private final JdbcTemplate jdbcTemplate;
-  private final BeanPropertyRowMapper<Course> mapper;
+  private  JdbcTemplate jdbcTemplate;
+  private  BeanPropertyRowMapper<Course> mapper;
 
   @Autowired
   public CourseDao(JdbcTemplate jdbcTemplate,
@@ -23,18 +23,19 @@ public class CourseDao {
     this.jdbcTemplate = jdbcTemplate;
     this.mapper = mapper;
   }
+  public CourseDao() {}
 
   public void add(Course course) {
     jdbcTemplate.update("INSERT INTO courses (course_name,course_description) VALUES (?,?);",
-        course.getCourse_name(), course.getCourse_description());
+        course.getCourseName(), course.getCourseDescription());
   }
 
   public void add(List<Course> courseList) {
     jdbcTemplate.batchUpdate("INSERT INTO courses (course_name,course_description) VALUES (?,?);",
         new BatchPreparedStatementSetter() {
           public void setValues(PreparedStatement ps, int i) throws SQLException {
-            ps.setString(1, courseList.get(i).getCourse_name());
-            ps.setString(2, courseList.get(i).getCourse_description());
+            ps.setString(1, courseList.get(i).getCourseName());
+            ps.setString(2, courseList.get(i).getCourseDescription());
           }
 
           public int getBatchSize() {

@@ -1,41 +1,45 @@
 package com.example;
 
-import static com.example.spring_boot.Application.COURSE_DAO;
-import static com.example.spring_boot.Application.DATA;
-import static com.example.spring_boot.Application.GROUP_DAO;
-import static com.example.spring_boot.Application.STUDENT_DAO;
-
+import com.example.dao.CourseDao;
+import com.example.dao.GroupDao;
+import com.example.dao.StudentDao;
 import com.example.model.Course;
 import com.example.model.Group;
 import com.example.model.Student;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
+import java.util.Set;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 
-@Component
+@Service
 @PropertySource("classpath:Task.properties")
 public class Data {
-
-  private final FileReader fileReader = new FileReader();
-  private final Random random;
 
   @Value("${groups}")
   private String groupsNumProp;
   @Value("${courses}")
-  private String courses;
+  private String coursesProp;
   @Value("${students-total}")
-  public String studTotal;
+  private String studentsTotal;
   @Value("${first-name-file}")
   private String firstNameFile;
   @Value("${last-name-file}")
   private String lastNameFile;
+  @Value("${course-name-file}")
+  private String coursesNameFile;
   @Value("${number-student-min}")
   private String numberStudentMin;
   @Value("${number-student-max}")
@@ -44,64 +48,74 @@ public class Data {
   private String studentsCoursesMin;
   @Value("${students-courses-max}")
   private String studentsCoursesMax;
+  private  Random random;
+  @Autowired
+  private  GroupDao groupDao;
+  @Autowired
+  private  CourseDao courseDao;
+  @Autowired
+  private  StudentDao studentDao;
+  @Autowired
+  private  FileReader fileReader;
 
   @Autowired
-  public Data(Random random) {
+  public Data( Random random) {
     this.random = random;
   }
-
-  public final int randomInt(Random random, int origin, int bound) {
+   public final int randomInt(Random random, int origin, int bound) {
     if (origin >= bound) {
       throw new IllegalArgumentException();
     }
     return origin + random.nextInt(bound);
   }
 
-  private String groupName(Random random, int characterСount, int digitCount) {
+
+  private String groupName(Random random, int characters, int digitCount) {
     return RandomStringUtils.
-        random(characterСount, 0, 0, true, false, null, random)
+        random(characters, 0, 0, true, false, null, random)
         + "-" +
         RandomStringUtils.
             random(digitCount, 0, 0, false, true, null, random);
   }
+
   private void addGroups() {
 
     List<Group> groupList = new ArrayList<>();
     for (int i = 0; i < Math.min(Integer.valueOf(groupsNumProp),
-        Integer.valueOf(studTotal)); i++) {
+        Integer.valueOf(studentsTotal)); i++) {
       groupList.add(new Group(0, groupName(random, 2, 2)));
     }
-    GROUP_DAO.add(groupList);
+    groupDao.add(groupList);
   }
 
   private void addCourses()
       throws IOException, URISyntaxException {
-    Map<String, String> courses = new LinkedHashMap<>();
-    List<String> element = fileReader.readFile("Courses.txt");
+    Map<String, String> coursesMap = new LinkedHashMap<>();
+    List<String> element = fileReader.readFile(coursesNameFile);
     String join = String.join(" ", element);
     String[] split = join.split(";");
     for (String str : split) {
       String[] arr = (str.trim().split("-", 2));
-      courses.put(arr[0].trim(), arr[1]);
+      coursesMap.put(arr[0].trim(), arr[1]);
     }
     List<Course> courseList = new ArrayList<>();
-    for (Entry<String, String> entry : courses.entrySet()) {
+    for (Entry<String, String> entry : coursesMap.entrySet()) {
       courseList.add(new Course(entry.getKey(), entry.getValue()));
     }
-    COURSE_DAO.add(courseList);
+    courseDao.add(courseList);
   }
 
   private void addStudents()
       throws IOException, URISyntaxException {
     List<Student> studentList = new ArrayList<>();
-    int studTotal = Integer.valueOf(DATA.studTotal);
+    int studTotal = Integer.valueOf(studentsTotal);
     String[] firstNames = fileReader.readFile(firstNameFile)
         .toArray(new String[]{});
     String[] lastNames = fileReader.readFile(lastNameFile)
         .toArray(new String[]{});
     List<Integer> groupsId = new ArrayList<>();
-    for (Group group : GROUP_DAO.getAll()) {
-      groupsId.add(group.getGroup_id());
+    for (Group group : groupDao.getAll()) {
+      groupsId.add(group.getGroupId());
     }
     Set<Integer> set = new HashSet<>();
     for (int i = 0; i < groupsId.size(); i++) {
@@ -115,9 +129,9 @@ public class Data {
       int i = 0;
       while (studentsWithGroup < studTotal && i <= number) {
         Student student = new Student();
-        student.setGroup_id(d);
-        student.setFirst_name(firstNames[randomInt(random, 0, firstNames.length - 1)]);
-        student.setLast_name(lastNames[randomInt(random, 0, lastNames.length - 1)]);
+        student.setGroupId(d);
+        student.setFirstName(firstNames[randomInt(random, 0, firstNames.length - 1)]);
+        student.setLastName(lastNames[randomInt(random, 0, lastNames.length - 1)]);
         studentList.add(student);
         studentsWithGroup++;
         i++;
@@ -125,18 +139,18 @@ public class Data {
     }
     for (int i = 0; i < studTotal - studentsWithGroup; i++) {
       Student student = new Student();
-      student.setFirst_name(firstNames[randomInt(random, 0, firstNames.length - 1)]);
-      student.setLast_name(lastNames[randomInt(random, 0, lastNames.length - 1)]);
+      student.setFirstName(firstNames[randomInt(random, 0, firstNames.length - 1)]);
+      student.setLastName(lastNames[randomInt(random, 0, lastNames.length - 1)]);
       studentList.add(student);
     }
-    STUDENT_DAO.add(studentList);
+    studentDao.add(studentList);
   }
 
   private void addStudentsCourses() {
-    List<Course> courseList = COURSE_DAO.getAll();
-    List<Student> studentList = STUDENT_DAO.getStudent();
+    List<Course> courseList = courseDao.getAll();
+    List<Student> studentList = studentDao.getStudent();
     List<Student> studentListNew = new ArrayList<>();
-    BitSet bitSet = new BitSet(Integer.valueOf(courses));
+    BitSet bitSet = new BitSet(Integer.valueOf(coursesProp));
     for (Student student : studentList) {
       List<Course> courseListNew = new ArrayList<>();
       int k = randomInt(random,
@@ -146,7 +160,7 @@ public class Data {
       bitSet.clear();
       while (i < k) {
         int course = randomInt(random, 1,
-            Integer.valueOf(courses));
+            Integer.valueOf(coursesProp));
         if (!bitSet.get(course)) {
           bitSet.set(course);
           i++;
@@ -156,7 +170,7 @@ public class Data {
       student.setCourseList(courseListNew);
       studentListNew.add(student);
     }
-    STUDENT_DAO.addStudentsCourse(studentListNew);
+    studentDao.addStudentsCourse(studentListNew);
   }
 
   public void createAll()

@@ -1,42 +1,53 @@
 package com.example;
 
-import static com.example.extra.TestUtils.clearData;
-import static com.example.spring_boot.Application.SPRING_CONFIG;
-
-import com.example.model.Student;
-import com.example.testcontainers.config.ContainerProperties;
-import com.example.testcontainers.config.ContainersEnvironment;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Random;
-import java.util.StringJoiner;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-class DataTest extends ContainersEnvironment {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-  private final Data data = new Data(new Random(42));
+@Testcontainers
+@SpringBootTest
+@ContextConfiguration(classes = DataTest.class)
+@ActiveProfiles("test")
+class DataTest {
+
+  @Container
+  public static PostgreSQLContainer postgreSQLContainer = (PostgreSQLContainer) new PostgreSQLContainer()
+      //   .withPassword("test")
+      //  .withUsername("test")
+      .withInitScript("Table.sql");
+
+  @DynamicPropertySource
+  static void postgresqlProperties(DynamicPropertyRegistry registry) {
+    registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+    registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+    registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+  }
+  Data data;// new Data(new Random(42));
   private final String s = System.lineSeparator();
-  private final JdbcTemplate jdbcTemplateTest = new JdbcTemplate(
-      new ContainerProperties().getDataSource(container));
-//  private final int coursesExpected = Integer.valueOf(SPRING_CONFIG.getCourses());
-//  private final int groupsExpected = Integer.valueOf(SPRING_CONFIG.getGroupsNumProp());
-
+  //  private final JdbcTemplate jdbcTemplateTest = new JdbcTemplate(
+//      new ContainerProperties().getDataSource(container));
+  @Autowired
+  public DataTest(Data data) {
+    this.data = data;
+  }
 //  @BeforeEach
 //  void start() throws IOException, URISyntaxException {
+//
 //    data.createAll();
 //  }
-//
 //  @AfterEach
 //  void end() {
 //    clearData();
 //  }
-//
-//  @Test
+
+  //  @Test
 //  void addStudents_ShouldAddedSetQuantityStudentsToDb() {
 //    StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
 //    String expect = "1|3|Bonnie|Stone" + s
@@ -50,20 +61,20 @@ class DataTest extends ContainersEnvironment {
 //            new BeanPropertyRowMapper<>(Student.class));
 //    for (Student stud : studentList) {
 //      stringJoiner.add(String.format("%d|%d|%s|%s",
-//          stud.getStudent_id(),
-//          stud.getGroup_id(),
-//          stud.getFirst_name(),
-//          stud.getLast_name()));
+//          stud.getStudentId(),
+//          stud.getGroupId(),
+//          stud.getFirstName(),
+//          stud.getLastName()));
 //    }
 //    Assertions.assertEquals(expect, stringJoiner.toString());
 //  }
 //
-//  @Test
-//  void addCourses_ShouldAddedSetQuantityCoursesToDb() {
+  @Test
+  void addCourses_ShouldAddedSetQuantityCoursesToDb() {
 //    int courses = jdbcTemplateTest.queryForObject("SELECT COUNT (course_id) FROM courses;",
 //        Integer.class);
-//    Assertions.assertEquals(coursesExpected, courses);
-//  }
+//    Assertions.assertEquals(5, courses);
+  }
 //
 //  @Test
 //  void addGroups_ShouldAddedSetQuantityGroupsToDb() {

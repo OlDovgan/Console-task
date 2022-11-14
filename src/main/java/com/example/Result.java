@@ -1,19 +1,22 @@
 package com.example;
 
-import static com.example.spring_boot.Application.COURSE_DAO;
-import static com.example.spring_boot.Application.STUDENT_DAO;
-
+import com.example.dao.CourseDao;
+import com.example.dao.StudentDao;
 import com.example.model.Course;
 import com.example.model.Student;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-
 public class Result {
 
+  @Autowired
+  private StudentDao studentDao;
+  @Autowired
+  private CourseDao courseDao;
   private static final String FORMAT = "%-" + 4 + "s| %-" + 12 + "s %-" + 12 + "s";
   public final List<String> courses = new ArrayList<>();
 
@@ -22,16 +25,16 @@ public class Result {
     String groupName;
     String format =
         "%-3d| %-" + 12 + "s| %-" + 12 + "s| %-" + (courseName.length() + 2) + "s| %s";
-    for (Student stud : STUDENT_DAO.getStudent()) {
+    for (Student stud : studentDao.getStudent()) {
       for (Course course : stud.getCourseList()) {
-        if (course.getCourse_name().equals(courseName)) {
-          if (stud.getGroup_name() == null) {
+        if (course.getCourseName().equals(courseName)) {
+          if (stud.getGroupName() == null) {
             groupName = "without a group";
           } else {
-            groupName = stud.getGroup_name();
+            groupName = stud.getGroupName();
           }
-          stringJoiner.add(String.format(format, stud.getStudent_id(), stud.getFirst_name(),
-              stud.getLast_name(), course.getCourse_name(), groupName));
+          stringJoiner.add(String.format(format, stud.getStudentId(), stud.getFirstName(),
+              stud.getLastName(), course.getCourseName(), groupName));
         }
       }
     }
@@ -41,18 +44,18 @@ public class Result {
   public String studentsWithOutCourse(int course) {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     String format = "%-" + 3 + "s| %-" + 12 + "s| %-" + 12 + "s";
-    for (Student stud : STUDENT_DAO.getStudentWithOutCourse(course)) {
-      stringJoiner.add(String.format(format, stud.getStudent_id(), stud.getFirst_name(),
-          stud.getLast_name()));
+    for (Student stud : studentDao.getStudentWithOutCourse(course)) {
+      stringJoiner.add(String.format(format, stud.getStudentId(), stud.getFirstName(),
+          stud.getLastName()));
     }
     return stringJoiner.toString();
   }
 
   public String studentsWhereCourseIsExists() {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
-    for (Student stud : STUDENT_DAO.getStudentWithCourse()) {
-      stringJoiner.add(String.format(FORMAT, stud.getStudent_id(), stud.getFirst_name(),
-          stud.getLast_name()));
+    for (Student stud : studentDao.getStudentWithCourse()) {
+      stringJoiner.add(String.format(FORMAT, stud.getStudentId(), stud.getFirstName(),
+          stud.getLastName()));
     }
     return stringJoiner.toString();
   }
@@ -65,9 +68,9 @@ public class Result {
         .replace('|', '+')
         .replace(' ', '-'));
 
-    for (Student st : STUDENT_DAO.getStudent()) {
-      joiner.add(String.format(FORMAT, st.getStudent_id(),
-          st.getFirst_name(), st.getLast_name()));
+    for (Student st : studentDao.getStudent()) {
+      joiner.add(String.format(FORMAT, st.getStudentId(),
+          st.getFirstName(), st.getLastName()));
     }
     return joiner.toString();
   }
@@ -76,22 +79,23 @@ public class Result {
     String separator = System.lineSeparator();
     StringJoiner joiner = new StringJoiner(separator);
     System.out.println("The action completed successfully" + separator);
-    for (Student st : STUDENT_DAO.getStudent()) {
-      if (st.getCourseList() != null && st.getStudent_id() == studentId) {
+    for (Student st : studentDao.getStudent()) {
+      if (st.getCourseList() != null && st.getStudentId() == studentId) {
         for (Course course : st.getCourseList()) {
-          joiner.add(st.getStudent_id() + " | " + st.getFirst_name() + "  "
-              + st.getLast_name() + " |  " + course.getCourse_id() + " |  "
-              + course.getCourse_name());
+          joiner.add(st.getStudentId() + " | " + st.getFirstName() + "  "
+              + st.getLastName() + " |  " + course.getCourseId() + " |  "
+              + course.getCourseName());
         }
       }
     }
     return joiner.toString();
   }
-    public String coursesInfoPrint() {
+
+  public String coursesInfo() {
     StringJoiner joiner = new StringJoiner(System.lineSeparator());
-    for (Course course : COURSE_DAO.getAll()) {
-      joiner.add(course.getCourse_id() + ". " + course.getCourse_name());
-      courses.add(course.getCourse_name());
+    for (Course course : courseDao.getAll()) {
+      joiner.add(course.getCourseId() + ". " + course.getCourseName());
+      courses.add(course.getCourseName());
     }
     return joiner.toString();
   }

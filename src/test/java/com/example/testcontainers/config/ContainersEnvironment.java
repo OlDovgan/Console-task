@@ -1,11 +1,13 @@
 package com.example.testcontainers.config;
 
-import javax.sql.DataSource;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-public abstract class ContainersEnvironment {
+@Component
+public class ContainersEnvironment {
 
+  @Autowired
   protected final static PostgreSQLContainer container;
 
   static {

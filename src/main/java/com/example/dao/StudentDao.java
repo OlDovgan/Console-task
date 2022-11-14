@@ -1,7 +1,5 @@
 package com.example.dao;
 
-import static com.example.spring_boot.Application.COURSE_DAO;
-import static com.example.spring_boot.Application.GROUP_DAO;
 
 import com.example.model.Course;
 import com.example.model.Group;
@@ -15,18 +13,22 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public class StudentDao {
 
+  private final GroupDao groupDao;
+  private final CourseDao courseDao;
   private final JdbcTemplate jdbcTemplate;
   private final BeanPropertyRowMapper<Student> mapper;
 
   @Autowired
-
   public StudentDao(JdbcTemplate jdbcTemplate,
-      @Qualifier("mapperStud") BeanPropertyRowMapper<Student> mapper) {
+      @Qualifier("mapperStud") BeanPropertyRowMapper<Student> mapper,
+      CourseDao courseDao, GroupDao groupDao) {
+    this.groupDao = groupDao;
+    this.courseDao = courseDao;
     this.jdbcTemplate = jdbcTemplate;
     this.mapper = mapper;
   }
@@ -35,10 +37,11 @@ public class StudentDao {
     jdbcTemplate.batchUpdate("INSERT INTO students(group_id, first_name, last_name)VALUES(?,?,?);",
         new BatchPreparedStatementSetter() {
           public void setValues(PreparedStatement ps, int i) throws SQLException {
-            ps.setInt(1, studentList.get(i).getGroup_id());
-            ps.setString(2, studentList.get(i).getFirst_name());
-            ps.setString(3, studentList.get(i).getLast_name());
+            ps.setInt(1, studentList.get(i).getGroupId());
+            ps.setString(2, studentList.get(i).getFirstName());
+            ps.setString(3, studentList.get(i).getLastName());
           }
+
           public int getBatchSize() {
             return studentList.size();
           }
@@ -47,13 +50,13 @@ public class StudentDao {
 
   public void add(Student student) {
     jdbcTemplate.update("INSERT INTO students(group_id, first_name, last_name)VALUES(?,?,?);",
-        student.getGroup_id(), student.getFirst_name(), student.getLast_name());
+        student.getGroupId(), student.getFirstName(), student.getLastName());
   }
 
   public List<Student> getStudent() {
-    List<Course> courseListFull = COURSE_DAO.getAll();
+    List<Course> courseListFull = courseDao.getAll();
     List<Student> studentList = jdbcTemplate.query("SELECT * FROM students;", mapper);
-    List<Group> groupList = GROUP_DAO.getAll();
+    List<Group> groupList = groupDao.getAll();
     List<Integer[]> studentsCoursesLinks = jdbcTemplate.query("SELECT * FROM students_courses ;",
         (rs, rowNum) -> {
           Integer[] studentsCourse = new Integer[2];
@@ -64,15 +67,14 @@ public class StudentDao {
     List<Student> studentListNew = new ArrayList<>();
     for (Student stud : studentList) {
       for (Group group : groupList) {
-        if (stud.getGroup_id() == group.getGroup_id()) {
-          stud.setGroup_name(group.getGroup_name());
+        if (stud.getGroupId() == group.getGroupId()) {
+          stud.setGroupName(group.getGroupName());
         }
       }
-
       List<Course> courseListTemp = new ArrayList<>();
       for (Integer[] i : studentsCoursesLinks) {
 
-        if (i[0].equals(stud.getStudent_id())) {
+        if (i[0].equals(stud.getStudentId())) {
           courseListTemp.add(courseListFull.get(i[1] - 1));
         }
         stud.setCourseList(courseListTemp);
@@ -87,7 +89,7 @@ public class StudentDao {
     for (Student stud : getStudent()) {
       List<Integer> courseIdList = new ArrayList<>();
       for (Course course : stud.getCourseList()) {
-        courseIdList.add(course.getCourse_id());
+        courseIdList.add(course.getCourseId());
       }
       if (!courseIdList.contains(courseId)) {
         studentList.add(stud);
@@ -115,7 +117,7 @@ public class StudentDao {
     for (Student stud : studentList) {
       if (stud.getCourseList() != null) {
         for (Course course : stud.getCourseList()) {
-          studentsCoursesList.add(new Integer[]{stud.getStudent_id(), course.getCourse_id()});
+          studentsCoursesList.add(new Integer[]{stud.getStudentId(), course.getCourseId()});
         }
       }
     }
@@ -126,6 +128,7 @@ public class StudentDao {
             ps.setInt(1, studentsCoursesList.get(i)[0]);
             ps.setInt(2, studentsCoursesList.get(i)[1]);
           }
+
           public int getBatchSize() {
             return studentsCoursesList.size();
           }
@@ -138,7 +141,7 @@ public class StudentDao {
     String sql = "INSERT INTO students_courses (student_id, course_id ) VALUES (?,?);";
     List<Student> studentList = getStudentWithOutCourse(courseId);
     for (Student stud : studentList) {
-      if (stud.getStudent_id() == studentId) {
+      if (stud.getStudentId() == studentId) {
         jdbcTemplate.update(sql, studentId, courseId);
       }
     }

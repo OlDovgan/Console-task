@@ -1,9 +1,8 @@
 package com.example.menu;
 
-import static com.example.spring_boot.Application.STUDENT_DAO;
-
 import com.example.Result;
 import com.example.Settings;
+import com.example.dao.StudentDao;
 import com.example.menu.MainMenu.SecondMenu;
 import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +13,17 @@ import org.springframework.stereotype.Component;
 @SecondMenu
 @Order(6)
 public class RemoveStudentFromCourse implements Menu {
+
+  private final StudentDao studentDao;
   private static final String FORMAT = "%-" + 4 + "s| %-" + 12 + "s %-" + 12 + "s";
-
   private final Settings setup;
-
   private final Result result;
-@Autowired
-  public RemoveStudentFromCourse(Result result, Settings setup) {
+
+  @Autowired
+  public RemoveStudentFromCourse(StudentDao studentDao, Result result, Settings setup) {
+    this.studentDao = studentDao;
     this.result = result;
-    this.setup=setup;
+    this.setup = setup;
   }
 
   @Override
@@ -41,8 +42,8 @@ public class RemoveStudentFromCourse implements Menu {
     System.out.println(result.studentsWhereCourseIsExists());
     int studentId = setup.readInt("Please, select a student ID to delete the course");
     System.out.println(result.studentsCourse(studentId));
-    int courseId = setup.readInt("Please, select a course ID to delete" );
-    STUDENT_DAO.deleteStudentFromCourse(studentId, courseId);
+    int courseId = setup.readInt("Please, select a course ID to delete");
+    studentDao.deleteStudentFromCourse(studentId, courseId);
     System.out.println(result.studentsCourse(studentId));
     setup.endExecution();
   }

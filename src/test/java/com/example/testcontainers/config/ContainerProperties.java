@@ -2,7 +2,6 @@ package com.example.testcontainers.config;
 
 import static com.example.testcontainers.config.ContainersEnvironment.container;
 
-import java.util.Properties;
 import javax.sql.DataSource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
