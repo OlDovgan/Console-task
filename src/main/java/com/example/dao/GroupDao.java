@@ -9,17 +9,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class GroupDao {
 
   private  JdbcTemplate jdbcTemplate;
-  private  BeanPropertyRowMapper<Group> mapper;
+  private RowMapper<Group> mapper;
 
   @Autowired
   public GroupDao(JdbcTemplate jdbcTemplate,
-      @Qualifier("mapperGroup") BeanPropertyRowMapper<Group> mapper) {
+      @Qualifier("mapperGroup") RowMapper<Group> mapper) {
     this.jdbcTemplate = jdbcTemplate;
     this.mapper = mapper;
   }

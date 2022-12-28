@@ -2,9 +2,8 @@ package com.example.menu;
 
 
 import com.example.Result;
-import com.example.Settings;
+import com.example.Utility;
 import com.example.dao.StudentDao;
-import com.example.menu.MainMenu.SecondMenu;
 import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -18,14 +17,14 @@ public class AddStudentToCourse implements Menu {
   private final StudentDao studentDao;
 
   private final String separator = System.lineSeparator();
-  private final Settings settings;
+  private final Utility service;
   private final Result result;
 
   @Autowired
-  public AddStudentToCourse(StudentDao studentDao, Settings settings, Result result) {
+  public AddStudentToCourse(StudentDao studentDao, Utility service, Result result) {
     this.studentDao = studentDao;
     this.result = result;
-    this.settings = settings;
+    this.service = service;
   }
 
   @Override
@@ -36,25 +35,33 @@ public class AddStudentToCourse implements Menu {
   @Override
   public void executeMenu() {
     System.out.println(result.coursesInfo());
-    int course = 0;
-    while (course < 1 || course > result.courses.size()) {
-      course = settings.readInt(
+    int courseNumber = getCourseNumber();
+    printTableHeader();
+    printInfo(courseNumber);
+    int studId = service.readInt("Please, select a student ID to add to course of "
+        + result.courses.get(courseNumber - 1));
+    studentDao.addStudentsCourse(studId, courseNumber);
+    System.out.println(result.getStudentsCourse(studId));
+    service.endExecution();
+  }
+  private int getCourseNumber() {
+    int courseNumber = 0;
+    while (courseNumber < 1 || courseNumber > result.courses.size()) {
+      courseNumber = service.readInt(
           "Please, select the course you want to add the student to" + separator);
     }
+    return courseNumber;
+  }
+  private void printTableHeader() {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     String format = "%-" + 3 + "s| %-" + 12 + "s| %-" + 12 + "s";
     stringJoiner.add(String.format(format, "ID", "First name", "Last mame"));
     stringJoiner.add(String.format(format, "-", "-", "-").replace('|', '+')
         .replace(' ', '-'));
-    System.out.println(result.studentsWithOutCourse(course) + separator);
-    System.out.println(
-        "You are going to add a student to course of " + result.courses.get(course - 1));
-    int studId = settings.readInt("Please, select a student ID to add to course of "
-        + result.courses.get(course - 1));
-    studentDao.addStudentsCourse(studId, course);
-    System.out.println(result.studentsCourse(studId));
-    settings.endExecution();
   }
-
-
+  private void printInfo(int courseNumber) {
+    System.out.println(result.studentsWithOutCourse(courseNumber) + separator);
+    System.out.println(
+        "You are going to add a student to course of " + result.courses.get(courseNumber - 1));
+  }
 }

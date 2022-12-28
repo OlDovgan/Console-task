@@ -1,23 +1,17 @@
-package com.example.spring_boot;
+package com.example;
 
 
-import com.example.SpringConfig;
 import com.example.menu.Menu;
 import java.sql.SQLException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
-public class Application {
-
-  public static final AnnotationConfigApplicationContext context =
-      new AnnotationConfigApplicationContext(
-          SpringConfig.class);
+public class MainApplication {
 
   public static void main(String[] args) throws SQLException {
-    SpringApplication.run(SpringConfig.class, args);
-
+    ApplicationContext context = SpringApplication.run(MainApplication.class, args);
     Menu firstMenu = context.getBean("firstMenu", Menu.class);
     Menu secondMenu = context.getBean("secondMenu", Menu.class);
     firstMenu.executeMenu();

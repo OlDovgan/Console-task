@@ -2,7 +2,6 @@ package com.example.menu;
 
 import com.example.Data;
 import com.example.Table;
-import com.example.menu.MainMenu.FirstMenu;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +13,15 @@ import org.springframework.stereotype.Component;
 @FirstMenu
 public class CreateData implements Menu {
 
+  private final Data data;
+  private final Table table;
+
   public String getItemName() {
     return "Create new data ";
   }
 
-  private final Data data;
-  private final Table table;
-
   @Autowired
   public CreateData(Data data, Table table) {
-
     this.data = data;
     this.table = table;
   }
@@ -35,7 +33,7 @@ public class CreateData implements Menu {
       table.create("Table.sql");
       System.out.println("Tables created successfully");
       System.out.println("Please wait...");
-      data.createAll();
+      data.addAllData();
       System.out.println("Data entered into database successfully" + System.lineSeparator());
     } catch (URISyntaxException | IOException e) {
       throw new RuntimeException(e);

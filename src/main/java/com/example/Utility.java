@@ -4,7 +4,7 @@ import java.util.Scanner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Settings {
+public class Utility {
 
   public final Scanner scanner = new Scanner(System.in);
 

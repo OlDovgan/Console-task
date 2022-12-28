@@ -1,8 +1,7 @@
 package com.example.menu;
 
 import com.example.Result;
-import com.example.Settings;
-import com.example.menu.MainMenu.SecondMenu;
+import com.example.Utility;
 import java.sql.SQLException;
 import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +13,13 @@ import org.springframework.stereotype.Component;
 @Order(2)
 public class FindStudentsWithCourse implements Menu {
 
-  private final Settings settings;
+  private final Utility service;
   private final Result result;
 
   @Autowired
-  public FindStudentsWithCourse(Settings settings, Result result) {
+  public FindStudentsWithCourse(Utility service, Result result) {
     this.result = result;
-    this.settings = settings;
+    this.service = service;
   }
 
   @Override
@@ -31,12 +30,25 @@ public class FindStudentsWithCourse implements Menu {
   @Override
   public void executeMenu() throws SQLException {
     System.out.println(result.coursesInfo());
-    int course = 0;
-    while (course < 1 || course > result.courses.size()) {
-      course = settings.readInt("Please select a course name from the list");
+    int courseNumber = 0;
+    courseNumber = getCourseNumber();
+    printTableHeader(courseNumber);
+    System.out.println(result.studentsWithCourse(result.courses.get(courseNumber - 1)));
+    service.endExecution();
+  }
+
+  private int getCourseNumber() {
+    int courseNumber = 0;
+    while (courseNumber < 1 || courseNumber > result.courses.size()) {
+      courseNumber = service.readInt("Please select a course name from the list");
     }
-    String formatString = "%-3s| %-" + 12 + "s| %-" + 12 + "s| %-" +
-        (result.courses.get(course - 1).length() + 2) + "s| %-" + 10 + "s";
+    return courseNumber;
+  }
+
+  private void printTableHeader(int courseNumber) {
+    String separator= "s| %-";
+    String formatString = "%-3s| %-" + 12 + separator + 12 + separator +
+        (result.courses.get(courseNumber - 1).length() + 2) + separator + 10 + "s";
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     stringJoiner.add(
         String.format(formatString, "ID", "First name", "Last name", "Course ",
@@ -45,8 +57,6 @@ public class FindStudentsWithCourse implements Menu {
         String.format(formatString, " ", " ", " ", " ", " ")
             .replace(' ', '-')
             .replace('|', '+'));
-    System.out.println(stringJoiner + System.lineSeparator() +
-        result.studentsWithCourse(result.courses.get(course - 1)));
-    settings.endExecution();
+    System.out.println(stringJoiner);
   }
 }

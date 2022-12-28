@@ -1,8 +1,7 @@
 package com.example.menu;
 
-import com.example.Settings;
+import com.example.Utility;
 import com.example.dao.GroupDao;
-import com.example.menu.MainMenu.SecondMenu;
 import com.example.model.Group;
 import java.sql.SQLException;
 import java.util.StringJoiner;
@@ -15,12 +14,12 @@ import org.springframework.stereotype.Component;
 @Order(1)
 public class FindAllGroups implements Menu {
 
-  private final Settings settings;
+  private final Utility service;
   private final GroupDao groupDao;
 
   @Autowired
-  public FindAllGroups(Settings settings, GroupDao groupDao) {
-    this.settings = settings;
+  public FindAllGroups(Utility service, GroupDao groupDao) {
+    this.service = service;
     this.groupDao = groupDao;
   }
 
@@ -31,15 +30,17 @@ public class FindAllGroups implements Menu {
 
   @Override
   public void executeMenu() throws SQLException {
-    int amount = settings.readInt("Please enter the number of students in the group ");
+    int studentNumber = service.readInt("Please enter the number of students in the group ");
+    printGroupsInfo(studentNumber);
+    service.endExecution();
+  }
+  private void printGroupsInfo(int studentNumber){
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     stringJoiner.add("Num| Groups");
     stringJoiner.add("---+-------");
-    stringJoiner.add(findGroups(amount));
+    stringJoiner.add(findGroups(studentNumber));
     System.out.println(stringJoiner);
-    settings.endExecution();
   }
-
   public String findGroups(int number) {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     for (Group group : groupDao.getGroupsByStudentCount(number)) {

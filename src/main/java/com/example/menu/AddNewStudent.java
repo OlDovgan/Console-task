@@ -1,8 +1,7 @@
 package com.example.menu;
 
-import com.example.Settings;
+import com.example.Utility;
 import com.example.dao.StudentDao;
-import com.example.menu.MainMenu.SecondMenu;
 import com.example.model.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -15,12 +14,12 @@ public class AddNewStudent implements Menu {
 
   private final StudentDao studentDao;
 
-  private final Settings settings;
+  private final Utility utility;
 
   @Autowired
-  public AddNewStudent(Settings settings, StudentDao studentDao) {
+  public AddNewStudent(Utility utility, StudentDao studentDao) {
     this.studentDao = studentDao;
-    this.settings = settings;
+    this.utility = utility;
   }
 
   @Override
@@ -30,7 +29,7 @@ public class AddNewStudent implements Menu {
 
   @Override
   public void executeMenu() {
-    String[] nameStudent = settings.
+    String[] nameStudent = utility.
         readString("Please enter name and surname of the student").split(" +");
     Student student = new Student();
     student.setFirstName(nameStudent[0]);
@@ -38,6 +37,6 @@ public class AddNewStudent implements Menu {
     studentDao.add(student);
     System.out.println(
         "Student " + nameStudent[0] + " " + nameStudent[1] + " has been successfully added");
-    settings.endExecution();
+    utility.endExecution();
   }
 }

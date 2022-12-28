@@ -1,42 +1,44 @@
-package com.example;
+package com.example.config;
 
 
+import com.example.Utility;
+import com.example.menu.FirstMenu;
 import com.example.menu.MainMenu;
-import com.example.menu.MainMenu.FirstMenu;
-import com.example.menu.MainMenu.SecondMenu;
 import com.example.menu.Menu;
+import com.example.menu.SecondMenu;
 import com.example.model.Course;
 import com.example.model.Group;
 import com.example.model.Student;
 import java.util.List;
 import java.util.Random;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 
-@SpringBootConfiguration
-@ComponentScan("com.example")
+@Configuration
 @PropertySource("classpath:application.properties")
+@PropertySource("classpath:application-task.properties")
 public class SpringConfig {
 
   @Bean
   public Random random() {
     return new Random();
   }
+
   @Bean
-  public BeanPropertyRowMapper<Student> mapperStud() {
+  public RowMapper<Student> mapperStudent() {
     return new BeanPropertyRowMapper<>(Student.class);
   }
 
   @Bean
-  public BeanPropertyRowMapper<Course> mapperCourse() {
+  public RowMapper<Course> mapperCourse() {
     return new BeanPropertyRowMapper<>(Course.class);
   }
 
   @Bean
-  public BeanPropertyRowMapper<Group> mapperGroup() {
+  public RowMapper<Group> mapperGroup() {
     return new BeanPropertyRowMapper<>(Group.class);
   }
 
@@ -46,12 +48,12 @@ public class SpringConfig {
   }
 
   @Bean
-  public MainMenu secondMenu(@SecondMenu List<Menu> items) {
+  public MainMenu secondMenu(@SecondMenu List<Menu> items ) {
     return createMenu(items);
   }
 
   private MainMenu createMenu(List<Menu> items) {
-    MainMenu menu = new MainMenu(new Settings());
+    MainMenu menu = new MainMenu(new Utility());
     items.forEach(menu::addMenuItem);
     return menu;
   }

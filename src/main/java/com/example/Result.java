@@ -25,7 +25,8 @@ public class Result {
     String groupName;
     String format =
         "%-3d| %-" + 12 + "s| %-" + 12 + "s| %-" + (courseName.length() + 2) + "s| %s";
-    for (Student stud : studentDao.getStudent()) {
+    for (Student stud : studentDao.getAll()) {
+      if(stud.getCourseList()!=null) {
       for (Course course : stud.getCourseList()) {
         if (course.getCourseName().equals(courseName)) {
           if (stud.getGroupName() == null) {
@@ -38,22 +39,23 @@ public class Result {
         }
       }
     }
+    }
     return stringJoiner.toString();
   }
 
   public String studentsWithOutCourse(int course) {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     String format = "%-" + 3 + "s| %-" + 12 + "s| %-" + 12 + "s";
-    for (Student stud : studentDao.getStudentWithOutCourse(course)) {
+    for (Student stud : studentDao.getWithOutCourse(course)) {
       stringJoiner.add(String.format(format, stud.getStudentId(), stud.getFirstName(),
           stud.getLastName()));
     }
     return stringJoiner.toString();
   }
 
-  public String studentsWhereCourseIsExists() {
+  public String getStudentsWhereCourseIsExists() {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
-    for (Student stud : studentDao.getStudentWithCourse()) {
+    for (Student stud : studentDao.getWithCourse()) {  //Не коректно працює
       stringJoiner.add(String.format(FORMAT, stud.getStudentId(), stud.getFirstName(),
           stud.getLastName()));
     }
@@ -61,25 +63,29 @@ public class Result {
   }
 
   public String studentInfoPrint() {
-    String separator = System.lineSeparator();
-    StringJoiner joiner = new StringJoiner(separator);
-    joiner.add(String.format(FORMAT, "ID", "Firs name", " Last name"));
-    joiner.add(String.format(FORMAT, "-", "-", " -")
-        .replace('|', '+')
-        .replace(' ', '-'));
-
-    for (Student st : studentDao.getStudent()) {
+    StringJoiner joiner = header();
+    for (Student st : studentDao.getAll()) {
       joiner.add(String.format(FORMAT, st.getStudentId(),
           st.getFirstName(), st.getLastName()));
     }
     return joiner.toString();
   }
 
-  public String studentsCourse(int studentId) {
+  private StringJoiner header() {
+    StringJoiner joiner = new StringJoiner(System.lineSeparator());
+    joiner.add(String.format(FORMAT, "ID", "Firs name", " Last name"));
+    joiner.add(String.format(FORMAT, "-", "-", " -")
+        .replace('|', '+')
+        .replace(' ', '-'));
+    return joiner;
+  }
+
+  public String getStudentsCourse(int studentId) {
     String separator = System.lineSeparator();
     StringJoiner joiner = new StringJoiner(separator);
     System.out.println("The action completed successfully" + separator);
-    for (Student st : studentDao.getStudent()) {
+
+    for (Student st : studentDao.getAll()) {
       if (st.getCourseList() != null && st.getStudentId() == studentId) {
         for (Course course : st.getCourseList()) {
           joiner.add(st.getStudentId() + " | " + st.getFirstName() + "  "
@@ -99,5 +105,4 @@ public class Result {
     }
     return joiner.toString();
   }
-
 }

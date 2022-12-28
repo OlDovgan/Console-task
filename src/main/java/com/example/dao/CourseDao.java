@@ -9,17 +9,19 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class CourseDao {
 
   private  JdbcTemplate jdbcTemplate;
-  private  BeanPropertyRowMapper<Course> mapper;
+
+  private  RowMapper<Course> mapper;
 
   @Autowired
   public CourseDao(JdbcTemplate jdbcTemplate,
-      @Qualifier("mapperCourse") BeanPropertyRowMapper<Course> mapper) {
+      @Qualifier("mapperCourse") RowMapper<Course> mapper) {
     this.jdbcTemplate = jdbcTemplate;
     this.mapper = mapper;
   }
@@ -44,7 +46,6 @@ public class CourseDao {
         }
     );
   }
-
   public List<Course> getAll() {
     return jdbcTemplate.query("SELECT * FROM courses ORDER BY course_id;",
         mapper);

@@ -1,10 +1,10 @@
 package com.example.model;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Getter
+@Data
 @Setter
 public class Group {
 
@@ -19,5 +19,8 @@ public class Group {
   }
 
   public Group() {
+  }
+  public Group(String groupName){
+    this.groupName=groupName;
   }
 }

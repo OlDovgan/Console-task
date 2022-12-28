@@ -1,9 +1,8 @@
 package com.example.menu;
 
 import com.example.Result;
-import com.example.Settings;
+import com.example.Utility;
 import com.example.dao.StudentDao;
-import com.example.menu.MainMenu.SecondMenu;
 import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -16,14 +15,14 @@ public class RemoveStudentFromCourse implements Menu {
 
   private final StudentDao studentDao;
   private static final String FORMAT = "%-" + 4 + "s| %-" + 12 + "s %-" + 12 + "s";
-  private final Settings setup;
+  private final Utility service;
   private final Result result;
 
   @Autowired
-  public RemoveStudentFromCourse(StudentDao studentDao, Result result, Settings setup) {
+  public RemoveStudentFromCourse(StudentDao studentDao, Result result, Utility service) {
     this.studentDao = studentDao;
     this.result = result;
-    this.setup = setup;
+    this.service = service;
   }
 
   @Override
@@ -33,18 +32,22 @@ public class RemoveStudentFromCourse implements Menu {
 
   @Override
   public void executeMenu() {
-    StringJoiner title = new StringJoiner(System.lineSeparator());
+    printTableHeader();
+    System.out.println(result.getStudentsWhereCourseIsExists());
+    int studentId = service.readInt("Please, select a student ID to delete the course");
+    System.out.println(result.getStudentsCourse(studentId));
+    int courseId = service.readInt("Please, select a course ID to delete");
+    studentDao.deleteFromCourse(studentId, courseId);
+    System.out.println(result.getStudentsCourse(studentId));
+    service.endExecution();
+  }
 
+  private void printTableHeader() {
+    StringJoiner title = new StringJoiner(System.lineSeparator());
     title.add(String.format(FORMAT, "ID", "Firs name", " Last name"));
     title.add(String.format(FORMAT, "-", "-", " -")
         .replace('|', '+')
         .replace(' ', '-'));
-    System.out.println(result.studentsWhereCourseIsExists());
-    int studentId = setup.readInt("Please, select a student ID to delete the course");
-    System.out.println(result.studentsCourse(studentId));
-    int courseId = setup.readInt("Please, select a course ID to delete");
-    studentDao.deleteStudentFromCourse(studentId, courseId);
-    System.out.println(result.studentsCourse(studentId));
-    setup.endExecution();
+    System.out.println(title);
   }
 }

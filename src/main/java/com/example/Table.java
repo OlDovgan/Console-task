@@ -13,8 +13,7 @@ public class Table {
   @Autowired
   private  JdbcTemplate jdbcTemplate;
 
-  public void create(String fileName)
-      throws IOException, URISyntaxException {
+  public void create(String fileName)  throws IOException, URISyntaxException {
     for (String strSql : String.join(" ", file.readFile(fileName)).split(";")) {
       jdbcTemplate.execute(strSql + ";");
     }

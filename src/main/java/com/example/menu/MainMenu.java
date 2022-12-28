@@ -1,16 +1,10 @@
 package com.example.menu;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import com.example.Settings;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import com.example.Utility;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -20,28 +14,14 @@ public class MainMenu implements Menu {
 
 
   private final List<Menu> childMenu = new ArrayList<>();
-  private Settings settings;
-
-  @Qualifier
-  @Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER})
-  @Retention(RUNTIME)
-  public @interface FirstMenu {
-
-  }
-
-  @Qualifier
-  @Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER})
-  @Retention(RUNTIME)
-  public @interface SecondMenu {
-
-  }
+  private Utility utility;
 
   @Autowired
-  public MainMenu(Settings settings) {
-    this.settings = settings;
+  public MainMenu(Utility utility) {
+    this.utility = utility;
   }
 
-  private MainMenu() {
+  public MainMenu() {
   }
 
   public void addMenuItem(Menu menu) {
@@ -63,7 +43,7 @@ public class MainMenu implements Menu {
   @Override
   public void executeMenu() throws SQLException {
     printMenu();
-    int menuItem = settings.readInt(childMenu.size());
+     int menuItem = utility.readInt(childMenu.size());
     childMenu.get(menuItem - 1).executeMenu();
     System.out.println("Please make your choice");
   }
