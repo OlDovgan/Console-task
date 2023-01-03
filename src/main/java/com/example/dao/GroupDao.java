@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -24,7 +23,6 @@ public class GroupDao {
     this.jdbcTemplate = jdbcTemplate;
     this.mapper = mapper;
   }
-public GroupDao(){}
   public void add(Group group) {
     jdbcTemplate.update("INSERT INTO groups (group_name) VALUES (?);", group.getGroupName());
   }

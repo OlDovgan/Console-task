@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,8 +28,6 @@ public class StudentDao {
   @Autowired
   @Qualifier("mapperStudent")
   private RowMapper<Student> mapper;
-  @Autowired
-  private RowMapper<Course> mapperCourse;
 
   public StudentDao(JdbcTemplate jdbcTemplate,
       RowMapper<Student> mapper,
@@ -45,9 +45,10 @@ public class StudentDao {
   }
 
   public void add(Student student) {
+String sql ="INSERT INTO students(group_id, first_name, last_name) VALUES(?,?,?);";
+    jdbcTemplate.update(sql, student.getGroupId(), student.getFirstName(), student.getLastName());
+    KeyHolder keyHolder = new GeneratedKeyHolder();
 
-    jdbcTemplate.update("INSERT INTO students(group_id, first_name, last_name) VALUES(?,?,?);",
-        student.getGroupId(), student.getFirstName(), student.getLastName());
     int id = jdbcTemplate.queryForObject(
         "SELECT MAX (student_id) FROM students ;", Integer.class);
     student.setStudentId(id);
@@ -56,8 +57,8 @@ public class StudentDao {
       for (Course course : student.getCourseList()) {
         studentsCoursesList.add(new Integer[]{student.getStudentId(), course.getCourseId()});
       }
-      String sql = "INSERT INTO students_courses (student_id, course_id ) VALUES (?,?);";
-      jdbcTemplate.batchUpdate(sql,
+      String sql1 = "INSERT INTO students_courses (student_id, course_id ) VALUES (?,?);";
+      jdbcTemplate.batchUpdate(sql1,
           new BatchPreparedStatementSetter() {
             public void setValues(PreparedStatement ps, int i) throws SQLException {
 

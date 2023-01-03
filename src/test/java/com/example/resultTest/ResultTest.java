@@ -29,12 +29,12 @@ class ResultTest {
   TestUtils utils;
   @Autowired
   Result result;
-  @Value("${table}")
-  private static String table;
+//  @Value("${table}")
+//  private static String table;
 
-  @Container
-  private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer<>()
-      .withInitScript(table);
+//  @Container
+//  private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer<>()
+//      .withInitScript(table);
 
   private final String separator = System.lineSeparator();
 

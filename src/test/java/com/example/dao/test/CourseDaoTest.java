@@ -8,11 +8,8 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
@@ -20,15 +17,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ActiveProfiles("Test")
 class CourseDaoTest {
 
-  @Value("${table}")
-  private static String table;
-  @Container
-  private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer<>()
-      .withInitScript(table);
   @Autowired
   CourseDao courseDao;
   @Autowired
   TestUtils utils;
+
   @Test
   void add_ShouldAddCourseToDB() {
     utils.clearData();
@@ -42,7 +35,9 @@ class CourseDaoTest {
     courseDao.add(course);
     Assertions.assertTrue(utils.isExistCourse(courseName, courseDescription));
   }
+
   List<Course> courseList = new ArrayList<>();
+
   @Test
   void add_ShouldAddCourseListToDB() {
     utils.clearData();
@@ -53,11 +48,10 @@ class CourseDaoTest {
     courseList.add(courseFirst);
     courseList.add(courseSecond);
     courseDao.add(courseList);
-    Assertions.assertEquals(courseList,utils.getCourseList());
+    Assertions.assertEquals(courseList, utils.getCourseList());
   }
 
   @Test
-
   void getAll_ShouldFindAllCoursesFromDB() {
     utils.clearData();
     Course courseFirst = new Course("Pascal", "Pascal");
@@ -67,6 +61,6 @@ class CourseDaoTest {
     courseList.add(courseFirst);
     courseList.add(courseSecond);
     courseDao.add(courseList);
-    Assertions.assertEquals(courseList,courseDao.getAll());
+    Assertions.assertEquals(courseList, courseDao.getAll());
   }
 }

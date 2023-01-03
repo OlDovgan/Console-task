@@ -11,21 +11,14 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
@@ -44,12 +37,6 @@ class StudentDaoTest {
   CourseDao courseDao;
   @Autowired
   Data testData;
-  @Value("${table}")
-  static
-  String table;
-  @Container
-  private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer<>()
-      .withInitScript(table);
 
   @BeforeEach
   void start() throws IOException, URISyntaxException {
@@ -57,14 +44,6 @@ class StudentDaoTest {
     testData.addAllData();
   }
 
-  @AfterEach
-  void end() {
-    utils.clearData();
-  }
-private  void ss() throws IOException, URISyntaxException {
-  utils.clearData();
-  testData.addAllData();
-}
   @Test
   void add_ShouldAddStudentToDB()  {
 

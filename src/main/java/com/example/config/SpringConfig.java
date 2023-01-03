@@ -18,8 +18,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 
 @Configuration
-@PropertySource("classpath:application.properties")
-@PropertySource("classpath:application-task.properties")
 public class SpringConfig {
 
   @Bean
@@ -48,12 +46,17 @@ public class SpringConfig {
   }
 
   @Bean
-  public MainMenu secondMenu(@SecondMenu List<Menu> items ) {
+  public MainMenu secondMenu(@SecondMenu List<Menu> items) {
     return createMenu(items);
   }
 
+  @Bean
+  public Utility utility() {
+    return new Utility();
+  }
+
   private MainMenu createMenu(List<Menu> items) {
-    MainMenu menu = new MainMenu(new Utility());
+    MainMenu menu = new MainMenu(utility());
     items.forEach(menu::addMenuItem);
     return menu;
   }

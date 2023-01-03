@@ -5,9 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -20,12 +18,10 @@ public class CourseDao {
   private  RowMapper<Course> mapper;
 
   @Autowired
-  public CourseDao(JdbcTemplate jdbcTemplate,
-      @Qualifier("mapperCourse") RowMapper<Course> mapper) {
+  public CourseDao(JdbcTemplate jdbcTemplate,RowMapper<Course> mapper) {
     this.jdbcTemplate = jdbcTemplate;
     this.mapper = mapper;
   }
-  public CourseDao() {}
 
   public void add(Course course) {
     jdbcTemplate.update("INSERT INTO courses (course_name,course_description) VALUES (?,?);",

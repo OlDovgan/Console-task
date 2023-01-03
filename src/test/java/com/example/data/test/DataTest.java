@@ -28,6 +28,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ActiveProfiles("Test")
 @TestInstance(Lifecycle.PER_CLASS)
 class DataTest {
+
   @Autowired
   private Data data;
   @Autowired
@@ -38,18 +39,16 @@ class DataTest {
   private String groupsTest;
 
   private final String separator = System.lineSeparator();
-  @Value("${table}")
-  private static String table;
+//  @Value("${table}")
+//  private static String table;
   @Autowired
   TestUtils utils;
 
-  @Container
-  private static final PostgreSQLContainer postgreSQLContainer =new PostgreSQLContainer<>()
-      .withInitScript(table);
+  DataTest() {
+  }
 
   @BeforeAll
   void start() throws IOException, URISyntaxException {
-    utils.clearData();
     data.addAllData();
   }
 

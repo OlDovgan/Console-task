@@ -3,7 +3,6 @@ package com.example;
 import java.util.Scanner;
 import org.springframework.stereotype.Component;
 
-@Component
 public class Utility {
 
   public final Scanner scanner = new Scanner(System.in);
