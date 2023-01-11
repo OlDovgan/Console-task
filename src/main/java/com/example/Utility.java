@@ -1,7 +1,6 @@
 package com.example;
 
 import java.util.Scanner;
-import org.springframework.stereotype.Component;
 
 public class Utility {
 

@@ -9,8 +9,6 @@ import com.example.model.Student;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashSet;
@@ -25,7 +23,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -56,31 +53,23 @@ public class Data {
   private String studentsCoursesMin;
   @Value("${students-courses-max}")
   private String studentsCoursesMax;
-  private Random random;
 
-  private GroupDao groupDao;
-
-  private CourseDao courseDao;
-
-  private StudentDao studentDao;
-
-  private FileReader fileReader;
-  int studentsWithGroup = 0;
+  Random random;
   @Autowired
-  JdbcTemplate jdbcTemplate;
-
+  GroupDao groupDao;
   @Autowired
-  public Data(Random random, GroupDao groupDao, CourseDao courseDao, StudentDao studentDao,
-      FileReader fileReader) {
+  CourseDao courseDao;
+  @Autowired
+  StudentDao studentDao;
+  @Autowired
+  FileReader fileReader;
+  private int studentsWithGroup;
+  @Autowired
+  public Data(Random random) {
     this.random = random;
-    this.groupDao = groupDao;
-    this.courseDao = courseDao;
-    this.studentDao = studentDao;
-    this.fileReader = fileReader;
   }
 
-
-  public final int randomInt(Random random, int origin, int bound) {
+  public  int randomInt(Random random, int origin, int bound) {
     if (origin >= bound) {
       throw new IllegalArgumentException();
     }
@@ -143,7 +132,6 @@ public class Data {
 
   private List<Student> createStudentsList()
       throws IOException, URISyntaxException {
-
     String[] firstNames = fileReader.readFile(fileFirstName)
         .toArray(new String[]{});
     String[] lastNames = fileReader.readFile(fileLastName)
@@ -151,12 +139,12 @@ public class Data {
     Set<Integer> set = setGroupId();
     List<Student> studentListWithGroup = createStudentListWithGroup(set, firstNames, lastNames);
     List<Student> studentListWithoutGroup = createStudentListWithoutGroup(firstNames, lastNames);
-    List<Student> studentList = Stream.concat(studentListWithGroup.stream(),
+
+    return Stream.concat(studentListWithGroup.stream(),
         studentListWithoutGroup.stream()).toList();
-    return studentList;
   }
 
-  private Set<Integer> setGroupId() {
+  public Set<Integer> setGroupId() {
     List<Integer> groupsId = new ArrayList<>();
     for (Group group : groupDao.getAll()) {
       groupsId.add(group.getGroupId());
@@ -168,8 +156,10 @@ public class Data {
     return groupsIdSet;
   }
 
+
   private List<Student> createStudentListWithGroup(Set<Integer> set, String[] firstNames,
       String[] lastNames) {
+    studentsWithGroup = 0;
     int studTotal = Integer.valueOf(studentsTotalNumber);
     List<Student> studentList = new ArrayList<>();
 
@@ -184,6 +174,11 @@ public class Data {
         student.setGroupId(d);
         student.setFirstName(firstNames[randomInt(random, 0, firstNames.length - 1)]);
         student.setLastName(lastNames[randomInt(random, 0, lastNames.length - 1)]);
+        for (Group group: groupDao.getAll()) {
+          if (group.getGroupId() == d) {
+            student.setGroupName(group.getGroupName());
+          }
+        }
         studentList.add(student);
         studentsWithGroup++;
         i++;
@@ -205,12 +200,11 @@ public class Data {
   }
 
   private List<Student> createStudentsCourseList() {
-    List<Student> studentListFromDB = studentDao.getAll();
     List<Course> courseList = courseDao.getAll();
     BitSet bitSet = new BitSet(Integer.valueOf(coursesNumber));
     List<Student> studentListNew = new ArrayList<>();
 
-    for (Student student : studentListFromDB) {
+    for (Student student : studentDao.getAll()) {
       List<Course> courseListAfterAdditionCourses = new ArrayList<>();
       int k = randomInt(random, Integer.valueOf(studentsCoursesMin),
           Integer.valueOf(studentsCoursesMax));
@@ -224,6 +218,7 @@ public class Data {
           i++;
           courseListAfterAdditionCourses.add(courseList.get(course - 1));
         }
+
       }
       student.setCourseList(courseListAfterAdditionCourses);
       studentListNew.add(student);
@@ -231,36 +226,10 @@ public class Data {
     return studentListNew;
   }
 
-  private void addStudentsCourseList(List<Student> studentsList) {
-    List<Integer[]> arr = new ArrayList<>();
-    for (Student student : studentsList) {
-      if (student.getCourseList() != null) {
-        for (Course course : student.getCourseList()) {
-          arr.add(new Integer[]{student.getStudentId(), course.getCourseId()});
-        }
-
-      }
-
-    }
-    String sql = "INSERT INTO students_courses (student_id, course_id ) VALUES (?,?);";
-    jdbcTemplate.batchUpdate(sql,
-        new BatchPreparedStatementSetter() {
-          public void setValues(PreparedStatement ps, int i) throws SQLException {
-
-            ps.setInt(1, arr.get(i)[0]);
-            ps.setInt(2, arr.get(i)[1]);
-          }
-
-          public int getBatchSize() {
-            return arr.size();
-          }
-        });
-  }
-
   public void addAllData() throws IOException, URISyntaxException {
     groupDao.add(createGroupsList());
     courseDao.add(createCoursesList());
     studentDao.add(createStudentsList());
-    addStudentsCourseList(createStudentsCourseList());
+    studentDao.addStudentsCourse(createStudentsCourseList());
   }
 }

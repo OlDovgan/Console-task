@@ -19,8 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
@@ -30,17 +28,15 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 class DataTest {
 
   @Autowired
-  private Data data;
+  Data data;
   @Autowired
-  private JdbcTemplate jdbcTemplate;
+  JdbcTemplate jdbcTemplate;
   @Value("${courses}")
   private String coursesTest;
   @Value("${groups}")
   private String groupsTest;
 
   private final String separator = System.lineSeparator();
-//  @Value("${table}")
-//  private static String table;
   @Autowired
   TestUtils utils;
 

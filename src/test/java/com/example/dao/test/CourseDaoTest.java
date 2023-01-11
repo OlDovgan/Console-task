@@ -6,6 +6,7 @@ import com.example.model.Course;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,26 +22,24 @@ class CourseDaoTest {
   CourseDao courseDao;
   @Autowired
   TestUtils utils;
-
+  @BeforeEach
+  void start() {
+    utils.clearData();
+  }
   @Test
   void add_ShouldAddCourseToDB() {
-    utils.clearData();
-    Course course = new Course();
     String courseName = "Java";
     String courseDescription = "Java -  is a high-level, class-based,"
         + " object-oriented programming language that is designed to have "
         + "as few implementation dependencies as possible.";
-    course.setCourseName(courseName);
-    course.setCourseDescription(courseDescription);
+    Course course = new Course(courseName,courseDescription);
     courseDao.add(course);
     Assertions.assertTrue(utils.isExistCourse(courseName, courseDescription));
   }
-
   List<Course> courseList = new ArrayList<>();
 
   @Test
   void add_ShouldAddCourseListToDB() {
-    utils.clearData();
     Course courseFirst = new Course("Pascal", "Pascal");
     courseFirst.setCourseId(1);
     Course courseSecond = new Course("Python", "Python");
@@ -53,7 +52,6 @@ class CourseDaoTest {
 
   @Test
   void getAll_ShouldFindAllCoursesFromDB() {
-    utils.clearData();
     Course courseFirst = new Course("Pascal", "Pascal");
     courseFirst.setCourseId(1);
     Course courseSecond = new Course("Python", "Python");

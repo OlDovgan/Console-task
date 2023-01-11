@@ -8,7 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
-public class MainApplication {
+public class
+    MainApplication {
 
   public static void main(String[] args) throws SQLException {
     ApplicationContext context = SpringApplication.run(MainApplication.class, args);

@@ -25,8 +25,7 @@ public class Result {
     String groupName;
     String format =
         "%-3d| %-" + 12 + "s| %-" + 12 + "s| %-" + (courseName.length() + 2) + "s| %s";
-    for (Student stud : studentDao.getAll()) {
-      if(stud.getCourseList()!=null) {
+    for (Student stud : studentDao.getWithCourse()) {
       for (Course course : stud.getCourseList()) {
         if (course.getCourseName().equals(courseName)) {
           if (stud.getGroupName() == null) {
@@ -38,7 +37,6 @@ public class Result {
               stud.getLastName(), course.getCourseName(), groupName));
         }
       }
-    }
     }
     return stringJoiner.toString();
   }
@@ -55,7 +53,7 @@ public class Result {
 
   public String getStudentsWhereCourseIsExists() {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
-    for (Student stud : studentDao.getWithCourse()) {  //Не коректно працює
+    for (Student stud : studentDao.getWithCourse()) {
       stringJoiner.add(String.format(FORMAT, stud.getStudentId(), stud.getFirstName(),
           stud.getLastName()));
     }

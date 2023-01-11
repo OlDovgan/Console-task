@@ -12,10 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
@@ -29,13 +26,6 @@ class ResultTest {
   TestUtils utils;
   @Autowired
   Result result;
-//  @Value("${table}")
-//  private static String table;
-
-//  @Container
-//  private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer<>()
-//      .withInitScript(table);
-
   private final String separator = System.lineSeparator();
 
   @BeforeAll
@@ -88,9 +78,9 @@ class ResultTest {
 
   @Test
   void studentsCourse_ShouldFindStudentsCourse() {
-    String expect = "1 | Bonnie  Stone |  5 |  Informatics" + separator
+    String expect = "1 | Bonnie  Stone |  3 |  History" + separator
         + "1 | Bonnie  Stone |  4 |  Probability theory" + separator
-        + "1 | Bonnie  Stone |  3 |  History";
+        + "1 | Bonnie  Stone |  5 |  Informatics";
     Assertions.assertEquals(expect, result.getStudentsCourse(1));
   }
 

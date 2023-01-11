@@ -6,6 +6,7 @@ import com.example.model.Group;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,10 +22,12 @@ class GroupDaoTest {
   @Autowired
   GroupDao groupDao;
   List<Group> groupList = new ArrayList<>();
-
+  @BeforeEach
+  void start() {
+    utils.clearData();
+  }
   @Test
   void add_ShouldAddGroupToDB() {
-    utils.clearData();
     Group group = new Group(10,"FR-t6");
     groupDao.add(group);
     Assertions.assertTrue(utils.isExistGroup(group.getGroupName()));
@@ -32,7 +35,6 @@ class GroupDaoTest {
 
   @Test
   void add_ShouldAddGroupListToDB() {
-    utils.clearData();
     Group firstGroup = new Group();
     firstGroup.setGroupName("FR-05");
     firstGroup.setGroupId(1);
@@ -48,7 +50,6 @@ class GroupDaoTest {
 
   @Test
   void getAll_ShouldFindAllGroupsFromDB() {
-    utils.clearData();
     Group firstGroup = new Group();
     firstGroup.setGroupName("FR-05");
     firstGroup.setGroupId(1);
