@@ -14,7 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
-@SpringBootTest(classes = CourseDaoTestConfig.class)
+@SpringBootTest()
 @ActiveProfiles("Test")
 class CourseDaoTest {
 
@@ -36,10 +36,11 @@ class CourseDaoTest {
     courseDao.add(course);
     Assertions.assertTrue(utils.isExistCourse(courseName, courseDescription));
   }
-  List<Course> courseList = new ArrayList<>();
+
 
   @Test
   void add_ShouldAddCourseListToDB() {
+    List<Course> courseList = new ArrayList<>();
     Course courseFirst = new Course("Pascal", "Pascal");
     courseFirst.setCourseId(1);
     Course courseSecond = new Course("Python", "Python");
@@ -52,6 +53,7 @@ class CourseDaoTest {
 
   @Test
   void getAll_ShouldFindAllCoursesFromDB() {
+    List<Course> courseList = new ArrayList<>();
     Course courseFirst = new Course("Pascal", "Pascal");
     courseFirst.setCourseId(1);
     Course courseSecond = new Course("Python", "Python");

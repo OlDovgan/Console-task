@@ -21,8 +21,9 @@ public class StudentDaoTestConfig {
   }
 
   @Bean
+  @Primary
   @Scope("prototype")
-  public Data dataTest() {
+  public Data data() {
     return new Data(randomTest());
   }
 }

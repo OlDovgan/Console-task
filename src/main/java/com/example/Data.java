@@ -54,15 +54,15 @@ public class Data {
   @Value("${students-courses-max}")
   private String studentsCoursesMax;
 
-  Random random;
+  private Random random;
   @Autowired
-  GroupDao groupDao;
+  private GroupDao groupDao;
   @Autowired
-  CourseDao courseDao;
+  private CourseDao courseDao;
   @Autowired
-  StudentDao studentDao;
+  private StudentDao studentDao;
   @Autowired
-  FileReader fileReader;
+  private FileReader fileReader;
   private int studentsWithGroup;
   @Autowired
   public Data(Random random) {

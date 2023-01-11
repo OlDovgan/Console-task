@@ -14,7 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
-@SpringBootTest(classes =GroupTestConfig.class)
+@SpringBootTest()
 @ActiveProfiles("Test")
 class GroupDaoTest {
   @Autowired
