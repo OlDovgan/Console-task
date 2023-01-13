@@ -3,7 +3,11 @@ package com.example.menu;
 
 import com.example.Result;
 import com.example.Utility;
+import com.example.dao.CourseDao;
 import com.example.dao.StudentDao;
+import com.example.model.Student;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -15,6 +19,9 @@ import org.springframework.stereotype.Component;
 public class AddStudentToCourse implements Menu {
 
   private final StudentDao studentDao;
+
+  @Autowired
+  private  CourseDao courseDao;
 
   private final String separator = System.lineSeparator();
   private final Utility service;
@@ -38,15 +45,27 @@ public class AddStudentToCourse implements Menu {
     int courseNumber = getCourseNumber();
     printTableHeader();
     printInfo(courseNumber);
-    int studId = service.readInt("Please, select a student ID to add to course of "
-        + result.courses.get(courseNumber - 1));
-    studentDao.addStudentsCourse(studId, courseNumber);
+    int studId = getStudentIdWithOutCourse(courseNumber);
+    studentDao.addStudentsCourse(getStudentIdWithOutCourse(courseNumber), courseNumber);
     System.out.println(result.getStudentsCourse(studId));
     service.endExecution();
   }
+  private int getStudentIdWithOutCourse(int courseNumber) {
+    int studId =0;
+    List<Integer> studIdList = new ArrayList<>();
+    for (Student student: studentDao.getWithOutCourse(courseNumber)) {
+      studIdList.add(student.getId());
+    }
+    while (!studIdList.contains(studId)) {
+      studId = service.readInt("Please, select a student ID to add to course of "
+          + result.courses.get(courseNumber - 1));
+    }
+    return studId;
+  }
   private int getCourseNumber() {
     int courseNumber = 0;
-    while (courseNumber < 1 || courseNumber > result.courses.size()) {
+  //  while (courseNumber < 1 || courseNumber > result.courses.size()) {
+    while (courseNumber < 1 || courseNumber > courseDao.getAll().size()) {
       courseNumber = service.readInt(
           "Please, select the course you want to add the student to" + separator);
     }

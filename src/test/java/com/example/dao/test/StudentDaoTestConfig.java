@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 
 @TestConfiguration
-@PropertySource("classpath:application-test.properties")
+@PropertySource("classpath:generation.properties")
 public class StudentDaoTestConfig {
 
   @Bean

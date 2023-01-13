@@ -23,13 +23,11 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 
 @Service
-@PropertySource("classpath:application.properties")
-@PropertySource("classpath:application-task.properties")
+@PropertySource("classpath:generation.properties")
 public class Data {
 
   @Value("${groups}")
@@ -147,7 +145,7 @@ public class Data {
   public Set<Integer> setGroupId() {
     List<Integer> groupsId = new ArrayList<>();
     for (Group group : groupDao.getAll()) {
-      groupsId.add(group.getGroupId());
+      groupsId.add(group.getId());
     }
     Set<Integer> groupsIdSet = new HashSet<>();
     for (int i = 0; i < groupsId.size(); i++) {
@@ -175,8 +173,8 @@ public class Data {
         student.setFirstName(firstNames[randomInt(random, 0, firstNames.length - 1)]);
         student.setLastName(lastNames[randomInt(random, 0, lastNames.length - 1)]);
         for (Group group: groupDao.getAll()) {
-          if (group.getGroupId() == d) {
-            student.setGroupName(group.getGroupName());
+          if (group.getId() == d) {
+            student.setGroupName(group.getName());
           }
         }
         studentList.add(student);
@@ -220,7 +218,7 @@ public class Data {
         }
 
       }
-      student.setCourseList(courseListAfterAdditionCourses);
+      student.setCourse(courseListAfterAdditionCourses);
       studentListNew.add(student);
     }
     return studentListNew;

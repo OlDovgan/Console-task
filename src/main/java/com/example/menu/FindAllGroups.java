@@ -44,7 +44,7 @@ public class FindAllGroups implements Menu {
   public String findGroups(int number) {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     for (Group group : groupDao.getGroupsByStudentCount(number)) {
-      stringJoiner.add(group.getNumberStudent() + " | " + group.getGroupName());
+      stringJoiner.add(group.getNumberStudent() + " | " + group.getName());
     }
     return stringJoiner.toString();
   }

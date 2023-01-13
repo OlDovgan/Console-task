@@ -1,7 +1,6 @@
 package com.example.extra;
 
 
-import com.example.dao.GroupDao;
 import com.example.model.Course;
 import com.example.model.Group;
 import com.example.model.Student;
@@ -100,7 +99,7 @@ public class TestUtils {
     student.setGroupId(groupId);
     student.setFirstName(firstName);
     student.setLastName(lastName);
-    student.setCourseList(courseList);
+    student.setCourse(courseList);
     String str = jdbcTemplate.queryForObject(
         "SELECT group_name FROM groups WHERE group_id = ? ", new Object[]{student.getGroupId()},
         String.class);

@@ -1,6 +1,8 @@
 package com.example.dao;
 
 
+import com.example.mapper.CourseMapper;
+import com.example.mapper.StudentMapper;
 import com.example.model.Course;
 import com.example.model.Student;
 import java.sql.PreparedStatement;
@@ -19,21 +21,20 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class StudentDao {
 
-  @Autowired
-  private GroupDao groupDao;
-  @Autowired
-  private CourseDao courseDao;
-  @Autowired
-  private JdbcTemplate jdbcTemplate;
-  @Autowired
-  @Qualifier("mapperStudent")
-  private RowMapper<Student> mapperStudent;
-  @Autowired
-  @Qualifier("mapperCourse")
-  private RowMapper<Course> mapperCourse;
 
+  private GroupDao groupDao;
+
+  private CourseDao courseDao;
+
+  private JdbcTemplate jdbcTemplate;
+
+  private StudentMapper mapperStudent;
+  @Autowired
+  private CourseMapper mapperCourse;
+
+  @Autowired
   public StudentDao(JdbcTemplate jdbcTemplate,
-      RowMapper<Student> mapperStudent,
+      StudentMapper mapperStudent,
       CourseDao courseDao, GroupDao groupDao) {
     this.groupDao = groupDao;
     this.courseDao = courseDao;
@@ -62,13 +63,15 @@ public class StudentDao {
     }, keyHolder);
     return (int) keyHolder.getKey();
   }
+
   String sqlInsertToStudCourses = "INSERT INTO students_courses (student_id, course_id ) VALUES (?,?);";
+
   public void add(Student student) {
-    student.setStudentId(keyId(student));
+    student.setId(keyId(student));
     List<Integer[]> studentsCoursesList = new ArrayList<>();
-    if (student.getCourseList() != null) {
-      for (Course course : student.getCourseList()) {
-        studentsCoursesList.add(new Integer[]{student.getStudentId(), course.getCourseId()});
+    if (student.getCourse() != null) {
+      for (Course course : student.getCourse()) {
+        studentsCoursesList.add(new Integer[]{student.getId(), course.getId()});
       }
       jdbcTemplate.batchUpdate(sqlInsertToStudCourses,
           new BatchPreparedStatementSetter() {
@@ -86,21 +89,17 @@ public class StudentDao {
   }
 
   public void addStudentsCourse(int studentId, int courseId) {
-
     List<Student> studentList = getWithOutCourse(courseId);
-    for (Student stud : studentList) {
-      if (stud.getStudentId() == studentId) {
-        jdbcTemplate.update(sqlInsertToStudCourses, studentId, courseId);
-      }
-    }
+    String sql = "INSERT INTO students_courses (student_id, course_id ) VALUES (?,?);";
+    jdbcTemplate.update(sqlInsertToStudCourses, studentId, courseId);
   }
 
   public void addStudentsCourse(List<Student> studentsList) {
-    List<Integer[]> arr = new ArrayList<>();
+    List<Integer[]> list = new ArrayList<>();
     for (Student student : studentsList) {
-      if (student.getCourseList() != null) {
-        for (Course course : student.getCourseList()) {
-          arr.add(new Integer[]{student.getStudentId(), course.getCourseId()});
+      if (student.getCourse() != null) {
+        for (Course course : student.getCourse()) {
+          list.add(new Integer[]{student.getId(), course.getId()});
         }
       }
     }
@@ -110,12 +109,12 @@ public class StudentDao {
         new BatchPreparedStatementSetter() {
           public void setValues(PreparedStatement ps, int i) throws SQLException {
 
-            ps.setInt(1, arr.get(i)[0]);
-            ps.setInt(2, arr.get(i)[1]);
+            ps.setInt(1, list.get(i)[0]);
+            ps.setInt(2, list.get(i)[1]);
           }
 
           public int getBatchSize() {
-            return arr.size();
+            return list.size();
           }
         });
 
@@ -129,7 +128,7 @@ public class StudentDao {
     List<Student> studentListNew = new ArrayList<>();
     for (Student student : studentListFromTableStudents) {
       setStudentsGroup(student);
-      student.setCourseList(getStudentsCourseByStudentId(student.getStudentId()));
+      student.setCourse(getStudentsCourseByStudentId(student.getId()));
       studentListNew.add(student);
     }
     return studentListNew;
@@ -140,7 +139,7 @@ public class StudentDao {
     List<Student> studentListNew = new ArrayList<>();
     for (Student student : studentList) {
       setStudentsGroup(student);
-      student.setCourseList(getStudentsCourseByStudentId(student.getStudentId()));
+      student.setCourse(getStudentsCourseByStudentId(student.getId()));
       studentListNew.add(student);
     }
     return studentListNew;

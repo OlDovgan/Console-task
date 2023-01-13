@@ -7,11 +7,11 @@ import lombok.Data;
 @Data
 public class Student {
 
-  private int studentId;
+  private int id;
   private int groupId;
   private String firstName;
   private String lastName;
-  private List<Course> courseList= new ArrayList<>();
+  private List<Course> course = new ArrayList<>();
   private String groupName;
 
 }

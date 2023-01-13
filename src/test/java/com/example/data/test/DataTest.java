@@ -2,6 +2,7 @@ package com.example.data.test;
 
 import com.example.Data;
 import com.example.extra.TestUtils;
+import com.example.mapper.StudentMapper;
 import com.example.model.Student;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -38,7 +39,9 @@ class DataTest {
 
   private final String separator = System.lineSeparator();
   @Autowired
-  TestUtils utils;
+  private TestUtils utils;
+  @Autowired
+  private StudentMapper mapper;
 
   DataTest() {
   }
@@ -65,10 +68,10 @@ class DataTest {
 
     List<Student> studentList =
         jdbcTemplate.query("SELECT * FROM students;",
-            new BeanPropertyRowMapper<>(Student.class));
+            mapper);
     for (Student stud : studentList) {
       stringJoiner.add(String.format("%d|%d|%s|%s",
-          stud.getStudentId(),
+          stud.getId(),
           stud.getGroupId(),
           stud.getFirstName(),
           stud.getLastName()));

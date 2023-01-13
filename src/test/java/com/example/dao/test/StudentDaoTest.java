@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -69,15 +68,15 @@ class StudentDaoTest {
     String description = " Mathematics is the science that deals with the logic of shape, "
         + "quantity and arrangement";
     Course course = new Course("Maths", description);
-    course.setCourseId(1);
+    course.setId(1);
     courses.add(course);
     Student student = new Student();
-    student.setStudentId(4);
+    student.setId(4);
     student.setGroupId(4);
     student.setFirstName("Marie");
     student.setLastName("Zimmerman");
     student.setGroupName("cP-50");
-    student.setCourseList(courses);
+    student.setCourse(courses);
     List<Student> studentListExpect = new ArrayList<>();
     studentListExpect.add(student);
     Assertions.assertEquals(studentListExpect, studentDao.getWithOutCourse(5));
@@ -90,7 +89,7 @@ class StudentDaoTest {
     studentDao.add(studentList);
     List<Student> studentListExpect = new ArrayList<>();
     for (Student student : studentList) {
-      if (!student.getCourseList().isEmpty() || student.getCourseList() == null) {
+      if (!student.getCourse().isEmpty() || student.getCourse() == null) {
         studentListExpect.add(student);
       }
     }

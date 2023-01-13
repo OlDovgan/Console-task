@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 
 @TestConfiguration
-@PropertySource("classpath:application-test.properties")
+@PropertySource("classpath:generation.properties")
 public class ResultTestConfig {
 
   @Bean

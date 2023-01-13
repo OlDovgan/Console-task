@@ -1,37 +1,35 @@
 package com.example.dao;
 
+import com.example.mapper.GroupMapper;
 import com.example.model.Group;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class GroupDao {
 
   private  JdbcTemplate jdbcTemplate;
-  private RowMapper<Group> mapper;
+  private GroupMapper mapper;
 
   @Autowired
-  public GroupDao(JdbcTemplate jdbcTemplate,
-      @Qualifier("mapperGroup") RowMapper<Group> mapper) {
+  public GroupDao(JdbcTemplate jdbcTemplate, GroupMapper mapper) {
     this.jdbcTemplate = jdbcTemplate;
     this.mapper = mapper;
   }
   public void add(Group group) {
-    jdbcTemplate.update("INSERT INTO groups (group_name) VALUES (?);", group.getGroupName());
+    jdbcTemplate.update("INSERT INTO groups (group_name) VALUES (?);", group.getName());
   }
 
   public void add(List<Group> groupList) {
     jdbcTemplate.batchUpdate("INSERT INTO groups (group_name) VALUES (?);",
         new BatchPreparedStatementSetter() {
           public void setValues(PreparedStatement ps, int i) throws SQLException {
-            ps.setString(1, groupList.get(i).getGroupName());
+            ps.setString(1, groupList.get(i).getName());
           }
 
           public int getBatchSize() {

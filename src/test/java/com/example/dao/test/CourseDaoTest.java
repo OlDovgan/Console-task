@@ -42,9 +42,9 @@ class CourseDaoTest {
   void add_ShouldAddCourseListToDB() {
     List<Course> courseList = new ArrayList<>();
     Course courseFirst = new Course("Pascal", "Pascal");
-    courseFirst.setCourseId(1);
+    courseFirst.setId(1);
     Course courseSecond = new Course("Python", "Python");
-    courseSecond.setCourseId(2);
+    courseSecond.setId(2);
     courseList.add(courseFirst);
     courseList.add(courseSecond);
     courseDao.add(courseList);
@@ -55,9 +55,9 @@ class CourseDaoTest {
   void getAll_ShouldFindAllCoursesFromDB() {
     List<Course> courseList = new ArrayList<>();
     Course courseFirst = new Course("Pascal", "Pascal");
-    courseFirst.setCourseId(1);
+    courseFirst.setId(1);
     Course courseSecond = new Course("Python", "Python");
-    courseSecond.setCourseId(2);
+    courseSecond.setId(2);
     courseList.add(courseFirst);
     courseList.add(courseSecond);
     courseDao.add(courseList);

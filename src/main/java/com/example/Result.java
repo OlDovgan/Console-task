@@ -26,15 +26,15 @@ public class Result {
     String format =
         "%-3d| %-" + 12 + "s| %-" + 12 + "s| %-" + (courseName.length() + 2) + "s| %s";
     for (Student stud : studentDao.getWithCourse()) {
-      for (Course course : stud.getCourseList()) {
-        if (course.getCourseName().equals(courseName)) {
+      for (Course course : stud.getCourse()) {
+        if (course.getName().equals(courseName)) {
           if (stud.getGroupName() == null) {
             groupName = "without a group";
           } else {
             groupName = stud.getGroupName();
           }
-          stringJoiner.add(String.format(format, stud.getStudentId(), stud.getFirstName(),
-              stud.getLastName(), course.getCourseName(), groupName));
+          stringJoiner.add(String.format(format, stud.getId(), stud.getFirstName(),
+              stud.getLastName(), course.getName(), groupName));
         }
       }
     }
@@ -45,7 +45,7 @@ public class Result {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     String format = "%-" + 3 + "s| %-" + 12 + "s| %-" + 12 + "s";
     for (Student stud : studentDao.getWithOutCourse(course)) {
-      stringJoiner.add(String.format(format, stud.getStudentId(), stud.getFirstName(),
+      stringJoiner.add(String.format(format, stud.getId(), stud.getFirstName(),
           stud.getLastName()));
     }
     return stringJoiner.toString();
@@ -54,7 +54,7 @@ public class Result {
   public String getStudentsWhereCourseIsExists() {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     for (Student stud : studentDao.getWithCourse()) {
-      stringJoiner.add(String.format(FORMAT, stud.getStudentId(), stud.getFirstName(),
+      stringJoiner.add(String.format(FORMAT, stud.getId(), stud.getFirstName(),
           stud.getLastName()));
     }
     return stringJoiner.toString();
@@ -63,7 +63,7 @@ public class Result {
   public String studentInfoPrint() {
     StringJoiner joiner = header();
     for (Student st : studentDao.getAll()) {
-      joiner.add(String.format(FORMAT, st.getStudentId(),
+      joiner.add(String.format(FORMAT, st.getId(),
           st.getFirstName(), st.getLastName()));
     }
     return joiner.toString();
@@ -84,11 +84,11 @@ public class Result {
     System.out.println("The action completed successfully" + separator);
 
     for (Student st : studentDao.getAll()) {
-      if (st.getCourseList() != null && st.getStudentId() == studentId) {
-        for (Course course : st.getCourseList()) {
-          joiner.add(st.getStudentId() + " | " + st.getFirstName() + "  "
-              + st.getLastName() + " |  " + course.getCourseId() + " |  "
-              + course.getCourseName());
+      if (st.getCourse() != null && st.getId() == studentId) {
+        for (Course course : st.getCourse()) {
+          joiner.add(st.getId() + " | " + st.getFirstName() + "  "
+              + st.getLastName() + " |  " + course.getId() + " |  "
+              + course.getName());
         }
       }
     }
@@ -98,8 +98,8 @@ public class Result {
   public String coursesInfo() {
     StringJoiner joiner = new StringJoiner(System.lineSeparator());
     for (Course course : courseDao.getAll()) {
-      joiner.add(course.getCourseId() + ". " + course.getCourseName());
-      courses.add(course.getCourseName());
+      joiner.add(course.getId() + ". " + course.getName());
+      courses.add(course.getName());
     }
     return joiner.toString();
   }

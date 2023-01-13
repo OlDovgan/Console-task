@@ -30,17 +30,17 @@ class GroupDaoTest {
   void add_ShouldAddGroupToDB() {
     Group group = new Group(10,"FR-t6");
     groupDao.add(group);
-    Assertions.assertTrue(utils.isExistGroup(group.getGroupName()));
+    Assertions.assertTrue(utils.isExistGroup(group.getName()));
   }
 
   @Test
   void add_ShouldAddGroupListToDB() {
     Group firstGroup = new Group();
-    firstGroup.setGroupName("FR-05");
-    firstGroup.setGroupId(1);
+    firstGroup.setName("FR-05");
+    firstGroup.setId(1);
     Group secondGroup = new Group();
-    secondGroup.setGroupName("sP-11");
-    secondGroup.setGroupId(2);
+    secondGroup.setName("sP-11");
+    secondGroup.setId(2);
     groupList.add(firstGroup);
     groupList.add(secondGroup);
     groupDao.add(groupList);
@@ -51,11 +51,11 @@ class GroupDaoTest {
   @Test
   void getAll_ShouldFindAllGroupsFromDB() {
     Group firstGroup = new Group();
-    firstGroup.setGroupName("FR-05");
-    firstGroup.setGroupId(1);
+    firstGroup.setName("FR-05");
+    firstGroup.setId(1);
     Group secondGroup = new Group();
-    secondGroup.setGroupName("sP-11");
-    secondGroup.setGroupId(2);
+    secondGroup.setName("sP-11");
+    secondGroup.setId(2);
     groupList.add(firstGroup);
     groupList.add(secondGroup);
     groupDao.add(groupList);

@@ -2,6 +2,9 @@ package com.example.config;
 
 
 import com.example.Utility;
+import com.example.mapper.CourseMapper;
+import com.example.mapper.GroupMapper;
+import com.example.mapper.StudentMapper;
 import com.example.menu.FirstMenu;
 import com.example.menu.MainMenu;
 import com.example.menu.Menu;
@@ -24,22 +27,18 @@ public class SpringConfig {
   public Random random() {
     return new Random();
   }
-
   @Bean
-  public RowMapper<Student> mapperStudent() {
-    return new BeanPropertyRowMapper<>(Student.class);
+  public CourseMapper mapperCourse() {
+    return new CourseMapper();
   }
-
   @Bean
-  public RowMapper<Course> mapperCourse() {
-    return new BeanPropertyRowMapper<>(Course.class);
+  public GroupMapper mapperGroup() {
+    return new GroupMapper();
   }
-
   @Bean
-  public RowMapper<Group> mapperGroup() {
-    return new BeanPropertyRowMapper<>(Group.class);
+  public StudentMapper mapperStudent() {
+    return new StudentMapper();
   }
-
   @Bean
   public MainMenu firstMenu(@FirstMenu List<Menu> items) {
     return createMenu(items);

@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Data
 public class Group {
 
-  private int groupId;
-  private String groupName;
+  private int id;
+  private String name;
   private int numberStudent;
 
   @Autowired
-  public Group(int numberStudent, String groupName) {
-    this.groupName = groupName;
+  public Group(int numberStudent, String name) {
+    this.name = name;
     this.numberStudent = numberStudent;
   }
 
