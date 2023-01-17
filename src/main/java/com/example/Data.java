@@ -88,7 +88,7 @@ public class Data {
     List<Group> groupList = new ArrayList<>();
     for (int i = 0; i < Math.min(Integer.valueOf(groupsNumber),
         Integer.valueOf(studentsTotalNumber)); i++) {
-      groupList.add(new Group(0, groupName(random, 2, 2)));
+      groupList.add(new Group( groupName(random, 2, 2)));
     }
     return groupList;
   }

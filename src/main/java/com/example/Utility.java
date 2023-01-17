@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Utility {
 
-  public final Scanner scanner = new Scanner(System.in);
+  final Scanner scanner = new Scanner(System.in);
 
   public void numberCheck() {
     while (!scanner.hasNextInt()) {

@@ -4,11 +4,11 @@ import com.example.model.Course;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CourseMapper implements RowMapper<Course> {
 
-  @Nullable
   @Override
    public Course mapRow(ResultSet rs, int rowNum) throws SQLException {
     Course course = new Course();

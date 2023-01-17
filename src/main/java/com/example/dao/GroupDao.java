@@ -1,5 +1,6 @@
 package com.example.dao;
 
+import com.example.mapper.GroupMapperFull;
 import com.example.mapper.GroupMapper;
 import com.example.model.Group;
 import java.sql.PreparedStatement;
@@ -13,14 +14,19 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GroupDao {
 
-  private  JdbcTemplate jdbcTemplate;
-  private GroupMapper mapper;
+  private JdbcTemplate jdbcTemplate;
+  private GroupMapperFull groupMapperFull;
+  private GroupMapper groupMapper;
 
   @Autowired
-  public GroupDao(JdbcTemplate jdbcTemplate, GroupMapper mapper) {
+  public GroupDao(JdbcTemplate jdbcTemplate, GroupMapper groupMapper,
+      GroupMapperFull groupMapperFull) {
     this.jdbcTemplate = jdbcTemplate;
-    this.mapper = mapper;
+    this.groupMapper = groupMapper;
+    this.groupMapperFull = groupMapperFull;
+
   }
+
   public void add(Group group) {
     jdbcTemplate.update("INSERT INTO groups (group_name) VALUES (?);", group.getName());
   }
@@ -41,20 +47,20 @@ public class GroupDao {
 
   public List<Group> getAll() {
 
-    return jdbcTemplate.query("SELECT * FROM groups;", mapper);
+    return jdbcTemplate.query("SELECT * FROM groups;", groupMapper);
   }
 
   public List<Group> getGroupsByStudentCount(int number) {
-    String sql = "SELECT  number_student, stud.group_name " +
+    String sql = "SELECT group_id,  stud.group_name, number_student " +
         "FROM(SELECT groups.group_name AS group_name,students.group_id,"
         + " COUNT (students.group_id) AS number_student "
-        + "FROM students "
-        + "JOIN groups "
+        + "FROM students JOIN groups "
         + "ON students.group_id= groups.group_id "
         + "GROUP BY students.group_id, groups.group_name ) AS stud "
         + "WHERE number_student <= ? "
         + "ORDER BY number_student;";
 
-    return jdbcTemplate.query(sql, mapper, number);
+    return jdbcTemplate.query(sql, groupMapperFull, number);
   }
 }
+

@@ -1,8 +1,11 @@
 package com.example.dao.test;
 
+import com.example.Data;
 import com.example.dao.GroupDao;
 import com.example.extra.TestUtils;
 import com.example.model.Group;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -11,24 +14,28 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Testcontainers
-@SpringBootTest()
+@SpringBootTest(classes = StudentDaoTestConfig.class)
 @ActiveProfiles("Test")
 class GroupDaoTest {
+
   @Autowired
   TestUtils utils;
   @Autowired
   GroupDao groupDao;
+
+  @Autowired
+  Data data;
   List<Group> groupList = new ArrayList<>();
+
   @BeforeEach
   void start() {
     utils.clearData();
   }
+
   @Test
   void add_ShouldAddGroupToDB() {
-    Group group = new Group(10,"FR-t6");
+    Group group = new Group("FR-t6");
     groupDao.add(group);
     Assertions.assertTrue(utils.isExistGroup(group.getName()));
   }
@@ -44,7 +51,7 @@ class GroupDaoTest {
     groupList.add(firstGroup);
     groupList.add(secondGroup);
     groupDao.add(groupList);
-    Assertions.assertEquals(groupList,utils.getGroupList());
+    Assertions.assertEquals(groupList, utils.getGroupList());
 
   }
 
@@ -60,5 +67,25 @@ class GroupDaoTest {
     groupList.add(secondGroup);
     groupDao.add(groupList);
     Assertions.assertEquals(groupList, groupDao.getAll());
+  }
+
+  @Test
+  void getGroupsByStudentCount_ShouldFindGroupsFromDbWhereNumberStudentLessEqualThan()
+      throws IOException, URISyntaxException {
+    data.addAllData();
+    int num=5;
+    Group firstGroup = new Group();
+    firstGroup.setName("cP-50");
+    firstGroup.setNumberStudent(2);
+    firstGroup.setId(4);
+    Group secondGroup = new Group();
+    secondGroup.setName("Jp-04");
+    secondGroup.setNumberStudent(3);
+    secondGroup.setId(3);
+    groupList.add(firstGroup);
+    groupList.add(secondGroup);
+    groupDao.add(groupList);
+
+    Assertions.assertEquals(groupList, groupDao.getGroupsByStudentCount(num));
   }
 }

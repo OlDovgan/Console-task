@@ -1,15 +1,15 @@
 package com.example.extra;
 
 
+import com.example.mapper.CourseMapper;
+import com.example.mapper.GroupMapper;
 import com.example.model.Course;
 import com.example.model.Group;
 import com.example.model.Student;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,11 +19,9 @@ public class TestUtils {
   JdbcTemplate jdbcTemplate;
 
   @Autowired
-  @Qualifier("mapperCourse")
-  RowMapper mapperCourse;
+  CourseMapper mapperCourse;
   @Autowired
-  @Qualifier("mapperGroup")
-  RowMapper mapperGroup;
+  GroupMapper mapperGroup;
 
   public boolean isExistStudentId(int student_id) {
     String sql = "SELECT EXISTS(SELECT * FROM students WHERE student_id= ? );";

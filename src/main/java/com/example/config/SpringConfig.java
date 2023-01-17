@@ -2,42 +2,20 @@ package com.example.config;
 
 
 import com.example.Utility;
-import com.example.mapper.CourseMapper;
-import com.example.mapper.GroupMapper;
-import com.example.mapper.StudentMapper;
 import com.example.menu.FirstMenu;
 import com.example.menu.MainMenu;
 import com.example.menu.Menu;
 import com.example.menu.SecondMenu;
-import com.example.model.Course;
-import com.example.model.Group;
-import com.example.model.Student;
 import java.util.List;
 import java.util.Random;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
 
 @Configuration
 public class SpringConfig {
-
   @Bean
   public Random random() {
     return new Random();
-  }
-  @Bean
-  public CourseMapper mapperCourse() {
-    return new CourseMapper();
-  }
-  @Bean
-  public GroupMapper mapperGroup() {
-    return new GroupMapper();
-  }
-  @Bean
-  public StudentMapper mapperStudent() {
-    return new StudentMapper();
   }
   @Bean
   public MainMenu firstMenu(@FirstMenu List<Menu> items) {

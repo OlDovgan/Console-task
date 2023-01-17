@@ -21,25 +21,21 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class StudentDao {
 
-
   private GroupDao groupDao;
-
   private CourseDao courseDao;
-
   private JdbcTemplate jdbcTemplate;
-
   private StudentMapper mapperStudent;
-  @Autowired
   private CourseMapper mapperCourse;
 
   @Autowired
   public StudentDao(JdbcTemplate jdbcTemplate,
-      StudentMapper mapperStudent,
+      StudentMapper mapperStudent, CourseMapper mapperCourse,
       CourseDao courseDao, GroupDao groupDao) {
     this.groupDao = groupDao;
     this.courseDao = courseDao;
     this.jdbcTemplate = jdbcTemplate;
     this.mapperStudent = mapperStudent;
+    this.mapperCourse = mapperCourse;
   }
 
   public void add(List<Student> studentList) {
@@ -117,7 +113,6 @@ public class StudentDao {
             return list.size();
           }
         });
-
   }
 
 
@@ -184,7 +179,6 @@ public class StudentDao {
   public void delete(int id) {
     jdbcTemplate.update("DELETE FROM students  WHERE student_id = ? ;", id);
   }
-
 
   public void deleteFromCourse(int studentId, int courseId) {
     jdbcTemplate.update("DELETE FROM students_courses WHERE student_id =? AND  course_id=? ;",

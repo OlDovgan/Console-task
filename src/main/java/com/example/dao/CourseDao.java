@@ -14,10 +14,7 @@ import org.springframework.stereotype.Repository;
 public class CourseDao {
 
   private  JdbcTemplate jdbcTemplate;
- // @Autowired
   private  CourseMapper mapper;
-
-//  private  RowMapper<Course> mapper;
 
   @Autowired
   public CourseDao(JdbcTemplate jdbcTemplate,CourseMapper mapper) {
