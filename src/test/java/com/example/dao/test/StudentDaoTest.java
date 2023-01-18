@@ -30,7 +30,6 @@ class StudentDaoTest {
   @Autowired
   CourseDao courseDao;
   @Autowired
- // @Qualifier("dataTest")
   Data data;
 
   @BeforeEach
