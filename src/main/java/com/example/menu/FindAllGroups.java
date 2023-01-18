@@ -4,9 +4,6 @@ import com.example.Utility;
 import com.example.dao.GroupDao;
 import com.example.model.Group;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -49,7 +46,7 @@ public class FindAllGroups implements Menu {
   public String findGroups(int number) {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     for (Group group : groupDao.getGroupsByStudentCount(number)) {
-      stringJoiner.add(group.getNumber_student() + " | " + group.getName());
+      stringJoiner.add(group.getNumberStudent() + " | " + group.getName());
     }
     return stringJoiner.toString();
   }

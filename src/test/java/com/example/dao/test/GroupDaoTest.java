@@ -1,11 +1,9 @@
 package com.example.dao.test;
 
 import com.example.Data;
-import com.example.dao.CourseDao;
 import com.example.dao.GroupDao;
 import com.example.dao.StudentDao;
 import com.example.extra.TestUtils;
-import com.example.model.Course;
 import com.example.model.Group;
 import com.example.model.Student;
 import java.io.IOException;
@@ -95,18 +93,21 @@ class GroupDaoTest {
   void getGroupsByStudentCount_ShouldFindGroupsFromDbWhereNumberStudentLessEqualThan()
       throws IOException, URISyntaxException {
     data.addAllData();
-    int num=5;
+    Student student = new Student();
+    student.setFirstName("Max");
+    student.setLastName("Smith");
+    studentDao.add(student);
+    int num=3;
     Group firstGroup = new Group();
     firstGroup.setName("cP-50");
-    firstGroup.setNumber_student(2);
+    firstGroup.setNumberStudent(2);
     firstGroup.setId(4);
     Group secondGroup = new Group();
     secondGroup.setName("Jp-04");
-    secondGroup.setNumber_student(3);
+    secondGroup.setNumberStudent(3);
     secondGroup.setId(3);
     groupList.add(firstGroup);
     groupList.add(secondGroup);
-    groupDao.add(groupList);
 
     Assertions.assertEquals(groupList, groupDao.getGroupsByStudentCount(num));
   }

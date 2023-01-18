@@ -53,13 +53,12 @@ public class GroupDao {
   }
 
   public List<Group> getGroupsByStudentCount(int number) {
-    String sql = "SELECT  group_id, stud.group_name, number_student " +
-        "FROM(SELECT groups.group_name AS group_name,students.group_id,"
-        + " COUNT (students.group_id) AS number_student "
-        + "FROM students JOIN groups "
-        + "ON students.group_id= groups.group_id "
-        + "GROUP BY students.group_id, groups.group_name ) AS stud "
-        + "WHERE number_student <= ? "
+    String sql = "SELECT group_id,  group_name, number_student "
+        + "FROM(SELECT groups.group_name AS group_name, groups.group_id, "
+        + "COUNT (students.group_id) AS number_student "
+        + "FROM groups LEFT JOIN students ON students.group_id = groups.group_id "
+        + "GROUP BY groups.group_id, groups.group_name ) AS stud "
+        + "WHERE number_student <= ?  AND number_student != '0' "
         + "ORDER BY number_student;";
 
     return jdbcTemplate.query(sql, groupMapper, number);
