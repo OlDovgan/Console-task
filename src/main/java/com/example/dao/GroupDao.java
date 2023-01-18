@@ -58,7 +58,8 @@ public class GroupDao {
         + "COUNT (students.group_id) AS number_student "
         + "FROM groups LEFT JOIN students ON students.group_id = groups.group_id "
         + "GROUP BY groups.group_id, groups.group_name ) AS stud "
-        + "WHERE number_student <= ?  AND number_student != '0' "
+       // + "WHERE number_student <= ?  AND number_student != '0' "
+        + "WHERE number_student BETWEEN 1 AND ? "
         + "ORDER BY number_student;";
 
     return jdbcTemplate.query(sql, groupMapper, number);
