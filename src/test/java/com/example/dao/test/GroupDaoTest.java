@@ -28,8 +28,6 @@ class GroupDaoTest {
   @Autowired
   GroupDao groupDao;
   @Autowired
-  CourseDao  courseDao;
-  @Autowired
   StudentDao studentDao;
   @Autowired
   Data data;
