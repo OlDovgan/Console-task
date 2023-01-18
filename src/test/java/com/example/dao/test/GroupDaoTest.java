@@ -1,9 +1,13 @@
 package com.example.dao.test;
 
 import com.example.Data;
+import com.example.dao.CourseDao;
 import com.example.dao.GroupDao;
+import com.example.dao.StudentDao;
 import com.example.extra.TestUtils;
+import com.example.model.Course;
 import com.example.model.Group;
+import com.example.model.Student;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -23,7 +27,10 @@ class GroupDaoTest {
   TestUtils utils;
   @Autowired
   GroupDao groupDao;
-
+  @Autowired
+  CourseDao  courseDao;
+  @Autowired
+  StudentDao studentDao;
   @Autowired
   Data data;
   List<Group> groupList = new ArrayList<>();
@@ -56,7 +63,24 @@ class GroupDaoTest {
   }
 
   @Test
-  void getAll_ShouldFindAllGroupsFromDB() {
+  void getAll_ShouldFindAllGroupsFromDbWhereTableStudentsIsEmpty() {
+    Group firstGroup = new Group();
+    firstGroup.setName("FR-05");
+    firstGroup.setId(1);
+    Group secondGroup = new Group();
+    secondGroup.setName("sP-11");
+    secondGroup.setId(2);
+    groupList.add(firstGroup);
+    groupList.add(secondGroup);
+    groupDao.add(groupList);
+    Assertions.assertEquals(groupList, groupDao.getAll());
+  }
+  @Test
+  void getAll_ShouldFindAllGroupsFromDbWhereTableStudentsHasStudentWithOutGroup() {
+    Student student = new Student();
+    student.setFirstName("Max");
+    student.setLastName("Smith");
+    studentDao.add(student);
     Group firstGroup = new Group();
     firstGroup.setName("FR-05");
     firstGroup.setId(1);
