@@ -1,6 +1,5 @@
 package com.example.dao;
 
-import com.example.mapper.GroupMapperFull;
 import com.example.mapper.GroupMapper;
 import com.example.model.Group;
 import java.sql.PreparedStatement;
@@ -14,16 +13,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GroupDao {
 
-  private JdbcTemplate jdbcTemplate;
-  private GroupMapperFull groupMapperFull;
-  private GroupMapper groupMapper;
+  private final JdbcTemplate jdbcTemplate;
+  private final GroupMapper groupMapper;
 
   @Autowired
-  public GroupDao(JdbcTemplate jdbcTemplate, GroupMapper groupMapper,
-      GroupMapperFull groupMapperFull) {
+  public GroupDao(JdbcTemplate jdbcTemplate, GroupMapper groupMapper) {
     this.jdbcTemplate = jdbcTemplate;
     this.groupMapper = groupMapper;
-    this.groupMapperFull = groupMapperFull;
 
   }
 
@@ -47,11 +43,17 @@ public class GroupDao {
 
   public List<Group> getAll() {
 
-    return jdbcTemplate.query("SELECT * FROM groups;", groupMapper);
+    String sql = "SELECT group_id,  group_name, number_student "
+        + "FROM(SELECT groups.group_name AS group_name, groups.group_id, "
+        + "COUNT (students.group_id) AS number_student "
+        + "FROM groups  LEFT JOIN students ON students.group_id = groups.group_id "
+        + "GROUP BY groups.group_id, groups.group_name ) AS stud ORDER BY group_id;";
+
+    return jdbcTemplate.query(sql, groupMapper);
   }
 
   public List<Group> getGroupsByStudentCount(int number) {
-    String sql = "SELECT group_id,  stud.group_name, number_student " +
+    String sql = "SELECT  group_id, stud.group_name, number_student " +
         "FROM(SELECT groups.group_name AS group_name,students.group_id,"
         + " COUNT (students.group_id) AS number_student "
         + "FROM students JOIN groups "
@@ -60,7 +62,7 @@ public class GroupDao {
         + "WHERE number_student <= ? "
         + "ORDER BY number_student;";
 
-    return jdbcTemplate.query(sql, groupMapperFull, number);
+    return jdbcTemplate.query(sql, groupMapper, number);
   }
 }
 

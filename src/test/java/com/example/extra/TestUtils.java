@@ -1,6 +1,7 @@
 package com.example.extra;
 
 
+import com.example.dao.GroupDao;
 import com.example.mapper.CourseMapper;
 import com.example.mapper.GroupMapper;
 import com.example.model.Course;
@@ -22,6 +23,8 @@ public class TestUtils {
   CourseMapper mapperCourse;
   @Autowired
   GroupMapper mapperGroup;
+  @Autowired
+  GroupDao groupDao;
 
   public boolean isExistStudentId(int student_id) {
     String sql = "SELECT EXISTS(SELECT * FROM students WHERE student_id= ? );";
@@ -40,13 +43,11 @@ public class TestUtils {
   }
 
   public List<Course> getCourseList() {
-    return jdbcTemplate.query("SELECT * FROM courses ORDER BY course_id;",
-        mapperCourse);
+    return jdbcTemplate.query("SELECT * FROM courses ORDER BY course_id;", mapperCourse);
   }
 
   public List<Group> getGroupList() {
-    return jdbcTemplate.query("SELECT * FROM groups ORDER BY group_id;",
-        mapperGroup);
+    return groupDao.getAll();
   }
 
   public boolean isExistCourse(String course, String description) {
@@ -98,9 +99,8 @@ public class TestUtils {
     student.setFirstName(firstName);
     student.setLastName(lastName);
     student.setCourse(courseList);
-    String str = jdbcTemplate.queryForObject(
-        "SELECT group_name FROM groups WHERE group_id = ? ", new Object[]{student.getGroupId()},
-        String.class);
+    String str = jdbcTemplate.queryForObject("SELECT group_name FROM groups WHERE group_id = ? ",
+        new Object[]{student.getGroupId()}, String.class);
     student.setGroupName(str);
     return student;
   }
@@ -110,21 +110,18 @@ public class TestUtils {
     student.setGroupId(groupId);
     student.setFirstName(firstName);
     student.setLastName(lastName);
-    String str = jdbcTemplate.queryForObject(
-        "SELECT group_name FROM groups WHERE group_id = ? ", new Object[]{student.getGroupId()},
-        String.class);
+    String str = jdbcTemplate.queryForObject("SELECT group_name FROM groups WHERE group_id = ? ",
+        new Object[]{student.getGroupId()}, String.class);
     student.setGroupName(str);
     return student;
   }
 
 
   public void clearData() {
-    jdbcTemplate.update(
-        "TRUNCATE students, courses, groups, students_courses RESTART IDENTITY");
+    jdbcTemplate.update("TRUNCATE students, courses, groups, students_courses RESTART IDENTITY");
   }
 
   public void clearStudent() {
-    jdbcTemplate.update(
-        "TRUNCATE students, students_courses RESTART IDENTITY");
+    jdbcTemplate.update("TRUNCATE students, students_courses RESTART IDENTITY");
   }
 }

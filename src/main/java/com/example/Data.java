@@ -53,18 +53,19 @@ public class Data {
   private String studentsCoursesMax;
 
   private Random random;
-  @Autowired
   private GroupDao groupDao;
-  @Autowired
   private CourseDao courseDao;
-  @Autowired
   private StudentDao studentDao;
-  @Autowired
   private FileReader fileReader;
   private int studentsWithGroup;
   @Autowired
-  public Data(Random random) {
+  public Data(Random random,GroupDao groupDao,CourseDao courseDao,
+      StudentDao studentDao, FileReader fileReader) {
     this.random = random;
+    this.groupDao = groupDao;
+    this.courseDao = courseDao;
+    this.studentDao = studentDao;
+    this.fileReader = fileReader;
   }
 
   public  int randomInt(Random random, int origin, int bound) {
