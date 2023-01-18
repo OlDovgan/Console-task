@@ -46,7 +46,7 @@ public class GroupDao {
     String sql = "SELECT group_id,  group_name, number_student "
         + "FROM(SELECT groups.group_name AS group_name, groups.group_id, "
         + "COUNT (students.group_id) AS number_student "
-        + "FROM groups  FULL JOIN students ON students.group_id = groups.group_id "
+        + "FROM groups  LEFT JOIN students ON students.group_id = groups.group_id "
         + "GROUP BY groups.group_id, groups.group_name ) AS stud ORDER BY group_id;";
 
     return jdbcTemplate.query(sql, groupMapper);
