@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,12 +49,12 @@ class GroupServiceTest {
 
   @Test
   void clear() {
-    boolean expect = false;
+    boolean exist = false;
     if (!groupService.getAll().isEmpty()) {
       groupService.clear();
-      expect = true;
+      exist = true;
     }
-    Assertions.assertTrue(expect);
+    Assertions.assertTrue(exist);
   }
 
   @Test

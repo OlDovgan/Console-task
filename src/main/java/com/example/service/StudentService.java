@@ -68,26 +68,20 @@ public class StudentService {
       studentDao.add(createStudentsList());
       studentDao.addStudentsCourse(createStudentsCourseList());
     }
-
-
   }
 
 
-  private List<Student> createStudentsList()
-      throws IOException, URISyntaxException {
-    String[] firstNames = fileReader.readFile(fileFirstName)
-        .toArray(new String[]{});
-    String[] lastNames = fileReader.readFile(fileLastName)
-        .toArray(new String[]{});
+  private List<Student> createStudentsList() throws IOException, URISyntaxException {
+    String[] firstNames = fileReader.readFile(fileFirstName).toArray(new String[]{});
+    String[] lastNames = fileReader.readFile(fileLastName).toArray(new String[]{});
     Set<Integer> set = setGroupId();
     List<Student> studentListWithGroup = createStudentListWithGroup(set, firstNames, lastNames);
     List<Student> studentListWithoutGroup = createStudentListWithoutGroup(firstNames, lastNames);
 
-    return Stream.concat(studentListWithGroup.stream(),
-        studentListWithoutGroup.stream()).toList();
+    return Stream.concat(studentListWithGroup.stream(), studentListWithoutGroup.stream()).toList();
   }
 
-  public Set<Integer> setGroupId() {
+  private Set<Integer> setGroupId() {
     List<Integer> groupsId = new ArrayList<>();
     for (Group group : groupDao.getAll()) {
       groupsId.add(group.getId());
@@ -99,7 +93,7 @@ public class StudentService {
     return groupsIdSet;
   }
 
-  public int randomInt(Random random, int origin, int bound) {
+  private int randomInt(Random random, int origin, int bound) {
     if (origin >= bound) {
       throw new IllegalArgumentException();
     }
@@ -113,8 +107,7 @@ public class StudentService {
     List<Student> studentList = new ArrayList<>();
 
     for (Integer d : set) {
-      int number = randomInt(random,
-          Integer.valueOf(numberStudentMin),
+      int number = randomInt(random, Integer.valueOf(numberStudentMin),
           Integer.valueOf(numberStudentMax));
       int i = 0;
 
@@ -198,6 +191,7 @@ public class StudentService {
   public void delete(int id) {
     studentDao.delete(id);
   }
+
   public void deleteFromCourse(int studentId, int courseId) {
     studentDao.deleteFromCourse(studentId, courseId);
   }

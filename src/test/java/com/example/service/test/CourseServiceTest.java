@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = StudentDaoTestConfig.class)
 @ActiveProfiles("Test")
-@TestInstance(Lifecycle.PER_CLASS)
 class CourseServiceTest {
 
   @Value("${courses}")
@@ -47,7 +44,7 @@ class CourseServiceTest {
   }
 
   @Test
-  void getAll_ShouldFindAllCoursesFromDB() throws IOException, URISyntaxException {
+  void getAll_ShouldFindAllCoursesFromDB() {
     utils.clearData();
     List<Course> courseList = new ArrayList<>();
     Course courseFirst = new Course("Pascal", "Pascal");
@@ -62,14 +59,11 @@ class CourseServiceTest {
 
   @Test
   void clear_ShouldDeleteDataFromCourses() {
-    boolean expect= false;
+    boolean exist= false;
     if (!courseService.getAll().isEmpty()) {
       courseService.clear();
-      expect=true;
+      exist=true;
     }
-
-    Assertions.assertTrue(expect);
+    Assertions.assertTrue(exist);
   }
-
-
 }
