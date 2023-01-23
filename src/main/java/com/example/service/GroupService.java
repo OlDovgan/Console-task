@@ -93,12 +93,6 @@ public class GroupService {
     return coursesMap;
   }
 
-  public int randomInt(Random random, int origin, int bound) {
-    if (origin >= bound) {
-      throw new IllegalArgumentException();
-    }
-    return origin + random.nextInt(bound);
-  }
   public void clear() {
     groupDao.clearAll();
   }

@@ -7,7 +7,6 @@ import com.example.dao.StudentDao;
 import com.example.model.Course;
 import com.example.model.Group;
 import com.example.model.Student;
-import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -206,7 +205,6 @@ public class StudentService {
   public void addStudentsCourse(int studId, int courseNumber) {
     studentDao.addStudentsCourse(studId, courseNumber);
   }
-
 
   public void clear() {
     studentDao.clearAll();

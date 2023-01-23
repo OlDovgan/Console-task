@@ -35,6 +35,7 @@ class GroupDaoTest {
   @Autowired
   StudentDao studentDao;
 <<<<<<< HEAD
+<<<<<<< HEAD
   @Autowired
   Data data;
 =======
@@ -42,6 +43,8 @@ class GroupDaoTest {
   //  @Autowired
 //  Data data;
 >>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
+=======
+>>>>>>> e50e4fd (22_01_2023_03_25_PM_Task_2_3_second)
   List<Group> groupList = new ArrayList<>();
 
   @BeforeEach
@@ -107,12 +110,16 @@ class GroupDaoTest {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   @Test
   void getGroupsByStudentCount_ShouldFindGroupsFromDbWhereNumberStudentLessEqualThan() {
 
     int num=3;
 =======
   //@Test
+=======
+  @Test
+>>>>>>> e50e4fd (22_01_2023_03_25_PM_Task_2_3_second)
   void getGroupsByStudentCount_ShouldFindGroupsFromDbWhereNumberStudentLessEqualThan() {
 
     int num = 3;

@@ -62,6 +62,7 @@ public class GroupDao {
 <<<<<<< HEAD
 =======
 
+<<<<<<< HEAD
 //    String sql = "SELECT group_id,  group_name, number_student "
 //        + "FROM(SELECT groups.group_name AS group_name, groups.group_id, "
 //        + "COUNT (students.group_id) AS number_student "
@@ -70,6 +71,8 @@ public class GroupDao {
 //        + "WHERE number_student <= ? "
 //        + "ORDER BY number_student;";
 >>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
+=======
+>>>>>>> e50e4fd (22_01_2023_03_25_PM_Task_2_3_second)
     String sql = "SELECT group_id,  group_name, number_student "
         + "FROM(SELECT groups.group_name AS group_name, groups.group_id, "
         + "COUNT (students.group_id) AS number_student "
