@@ -22,10 +22,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional
 public class StudentDao {
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   private GroupDao groupDao;
   private CourseDao courseDao;
@@ -33,6 +36,8 @@ public class StudentDao {
 //  private GroupDao groupDao;
 //  private CourseDao courseDao;
 >>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
+=======
+>>>>>>> 7e8b301 (22_01_2023_12_36_PM_Task_2_3_first)
   private JdbcTemplate jdbcTemplate;
   private StudentMapper mapperStudent;
   private CourseMapper mapperCourse;
