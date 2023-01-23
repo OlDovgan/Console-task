@@ -1,20 +1,11 @@
 package com.example.dao.test;
 
-<<<<<<< HEAD
-import com.example.Data;
-=======
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
 import com.example.dao.GroupDao;
 import com.example.dao.StudentDao;
 import com.example.extra.TestUtils;
 import com.example.model.Group;
 import com.example.model.Student;
-<<<<<<< HEAD
-import java.io.IOException;
-import java.net.URISyntaxException;
-=======
 import jakarta.annotation.PostConstruct;
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -34,17 +25,6 @@ class GroupDaoTest {
   GroupDao groupDao;
   @Autowired
   StudentDao studentDao;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  @Autowired
-  Data data;
-=======
-
-  //  @Autowired
-//  Data data;
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
-=======
->>>>>>> e50e4fd (22_01_2023_03_25_PM_Task_2_3_second)
   List<Group> groupList = new ArrayList<>();
 
   @BeforeEach
@@ -87,10 +67,7 @@ class GroupDaoTest {
     groupDao.add(groupList);
     Assertions.assertEquals(groupList, groupDao.getAll());
   }
-<<<<<<< HEAD
-=======
 
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
   @Test
   void getAll_ShouldFindAllGroupsFromDbWhereTableStudentsHasStudentWithOutGroup() {
     Student student = new Student();
@@ -109,21 +86,10 @@ class GroupDaoTest {
     Assertions.assertEquals(groupList, groupDao.getAll());
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   @Test
-  void getGroupsByStudentCount_ShouldFindGroupsFromDbWhereNumberStudentLessEqualThan() {
-
-    int num=3;
-=======
-  //@Test
-=======
-  @Test
->>>>>>> e50e4fd (22_01_2023_03_25_PM_Task_2_3_second)
   void getGroupsByStudentCount_ShouldFindGroupsFromDbWhereNumberStudentLessEqualThan() {
 
     int num = 3;
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
     Student student = new Student();
     student.setFirstName("Max");
     student.setLastName("Smith");

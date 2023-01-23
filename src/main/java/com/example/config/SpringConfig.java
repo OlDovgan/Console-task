@@ -17,15 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class SpringConfig {
   @Bean
   public Random random() {
-<<<<<<< HEAD
-<<<<<<< HEAD
     return new Random();
-=======
-    return new Random(42);
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
-=======
-    return new Random();
->>>>>>> 9e37042 (22_01_2023_01_22_PM_Task_2_3)
   }
   @Bean
   public MainMenu firstMenu(@FirstMenu List<Menu> items) {

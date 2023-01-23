@@ -13,11 +13,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 @Service
-//@PropertySource("classpath:generation.properties")
 public class CourseService {
 
   @Value("${course-name-file}")

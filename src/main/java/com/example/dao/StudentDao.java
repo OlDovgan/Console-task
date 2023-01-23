@@ -10,15 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-<<<<<<< HEAD
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-=======
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -28,30 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class StudentDao {
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  private GroupDao groupDao;
-  private CourseDao courseDao;
-=======
-//  private GroupDao groupDao;
-//  private CourseDao courseDao;
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
-=======
->>>>>>> 7e8b301 (22_01_2023_12_36_PM_Task_2_3_first)
   private JdbcTemplate jdbcTemplate;
   private StudentMapper mapperStudent;
   private CourseMapper mapperCourse;
 
   @Autowired
-<<<<<<< HEAD
-  public StudentDao(JdbcTemplate jdbcTemplate,
-      StudentMapper mapperStudent, CourseMapper mapperCourse,
-      CourseDao courseDao, GroupDao groupDao) {
-    this.groupDao = groupDao;
-    this.courseDao = courseDao;
-=======
   public StudentDao(JdbcTemplate jdbcTemplate, StudentMapper mapperStudent, CourseMapper mapperCourse) {
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
     this.jdbcTemplate = jdbcTemplate;
     this.mapperStudent = mapperStudent;
     this.mapperCourse = mapperCourse;
@@ -166,10 +141,7 @@ public class StudentDao {
             + " ON students_courses.course_id= courses.course_id "
             + " WHERE students_courses.student_id= ?;";
     return jdbcTemplate.query(sql, mapperCourse, studentId);
-<<<<<<< HEAD
-=======
 
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
   }
 
   private void setStudentsGroup(Student student) {
@@ -207,10 +179,7 @@ public class StudentDao {
     jdbcTemplate.update("DELETE FROM students_courses WHERE student_id =? AND  course_id=? ;",
         studentId, courseId);
   }
-<<<<<<< HEAD
-=======
   public void clearAll() {
     jdbcTemplate.update("TRUNCATE students, students_courses RESTART IDENTITY");
   }
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
 }

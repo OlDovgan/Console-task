@@ -1,18 +1,11 @@
 package com.example.dao.test;
 
-<<<<<<< HEAD
-import com.example.Data;
-=======
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
 import com.example.dao.CourseDao;
 import com.example.dao.StudentDao;
 import com.example.extra.TestUtils;
 import com.example.model.Course;
 import com.example.model.Student;
-<<<<<<< HEAD
-=======
 import com.example.service.Data;
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -40,20 +33,12 @@ class StudentDaoTest {
 
   @BeforeEach
   void start() throws IOException, URISyntaxException {
-<<<<<<< HEAD
-    data.addAllData();
-=======
-     data.createAll();
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
+    data.createAll();
   }
 
   @AfterEach
   void finish() {
-<<<<<<< HEAD
-    utils.clearData();
-=======
     data.clearAll();
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
   }
 
 
@@ -77,23 +62,6 @@ class StudentDaoTest {
   @Test
   void getWithOutCourse_ShouldFindStudentsWithOutCourseByIdFromDB() {
     List<Course> courses = new ArrayList<>();
-<<<<<<< HEAD
-    String description = " Mathematics is the science that deals with the logic of shape, "
-        + "quantity and arrangement";
-    Course course = new Course("Maths", description);
-    course.setId(1);
-    courses.add(course);
-    Student student = new Student();
-    student.setId(4);
-    student.setGroupId(4);
-    student.setFirstName("Marie");
-    student.setLastName("Zimmerman");
-    student.setGroupName("cP-50");
-    student.setCourse(courses);
-    List<Student> studentListExpect = new ArrayList<>();
-    studentListExpect.add(student);
-    Assertions.assertEquals(studentListExpect, studentDao.getWithOutCourse(5));
-=======
     String description = " English is a language—originally the language of the people of England";
     String description2 = " Probability theory is the branch of mathematics concerned with probability";
     Course first = new Course("English", description);
@@ -112,7 +80,6 @@ class StudentDaoTest {
     List<Student> studentListExpect = new ArrayList<>();
     studentListExpect.add(student);
     Assertions.assertEquals(studentListExpect, studentDao.getWithOutCourse(1));
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
   }
 
   @Test
@@ -144,13 +111,8 @@ class StudentDaoTest {
 
   @Test
   void deleteFromCourse_ShouldDeleteStudentsCourseFromDB() {
-<<<<<<< HEAD
-    int courseId = 4;
-    int studentId = 1;
-=======
     int courseId = 2;
     int studentId = 2;
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
     boolean exist = true;
     if (utils.isExistStudentsCourse(studentId, courseId)) {
       studentDao.deleteFromCourse(studentId, courseId);
@@ -179,8 +141,4 @@ class StudentDaoTest {
     }
     Assertions.assertFalse(exist);
   }
-<<<<<<< HEAD
-
-=======
->>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
 }
