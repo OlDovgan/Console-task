@@ -21,8 +21,13 @@ public class TestUtils {
 
   @Autowired
   CourseMapper mapperCourse;
+<<<<<<< HEAD
   @Autowired
   GroupMapper mapperGroup;
+=======
+//  @Autowired
+//  GroupMapper mapperGroup;
+>>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
   @Autowired
   GroupDao groupDao;
 

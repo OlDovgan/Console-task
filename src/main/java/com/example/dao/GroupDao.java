@@ -17,7 +17,11 @@ public class GroupDao {
   private final GroupMapper groupMapper;
 
   @Autowired
+<<<<<<< HEAD
   public GroupDao(JdbcTemplate jdbcTemplate, GroupMapper groupMapper) {
+=======
+    public GroupDao(JdbcTemplate jdbcTemplate, GroupMapper groupMapper) {
+>>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
     this.jdbcTemplate = jdbcTemplate;
     this.groupMapper = groupMapper;
 
@@ -53,15 +57,36 @@ public class GroupDao {
   }
 
   public List<Group> getGroupsByStudentCount(int number) {
+<<<<<<< HEAD
+=======
+
+//    String sql = "SELECT group_id,  group_name, number_student "
+//        + "FROM(SELECT groups.group_name AS group_name, groups.group_id, "
+//        + "COUNT (students.group_id) AS number_student "
+//        + "FROM groups LEFT JOIN students ON students.group_id = groups.group_id "
+//        + "GROUP BY groups.group_id, groups.group_name ) AS stud "
+//        + "WHERE number_student <= ? "
+//        + "ORDER BY number_student;";
+>>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
     String sql = "SELECT group_id,  group_name, number_student "
         + "FROM(SELECT groups.group_name AS group_name, groups.group_id, "
         + "COUNT (students.group_id) AS number_student "
         + "FROM groups LEFT JOIN students ON students.group_id = groups.group_id "
+<<<<<<< HEAD
         + "GROUP BY groups.group_id, groups.group_name ) AS stud "
         + "WHERE number_student <= ? "
         + "ORDER BY number_student;";
 
     return jdbcTemplate.query(sql, groupMapper, number);
   }
+=======
+        + "GROUP BY groups.group_id, groups.group_name ) AS stud WHERE number_student <= ? "
+        + "ORDER BY number_student;";
+    return jdbcTemplate.query(sql, groupMapper, number);
+  }
+  public void clearAll() {
+    jdbcTemplate.update("TRUNCATE  groups RESTART IDENTITY");
+  }
+>>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
 }
 

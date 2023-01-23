@@ -15,7 +15,11 @@ import org.springframework.context.annotation.Configuration;
 public class SpringConfig {
   @Bean
   public Random random() {
+<<<<<<< HEAD
     return new Random();
+=======
+    return new Random(42);
+>>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
   }
   @Bean
   public MainMenu firstMenu(@FirstMenu List<Menu> items) {

@@ -45,4 +45,10 @@ public class CourseDao {
     return jdbcTemplate.query("SELECT * FROM courses ORDER BY course_id;",
         mapper);
   }
+<<<<<<< HEAD
+=======
+  public void clearAll() {
+    jdbcTemplate.update("TRUNCATE  courses RESTART IDENTITY");
+  }
+>>>>>>> 014d8fb (22_01_2023_01_03_PM_Task_2_3)
 }
