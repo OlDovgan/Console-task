@@ -1,6 +1,6 @@
 
 CREATE TABLE IF NOT EXISTS students( student_id SERIAL  PRIMARY KEY ,
-   group_id   INT NULL,
+   group_id   INT DEFAULT 0,
    first_name VARCHAR (20) NOT NULL,
    last_name VARCHAR (20)  NOT NULL);
 

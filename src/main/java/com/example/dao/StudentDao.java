@@ -21,9 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class StudentDao {
 
-  private JdbcTemplate jdbcTemplate;
-  private StudentMapper mapperStudent;
-  private CourseMapper mapperCourse;
+  private final JdbcTemplate jdbcTemplate;
+  private final StudentMapper mapperStudent;
+  private final CourseMapper mapperCourse;
 
   @Autowired
   public StudentDao(JdbcTemplate jdbcTemplate, StudentMapper mapperStudent, CourseMapper mapperCourse) {
@@ -116,7 +116,7 @@ public class StudentDao {
         mapperStudent);
     List<Student> studentListNew = new ArrayList<>();
     for (Student student : studentListFromTableStudents) {
-      setStudentsGroup(student);
+      setStudentsGroupsName(student);
       student.setCourse(getStudentsCourseByStudentId(student.getId()));
       studentListNew.add(student);
     }
@@ -127,7 +127,7 @@ public class StudentDao {
 
     List<Student> studentListNew = new ArrayList<>();
     for (Student student : studentList) {
-      setStudentsGroup(student);
+      setStudentsGroupsName(student);
       student.setCourse(getStudentsCourseByStudentId(student.getId()));
       studentListNew.add(student);
     }
@@ -144,7 +144,7 @@ public class StudentDao {
 
   }
 
-  private void setStudentsGroup(Student student) {
+  private void setStudentsGroupsName(Student student) {
     if (student.getGroupId() != 0) {
       var groupName = jdbcTemplate.queryForObject(
           "SELECT group_name FROM groups WHERE group_id = ? ;",

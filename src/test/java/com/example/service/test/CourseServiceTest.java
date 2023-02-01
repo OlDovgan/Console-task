@@ -1,7 +1,7 @@
 package com.example.service.test;
 
 import com.example.dao.CourseDao;
-import com.example.dao.test.StudentDaoTestConfig;
+import com.example.TestConfig;
 import com.example.extra.TestUtils;
 import com.example.model.Course;
 import com.example.service.CourseService;
@@ -15,14 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = StudentDaoTestConfig.class)
+@SpringBootTest(classes = TestConfig.class)
+@DirtiesContext
 @ActiveProfiles("Test")
 class CourseServiceTest {
 
   @Value("${courses}")
-  private String coursesTest;
+  private int coursesTest;
   @Autowired
   JdbcTemplate jdbcTemplate;
   @Autowired
@@ -35,12 +37,10 @@ class CourseServiceTest {
 
   @Test
   void createData_ShouldAddedSetQuantityCoursesToDb() throws IOException, URISyntaxException {
-    utils.clearData();
-    courseService.createData();
-
+    courseService.createNewData();
     int courses = jdbcTemplate.queryForObject("SELECT COUNT (course_id) FROM courses;",
         Integer.class);
-    Assertions.assertEquals(Integer.valueOf(coursesTest), courses);
+    Assertions.assertEquals(coursesTest, courses);
   }
 
   @Test
@@ -55,15 +55,5 @@ class CourseServiceTest {
     courseList.add(courseSecond);
     courseDao.add(courseList);
     Assertions.assertEquals(courseList, courseService.getAll());
-  }
-
-  @Test
-  void clear_ShouldDeleteDataFromCourses() {
-    boolean exist= false;
-    if (!courseService.getAll().isEmpty()) {
-      courseService.clear();
-      exist=true;
-    }
-    Assertions.assertTrue(exist);
   }
 }

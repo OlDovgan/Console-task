@@ -2,28 +2,30 @@ package com.example.service.test;
 
 import com.example.dao.GroupDao;
 import com.example.dao.StudentDao;
-import com.example.dao.test.StudentDaoTestConfig;
+import com.example.TestConfig;
 import com.example.extra.TestUtils;
 import com.example.model.Group;
 import com.example.model.Student;
-import com.example.service.Data;
 import com.example.service.GroupService;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = StudentDaoTestConfig.class)
+@SpringBootTest(classes = TestConfig.class)
+@DirtiesContext
 @ActiveProfiles("Test")
 class GroupServiceTest {
 
   @Value("${groups}")
-  private String groupsTest;
+  private int groupsTest;
   @Autowired
   JdbcTemplate jdbcTemplate;
   @Autowired
@@ -31,35 +33,24 @@ class GroupServiceTest {
   @Autowired
   StudentDao studentDao;
   @Autowired
-  Data data;
-  @Autowired
   GroupService groupService;
   @Autowired
   TestUtils utils;
-
+  @BeforeEach
+  void start()  {
+    utils.clearData();
+  }
   @Test
   void createData_ShouldAddedSetQuantityGroupsToDb() {
-    utils.clearData();
     groupService.createData();
     int groups = 0;
     groups = jdbcTemplate.queryForObject("SELECT COUNT (group_id) FROM groups;",
         Integer.class);
-    Assertions.assertEquals(Integer.valueOf(groupsTest), groups);
-  }
-
-  @Test
-  void clear() {
-    boolean exist = false;
-    if (!groupService.getAll().isEmpty()) {
-      groupService.clear();
-      exist = true;
-    }
-    Assertions.assertTrue(exist);
+    Assertions.assertEquals(groupsTest, groups);
   }
 
   @Test
   void getGroupsByStudentCount_ShouldFindGroupsFromDbWhereNumberStudentLessEqualThan() {
-    data.clearAll();
     List<Group> groupList = new ArrayList<>();
     int num = 3;
     Student student = new Student();
@@ -89,7 +80,6 @@ class GroupServiceTest {
 
   @Test
   void getAll_ShouldFindAllGroupsFromDb() {
-    data.clearAll();
     List<Group> groupList = new ArrayList<>();
     Group firstGroup = new Group();
     firstGroup.setName("FR-05");

@@ -30,17 +30,17 @@ public class StudentService {
   @Value("${last-name-file}")
   private String fileLastName;
   @Value("${number-student-min}")
-  private String numberStudentMin;
+  private int numberStudentMin;
   @Value("${number-student-max}")
-  private String numberStudentMax;
+  private int numberStudentMax;
   @Value("${students-courses-min}")
-  private String studentsCoursesMin;
+  private int studentsCoursesMin;
   @Value("${students-courses-max}")
-  private String studentsCoursesMax;
+  private int studentsCoursesMax;
   @Value("${students-total}")
-  private String studentsTotalNumber;
+  private int studentsTotalNumber;
   @Value("${courses}")
-  private String coursesNumber;
+  private int coursesNumber;
   private FileReader fileReader;
   private CourseDao courseDao;
   private GroupDao groupDao;
@@ -65,6 +65,7 @@ public class StudentService {
     if (courseDao.getAll().isEmpty()) {
       throw new IllegalArgumentException("No data available from course!!!");
     } else {
+      studentDao.clearAll();
       studentDao.add(createStudentsList());
       studentDao.addStudentsCourse(createStudentsCourseList());
     }
@@ -103,12 +104,11 @@ public class StudentService {
   private List<Student> createStudentListWithGroup(Set<Integer> set, String[] firstNames,
       String[] lastNames) {
     studentsWithGroup = 0;
-    int studTotal = Integer.valueOf(studentsTotalNumber);
+    int studTotal = studentsTotalNumber;
     List<Student> studentList = new ArrayList<>();
 
     for (Integer d : set) {
-      int number = randomInt(random, Integer.valueOf(numberStudentMin),
-          Integer.valueOf(numberStudentMax));
+      int number = randomInt(random, numberStudentMin, numberStudentMax);
       int i = 0;
 
       while (studentsWithGroup < studTotal && i <= number) {
@@ -130,9 +130,8 @@ public class StudentService {
   }
 
   private List<Student> createStudentListWithoutGroup(String[] firstNames, String[] lastNames) {
-    int studTotal = Integer.valueOf(studentsTotalNumber);
     List<Student> studentList = new ArrayList<>();
-    for (int i = 0; i < studTotal - studentsWithGroup; i++) {
+    for (int i = 0; i < studentsTotalNumber - studentsWithGroup; i++) {
       Student student = new Student();
       student.setFirstName(firstNames[randomInt(random, 0, firstNames.length - 1)]);
       student.setLastName(lastNames[randomInt(random, 0, lastNames.length - 1)]);
@@ -148,13 +147,12 @@ public class StudentService {
 
     for (Student student : studentDao.getAll()) {
       List<Course> courseListAfterAdditionCourses = new ArrayList<>();
-      int k = randomInt(random, Integer.valueOf(studentsCoursesMin),
-          Integer.valueOf(studentsCoursesMax));
+      int k = randomInt(random, studentsCoursesMin, studentsCoursesMax);
       int i = 0;
       bitSet.clear();
 
       while (i < k) {
-        int course = randomInt(random, 1, Integer.valueOf(coursesNumber));
+        int course = randomInt(random, 1, coursesNumber);
         if (!bitSet.get(course)) {
           bitSet.set(course);
           i++;
@@ -198,9 +196,5 @@ public class StudentService {
 
   public void addStudentsCourse(int studId, int courseNumber) {
     studentDao.addStudentsCourse(studId, courseNumber);
-  }
-
-  public void clear() {
-    studentDao.clearAll();
   }
 }

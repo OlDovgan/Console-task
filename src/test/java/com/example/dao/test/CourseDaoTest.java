@@ -10,9 +10,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest()
+@DirtiesContext
 @ActiveProfiles("Test")
 class CourseDaoTest {
 
@@ -20,17 +22,19 @@ class CourseDaoTest {
   CourseDao courseDao;
   @Autowired
   TestUtils utils;
+
   @BeforeEach
   void start() {
-    utils.clearData();
+    utils.clearCourse();
   }
+
   @Test
   void add_ShouldAddCourseToDB() {
     String courseName = "Java";
     String courseDescription = "Java -  is a high-level, class-based,"
         + " object-oriented programming language that is designed to have "
         + "as few implementation dependencies as possible.";
-    Course course = new Course(courseName,courseDescription);
+    Course course = new Course(courseName, courseDescription);
     courseDao.add(course);
     Assertions.assertTrue(utils.isExistCourse(courseName, courseDescription));
   }

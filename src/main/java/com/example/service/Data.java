@@ -1,7 +1,5 @@
 package com.example.service;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -26,28 +24,14 @@ public class Data implements ApplicationRunner {
   }
 
 
-  public void createAll()
-      throws IOException, URISyntaxException {
-    clearAll();
-    courseService.createData();
-    groupService.createData();
-    studentService.createData();
-  }
-
-  public void clearAll() {
-    courseService.clear();
-    groupService.clear();
-    studentService.clear();
-  }
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
 
     if (courseService.getAll().size() < Integer.valueOf(studentsCoursesMax)) {
-      courseService.createData();
+      courseService.createNewData();
     }
     if (groupService.getAll().isEmpty()) {
-      groupService.clear();
       groupService.createData();
     }
     if (studentService.getAll().isEmpty()) {

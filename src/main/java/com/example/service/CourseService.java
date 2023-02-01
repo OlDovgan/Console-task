@@ -21,7 +21,7 @@ public class CourseService {
   @Value("${course-name-file}")
   private String fileCourseName;
   @Value("${courses}")
-  private String coursesNumber;
+  private int coursesNumber;
   private FileReader fileReader;
 private  CourseDao courseDao;
   @Autowired
@@ -29,7 +29,8 @@ private  CourseDao courseDao;
     this.fileReader = fileReader;
     this.courseDao = courseDao;
   }
-  public void createData() throws IOException, URISyntaxException {
+  public void createNewData() throws IOException, URISyntaxException {
+    courseDao.clearAll();
     courseDao.add(createCoursesList());
   }
 
@@ -61,7 +62,7 @@ private  CourseDao courseDao;
       String[] courseInfo = (course.trim().split("-", 2));
       coursesMap.put(courseInfo[0].trim(), courseInfo[1]);
       i++;
-      if (i >= Integer.valueOf(coursesNumber)) {
+      if (i >= coursesNumber) {
         break;
       }
     }
@@ -69,8 +70,5 @@ private  CourseDao courseDao;
   }
   public List<Course> getAll() {
     return courseDao.getAll();
-  }
-  public void clear(){
-    courseDao.clearAll();
   }
 }

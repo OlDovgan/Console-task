@@ -1,11 +1,11 @@
 package com.example.dao.test;
 
+import com.example.TestConfig;
 import com.example.dao.GroupDao;
 import com.example.dao.StudentDao;
 import com.example.extra.TestUtils;
 import com.example.model.Group;
 import com.example.model.Student;
-import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -13,9 +13,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = StudentDaoTestConfig.class)
+@SpringBootTest(classes = TestConfig.class)
+@DirtiesContext
 @ActiveProfiles("Test")
 class GroupDaoTest {
 

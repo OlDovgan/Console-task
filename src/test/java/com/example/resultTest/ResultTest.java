@@ -2,42 +2,20 @@ package com.example.resultTest;
 
 
 import com.example.Result;
-import com.example.dao.test.StudentDaoTestConfig;
-import com.example.extra.TestUtils;
-import com.example.service.Data;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import org.junit.jupiter.api.AfterAll;
+import com.example.TestConfig;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
-@SpringBootTest(classes = StudentDaoTestConfig.class)
-//@TestInstance(Lifecycle.PER_CLASS)
+@SpringBootTest(classes = TestConfig.class)
+@DirtiesContext
 class ResultTest {
 
   @Autowired
-  Data data;
-  @Autowired
-  TestUtils utils;
-  @Autowired
   Result result;
   private final String separator = System.lineSeparator();
-
-//  @BeforeAll
-//  void start() throws IOException, URISyntaxException {
-//  //  utils.clearData();
-//  //  data.createAll();
-//  }
-//
-//  @AfterAll
-//  void end() {
-//    utils.clearData();
-//  }
 
   @Test
   void studentsWithCourse_ShouldFindStudentWithCourseNumber() {
@@ -47,6 +25,7 @@ class ResultTest {
             + "3  | Gabrielle   | Ferguson    | Maths  | nA-51" + separator
             + "4  | Nicolas     | Stone       | Maths  | cP-50" + separator
             + "5  | Rufus       | Zimmerman   | Maths  | cP-50";
+
     Assertions.assertEquals(expect, result.studentsWithCourse("Maths"));
   }
 
@@ -64,6 +43,7 @@ class ResultTest {
             + "3   | Gabrielle    Ferguson    " + separator
             + "4   | Nicolas      Stone       " + separator
             + "5   | Rufus        Zimmerman   ";
+
     Assertions.assertEquals(expect, result.getStudentsWhereCourseIsExists());
   }
 

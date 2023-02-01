@@ -3,15 +3,18 @@ package com.example.extra;
 
 import com.example.dao.GroupDao;
 import com.example.mapper.CourseMapper;
-import com.example.mapper.GroupMapper;
 import com.example.model.Course;
 import com.example.model.Group;
 import com.example.model.Student;
+import com.example.service.StudentService;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.DirtiesContext;
 
 @Service
 public class TestUtils {
@@ -24,6 +27,8 @@ public class TestUtils {
 
   @Autowired
   GroupDao groupDao;
+  @Autowired
+  private StudentService studentService;
 
   public boolean isExistStudentId(int student_id) {
     String sql = "SELECT EXISTS(SELECT * FROM students WHERE student_id= ? );";
@@ -34,11 +39,6 @@ public class TestUtils {
       }
       throw new IllegalStateException("Zero rows returned from the DB");
     }, student_id));
-  }
-
-  public Student findStudentById(int id) {
-    return jdbcTemplate.queryForObject("SELECT * FROM students WHERE student_id= ? ;",
-        new Object[]{id}, Student.class);
   }
 
   public List<Course> getCourseList() {
@@ -91,6 +91,36 @@ public class TestUtils {
     return studentList;
   }
 
+  @DirtiesContext
+  public List<Student> createStudentList() {
+    List<Course> courses = new ArrayList<>();
+    String description = " English is a language—originally the language of the people of England";
+    String description2 = " Probability theory is the branch of mathematics concerned with probability";
+    Course first = new Course("English", description);
+    Course second = new Course("Probability theory", description2);
+    first.setId(2);
+    second.setId(4);
+    courses.add(first);
+    courses.add(second);
+    Student student = new Student();
+    student.setId(1);
+    student.setGroupId(1);
+    student.setFirstName("Amir");
+    student.setLastName("Watson");
+    student.setGroupName("nA-51");
+    student.setCourse(courses);
+    Student studentNext = new Student();
+    studentNext.setId(2);
+    studentNext.setGroupId(3);
+    studentNext.setFirstName("Rex");
+    studentNext.setLastName("Philip");
+    studentNext.setGroupName("Jp-04");
+    List<Student> studentListExpect = new ArrayList<>();
+    studentListExpect.add(student);
+    studentListExpect.add(studentNext);
+    return studentListExpect;
+  }
+
   public Student createStudent(int groupId, String firstName, String lastName,
       List<Course> courseList) {
     Student student = new Student();
@@ -104,7 +134,7 @@ public class TestUtils {
     return student;
   }
 
-  public Student createStudent(int groupId, String firstName, String lastName) {
+  private Student createStudent(int groupId, String firstName, String lastName) {
     Student student = new Student();
     student.setGroupId(groupId);
     student.setFirstName(firstName);
@@ -118,6 +148,15 @@ public class TestUtils {
 
   public void clearData() {
     jdbcTemplate.update("TRUNCATE students, courses, groups, students_courses RESTART IDENTITY");
+
+  }
+
+  public void clearCourse() {
+    jdbcTemplate.update("TRUNCATE  courses RESTART IDENTITY");
+  }
+
+  public void createStudentInDb() throws IOException, URISyntaxException {
+    studentService.createData();
   }
 
   public void clearStudent() {
