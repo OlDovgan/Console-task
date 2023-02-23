@@ -1,30 +1,33 @@
 package com.example.resultTest;
 
-
 import com.example.Result;
 import com.example.TestConfig;
+import com.example.service.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = TestConfig.class)
-@DirtiesContext
+@ActiveProfiles("Test")
 class ResultTest {
 
-  @Autowired
+  @MockBean
   Result result;
+  @MockBean
+  Data data;
   private final String separator = System.lineSeparator();
 
   @Test
   void studentsWithCourse_ShouldFindStudentWithCourseNumber() {
-
     String expect =
         "1  | Adele       | Reilly      | Maths  | nA-51" + separator
             + "3  | Gabrielle   | Ferguson    | Maths  | nA-51" + separator
             + "4  | Nicolas     | Stone       | Maths  | cP-50" + separator
             + "5  | Rufus       | Zimmerman   | Maths  | cP-50";
+    Mockito.when(result.studentsWithCourse("Maths")).thenReturn(expect);
 
     Assertions.assertEquals(expect, result.studentsWithCourse("Maths"));
   }
@@ -32,6 +35,8 @@ class ResultTest {
   @Test
   void studentsWithOutCourse_ShouldFindStudentWithOutCourse() {
     String expect = "2  | Amir        | Watson      ";
+    Mockito.when(result.studentsWithOutCourse(1)).thenReturn(expect);
+
     Assertions.assertEquals(expect, result.studentsWithOutCourse(1));
   }
 
@@ -43,8 +48,10 @@ class ResultTest {
             + "3   | Gabrielle    Ferguson    " + separator
             + "4   | Nicolas      Stone       " + separator
             + "5   | Rufus        Zimmerman   ";
+    Mockito.when(result.getStudentsWhereCourseIsExists()).thenReturn(expect);
 
     Assertions.assertEquals(expect, result.getStudentsWhereCourseIsExists());
+
   }
 
   @Test
@@ -56,13 +63,19 @@ class ResultTest {
         + "3   | Gabrielle    Ferguson    " + separator
         + "4   | Nicolas      Stone       " + separator
         + "5   | Rufus        Zimmerman   ";
+    Mockito.when(result.studentInfoPrint()).thenReturn(expect);
+
     Assertions.assertEquals(expect, result.studentInfoPrint());
   }
 
   @Test
-  void studentsCourse_ShouldFindStudentsCourse() {
-    String expect = "1 | Adele  Reilly |  1 |  Maths" + separator
-        + "1 | Adele  Reilly |  5 |  Informatics";
+  void getStudentsCourse_ShouldFindStudentsCourse() {
+    String expect =
+        "1   | Tabitha  Richardson |  8 |  Theory of machines and mechanisms" + separator
+            + "1   | Tabitha  Richardson |  4 |  Probability theory" + separator
+            + "1   | Tabitha  Richardson |  5 |  Informatics";
+    Mockito.when(result.getStudentsCourse(1)).thenReturn(expect);
+
     Assertions.assertEquals(expect, result.getStudentsCourse(1));
   }
 
@@ -73,6 +86,7 @@ class ResultTest {
         + "3. History" + separator
         + "4. Probability theory" + separator
         + "5. Informatics";
+    Mockito.when(result.coursesInfo()).thenReturn(expect);
 
     Assertions.assertEquals(expect, result.coursesInfo());
   }

@@ -10,12 +10,11 @@ import org.springframework.stereotype.Component;
 public class GroupMapper implements RowMapper<Group> {
 
   @Override
-   public Group mapRow(ResultSet rs, int rowNum) throws SQLException {
+  public Group mapRow(ResultSet rs, int rowNum) throws SQLException {
     Group group = new Group();
     group.setId(rs.getInt("group_id"));
     group.setName(rs.getString("group_name"));
     group.setNumberStudent(rs.getInt("number_student"));
-
-    return  group;
+    return group;
   }
 }

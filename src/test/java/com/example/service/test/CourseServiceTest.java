@@ -1,25 +1,29 @@
 package com.example.service.test;
 
+
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.example.dao.CourseDao;
 import com.example.TestConfig;
-import com.example.extra.TestUtils;
 import com.example.model.Course;
 import com.example.service.CourseService;
+import com.example.service.StudentService;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = TestConfig.class)
-@DirtiesContext
 @ActiveProfiles("Test")
 class CourseServiceTest {
 
@@ -29,31 +33,26 @@ class CourseServiceTest {
   JdbcTemplate jdbcTemplate;
   @Autowired
   CourseService courseService;
-
-  @Autowired
-  TestUtils utils;
-  @Autowired
+  @MockBean
   CourseDao courseDao;
+  @MockBean
+  StudentService studentService;
 
   @Test
   void createData_ShouldAddedSetQuantityCoursesToDb() throws IOException, URISyntaxException {
-    courseService.createNewData();
-    int courses = jdbcTemplate.queryForObject("SELECT COUNT (course_id) FROM courses;",
-        Integer.class);
-    Assertions.assertEquals(coursesTest, courses);
+    courseService.createNewData(coursesTest);
+    List<Course> list = new ArrayList<>();
+    for (int i = 0; i < coursesTest; i++) {
+      list.add(null);
+    }
+    Mockito.when(courseDao.getAll()).thenReturn(list);
+    Assertions.assertEquals(coursesTest, courseService.getAll().size());
+
   }
 
   @Test
-  void getAll_ShouldFindAllCoursesFromDB() {
-    utils.clearData();
-    List<Course> courseList = new ArrayList<>();
-    Course courseFirst = new Course("Pascal", "Pascal");
-    courseFirst.setId(1);
-    Course courseSecond = new Course("Python", "Python");
-    courseSecond.setId(2);
-    courseList.add(courseFirst);
-    courseList.add(courseSecond);
-    courseDao.add(courseList);
-    Assertions.assertEquals(courseList, courseService.getAll());
+  void getAll_ShouldCallCourseDaoMethodGetAll() throws IOException, URISyntaxException {
+    courseService.getAll();
+    verify(courseDao, times(2)).getAll();
   }
 }

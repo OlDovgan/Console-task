@@ -24,9 +24,11 @@ public class StudentDao {
   private final JdbcTemplate jdbcTemplate;
   private final StudentMapper mapperStudent;
   private final CourseMapper mapperCourse;
+  private String query = "INSERT INTO students_courses (student_id, course_id ) VALUES (?,?);";
 
   @Autowired
-  public StudentDao(JdbcTemplate jdbcTemplate, StudentMapper mapperStudent, CourseMapper mapperCourse) {
+  public StudentDao(JdbcTemplate jdbcTemplate, StudentMapper mapperStudent,
+      CourseMapper mapperCourse) {
     this.jdbcTemplate = jdbcTemplate;
     this.mapperStudent = mapperStudent;
     this.mapperCourse = mapperCourse;
@@ -39,12 +41,11 @@ public class StudentDao {
     }
   }
 
-  private String sqlInsertToStudents = "INSERT INTO students (group_id, first_name, last_name) VALUES(?,?,?);";
-
   private int keyId(Student student) {
     KeyHolder keyHolder = new GeneratedKeyHolder();
+    String sql = "INSERT INTO students (group_id, first_name, last_name) VALUES(?,?,?);";
     jdbcTemplate.update(connection -> {
-      PreparedStatement ps = connection.prepareStatement(sqlInsertToStudents,
+      PreparedStatement ps = connection.prepareStatement(sql,
           new String[]{"student_id"});
       ps.setInt(1, student.getGroupId());
       ps.setString(2, student.getFirstName());
@@ -54,7 +55,6 @@ public class StudentDao {
     return (int) keyHolder.getKey();
   }
 
-  String sqlInsertToStudCourses = "INSERT INTO students_courses (student_id, course_id ) VALUES (?,?);";
 
   public void add(Student student) {
     student.setId(keyId(student));
@@ -63,25 +63,23 @@ public class StudentDao {
       for (Course course : student.getCourse()) {
         studentsCoursesList.add(new Integer[]{student.getId(), course.getId()});
       }
-      jdbcTemplate.batchUpdate(sqlInsertToStudCourses,
-          new BatchPreparedStatementSetter() {
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
+      jdbcTemplate.batchUpdate(query,
+      new BatchPreparedStatementSetter() {
+        public void setValues(PreparedStatement ps, int i) throws SQLException {
 
-              ps.setInt(1, studentsCoursesList.get(i)[0]);
-              ps.setInt(2, studentsCoursesList.get(i)[1]);
-            }
+          ps.setInt(1, studentsCoursesList.get(i)[0]);
+          ps.setInt(2, studentsCoursesList.get(i)[1]);
+        }
 
-            public int getBatchSize() {
-              return studentsCoursesList.size();
-            }
-          });
+        public int getBatchSize() {
+          return studentsCoursesList.size();
+        }
+      });
     }
   }
 
   public void addStudentsCourse(int studentId, int courseId) {
-    List<Student> studentList = getWithOutCourse(courseId);
-    String sql = "INSERT INTO students_courses (student_id, course_id ) VALUES (?,?);";
-    jdbcTemplate.update(sqlInsertToStudCourses, studentId, courseId);
+    jdbcTemplate.update(query, studentId, courseId);
   }
 
   public void addStudentsCourse(List<Student> studentsList) {
@@ -94,8 +92,7 @@ public class StudentDao {
       }
     }
 
-    String sql = "INSERT INTO students_courses (student_id, course_id ) VALUES (?,?);";
-    jdbcTemplate.batchUpdate(sql,
+    jdbcTemplate.batchUpdate(query,
         new BatchPreparedStatementSetter() {
           public void setValues(PreparedStatement ps, int i) throws SQLException {
 
@@ -109,7 +106,6 @@ public class StudentDao {
         });
   }
 
-
   public List<Student> getAll() {
 
     List<Student> studentListFromTableStudents = jdbcTemplate.query("SELECT * FROM students;",
@@ -121,6 +117,16 @@ public class StudentDao {
       studentListNew.add(student);
     }
     return studentListNew;
+  }
+
+  public Student getStudentById(int id) {
+    String sql = "SELECT * FROM students WHERE student_id = ?;";
+    Student student = jdbcTemplate.queryForObject(sql, mapperStudent, id);
+    if (student != null) {
+      setStudentsGroupsName(student);
+      student.setCourse(getStudentsCourseByStudentId(id));
+    }
+    return student;
   }
 
   private List<Student> getAll(List<Student> studentList) {
@@ -140,6 +146,7 @@ public class StudentDao {
             + " FROM students_courses JOIN courses "
             + " ON students_courses.course_id= courses.course_id "
             + " WHERE students_courses.student_id= ?;";
+
     return jdbcTemplate.query(sql, mapperCourse, studentId);
 
   }
@@ -171,6 +178,19 @@ public class StudentDao {
     return getAll(studentList);
   }
 
+  public List<Student> getWithCourse(String courseName) {
+
+    List<Student> studentList = new ArrayList<>();
+    for (Student stud : getWithCourse()) {
+      for (Course course : stud.getCourse()) {
+        if (course.getName().equals(courseName)) {
+          studentList.add(stud);
+        }
+      }
+    }
+    return studentList;
+  }
+
   public void delete(int id) {
     jdbcTemplate.update("DELETE FROM students  WHERE student_id = ? ;", id);
   }
@@ -179,6 +199,7 @@ public class StudentDao {
     jdbcTemplate.update("DELETE FROM students_courses WHERE student_id =? AND  course_id=? ;",
         studentId, courseId);
   }
+
   public void clearAll() {
     jdbcTemplate.update("TRUNCATE students, students_courses RESTART IDENTITY");
   }

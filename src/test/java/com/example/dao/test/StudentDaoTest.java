@@ -1,63 +1,81 @@
 package com.example.dao.test;
 
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
+
 import com.example.TestConfig;
-import com.example.dao.CourseDao;
 import com.example.dao.StudentDao;
 import com.example.extra.TestUtils;
 import com.example.model.Student;
+import com.example.service.Data;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = TestConfig.class)
-@DirtiesContext
+@TestInstance(Lifecycle.PER_CLASS)
+@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 @ActiveProfiles("Test")
 class StudentDaoTest {
+
+  @Value("${students-total}")
+  private int studentsTotalNumber;
 
   @Autowired
   TestUtils utils;
   @Autowired
   StudentDao studentDao;
-  @Autowired
-  CourseDao courseDao;
+  @BeforeEach
+  void start() throws IOException, URISyntaxException {
+    utils.clearData();
+    utils.createCourse();
+    utils.createGroup();
+  }
 
   @Test
   void add_ShouldAddStudentToDB() {
-    utils.clearStudent();
     Student student = new Student();
-    student.setGroupId(0);
+    student.setGroupId(1);
     student.setFirstName("Max");
     student.setLastName("Smith");
     studentDao.add(student);
     student.setId(1);
-    Assertions.assertTrue(studentDao.getAll().contains(student));
+    Assertions.assertTrue(utils.isExistStudent(student));
   }
 
   @Test
-  void add_ShouldAddStudentsListToDB() {
-    utils.clearStudent();
-    studentDao.add(utils.createStudentList());
-    Assertions.assertEquals(utils.createStudentList(), studentDao.getAll());
+  void add_ShouldAddStudentsListToDB() throws IOException, URISyntaxException {
+    List<Student> students = utils.createStudentList();
+    studentDao.add(students);
+    students.get(0).setId(1);
+    students.get(1).setId(2);
+    Assertions.assertTrue( utils.isExistStudent(students));
   }
 
   @Test
   void getWithOutCourse_ShouldFindStudentsWithOutCourseByIdFromDB() {
-    utils.clearStudent();
-    studentDao.add(utils.createStudentList());
-    Assertions.assertEquals(utils.createStudentList(), studentDao.getWithOutCourse(1));
+
+    List<Student> students = utils.createStudentList();
+    studentDao.add(students);
+    students.get(0).setId(1);
+    students.get(1).setId(2);
+    Assertions.assertEquals(students, studentDao.getWithOutCourse(1));
   }
 
   @Test
   void getWithCourse_ShouldFindStudentsWithCourseFromDB() {
-    utils.clearStudent();
-    List<Student> studentList = utils.createStudentList(courseDao.getAll());
+    List<Student> studentList = utils.createStudentList();
     studentDao.add(studentList);
     List<Student> studentListExpect = new ArrayList<>();
     for (Student student : studentList) {
@@ -69,7 +87,8 @@ class StudentDaoTest {
   }
 
   @Test
-  void addStudentsCourse_ShouldAddStudentsCourseToDB() {
+  void addStudentsCourse_ShouldAddStudentsCourseToDB() throws IOException, URISyntaxException {
+    utils.createStudentInDb();
     int courseId = 6;
     int studentId = 1;
     boolean exist = false;
@@ -80,7 +99,6 @@ class StudentDaoTest {
     }
     Assertions.assertTrue(exist);
   }
-
   @Test
   void deleteFromCourse_ShouldDeleteStudentsCourseFromDB() throws IOException, URISyntaxException {
     utils.createStudentInDb();
@@ -91,21 +109,21 @@ class StudentDaoTest {
       studentDao.deleteFromCourse(studentId, courseId);
       exist = utils.isExistStudentsCourse(studentId, courseId);
     }
-
     Assertions.assertFalse(exist);
   }
 
-
   @Test
   void getAll_ShouldFindAllStudentsFromDB() {
-    utils.clearStudent();
-    List<Student> studentList = utils.createStudentList(courseDao.getAll());
-    studentDao.add(studentList);
-    Assertions.assertEquals(studentList, studentDao.getAll());
+    List<Student> students = utils.createStudentList();
+    studentDao.add(students);
+    students.get(0).setId(1);
+    students.get(1).setId(2);
+    Assertions.assertEquals(students, studentDao.getAll());
   }
 
   @Test
-  void delete_ShouldDeleteStudentsByIdFromDB() {
+  void delete_ShouldDeleteStudentsByIdFromDB() throws IOException, URISyntaxException {
+    utils.createStudentInDb();
     boolean exist = true;
     var id = 1;
     if (utils.isExistStudentId(id)) {

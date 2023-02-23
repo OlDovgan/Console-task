@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class CourseMapper implements RowMapper<Course> {
 
   @Override
-   public Course mapRow(ResultSet rs, int rowNum) throws SQLException {
+  public Course mapRow(ResultSet rs, int rowNum) throws SQLException {
     Course course = new Course();
     course.setId(rs.getInt("course_id"));
     course.setName(rs.getString("course_name"));

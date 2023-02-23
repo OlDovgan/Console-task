@@ -7,6 +7,7 @@ import com.example.service.StudentService;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Component;
 @Order(1)
 @FirstMenu
 public class CreateData implements Menu {
+  @Value("${courses}")
+  private int coursesNumber;
 
   private final CourseService courseService;
   private final GroupService groupService;
@@ -35,7 +38,7 @@ public class CreateData implements Menu {
   public void executeMenu() {
     try {
       System.out.println("Please wait...");
-      courseService.createNewData();
+      courseService.createNewData(coursesNumber);
       groupService.createData();
       studentService.createData();
       System.out.println("Data entered into database successfully" + System.lineSeparator());

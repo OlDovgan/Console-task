@@ -20,23 +20,19 @@ public class Result {
   private static final String FORMAT = "%-" + 4 + "s| %-" + 12 + "s %-" + 12 + "s";
   public final List<String> courses = new ArrayList<>();
 
-  public String studentsWithCourse(String courseName) {
+  public String studentsWithCourse(String course) {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     String groupName;
     String format =
-        "%-3d| %-" + 12 + "s| %-" + 12 + "s| %-" + (courseName.length() + 2) + "s| %s";
-    for (Student stud : studentService.getWithCourse()) {
-      for (Course course : stud.getCourse()) {
-        if (course.getName().equals(courseName)) {
-          if (stud.getGroupName() == null) {
-            groupName = "without a group";
-          } else {
-            groupName = stud.getGroupName();
-          }
-          stringJoiner.add(String.format(format, stud.getId(), stud.getFirstName(),
-              stud.getLastName(), course.getName(), groupName));
-        }
+        "%-3d| %-" + 12 + "s| %-" + 12 + "s| %-" + (course.length() + 2) + "s| %s";
+    for (Student stud : studentService.getWithCourse(course)) {
+      if (stud.getGroupName() == null) {
+        groupName = "without a group";
+      } else {
+        groupName = stud.getGroupName();
       }
+      stringJoiner.add(String.format(format, stud.getId(), stud.getFirstName(),
+          stud.getLastName(), course, groupName));
     }
     return stringJoiner.toString();
   }
@@ -79,19 +75,19 @@ public class Result {
   }
 
   public String getStudentsCourse(int studentId) {
+    Student student = studentService.getStudentById(studentId);
+
     String separator = System.lineSeparator();
     StringJoiner joiner = new StringJoiner(separator);
-    System.out.println("The action completed successfully" + separator);
 
-    for (Student st : studentService.getAll()) {
-      if (st.getCourse() != null && st.getId() == studentId) {
-        for (Course course : st.getCourse()) {
-          joiner.add(st.getId() + " | " + st.getFirstName() + "  "
-              + st.getLastName() + " |  " + course.getId() + " |  "
-              + course.getName());
-        }
+    if (student.getCourse() != null) {
+      for (Course course : student.getCourse()) {
+        joiner.add(student.getId() + " | " + student.getFirstName() + "  "
+            + student.getLastName() + " |  " + course.getId() + " |  "
+            + course.getName());
       }
     }
+
     return joiner.toString();
   }
 

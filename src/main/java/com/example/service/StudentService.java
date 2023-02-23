@@ -170,6 +170,10 @@ public class StudentService {
     return studentDao.getWithCourse();
   }
 
+  public List<Student> getWithCourse(String course) {
+    return studentDao.getWithCourse(course);
+  }
+
   public List<Student> getWithOutCourse(int courseId) {
     return studentDao.getWithOutCourse(courseId);
   }
@@ -192,6 +196,10 @@ public class StudentService {
 
   public void deleteFromCourse(int studentId, int courseId) {
     studentDao.deleteFromCourse(studentId, courseId);
+  }
+
+  public Student getStudentById(int id) {
+    return studentDao.getStudentById(id);
   }
 
   public void addStudentsCourse(int studId, int courseNumber) {

@@ -18,7 +18,7 @@ public class GroupService {
   @Value("${students-total}")
   private int studentsTotalNumber;
   private Random random;
-  public GroupDao groupDao;
+  public final GroupDao groupDao;
 
   @Autowired
   public GroupService(GroupDao groupDao, Random random) {

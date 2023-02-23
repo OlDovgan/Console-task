@@ -23,29 +23,30 @@ public class CourseService {
   @Value("${courses}")
   private int coursesNumber;
   private FileReader fileReader;
-private  CourseDao courseDao;
+  private CourseDao courseDao;
+
   @Autowired
   public CourseService(FileReader fileReader, CourseDao courseDao) {
     this.fileReader = fileReader;
     this.courseDao = courseDao;
   }
-  public void createNewData() throws IOException, URISyntaxException {
+
+  public void createNewData(int course) throws IOException, URISyntaxException {
     courseDao.clearAll();
-    courseDao.add(createCoursesList());
+    courseDao.add(createCoursesList(course));
   }
 
-  private List<Course> createCoursesList()
+  private List<Course> createCoursesList(int course)
       throws IOException, URISyntaxException {
 
     String[] courseArray = createCourseArray(fileCourseName);
-    Map<String, String> coursesMap = createCoursesMap(courseArray);
+    Map<String, String> coursesMap = createCoursesMap(courseArray, course);
 
     List<Course> courseList = new ArrayList<>();
     for (Entry<String, String> entry : coursesMap.entrySet()) {
       courseList.add(new Course(entry.getKey(), entry.getValue()));
     }
     return courseList;
-
   }
 
   private String[] createCourseArray(String coursesNameFile)
@@ -55,19 +56,20 @@ private  CourseDao courseDao;
     return join.split(";");
   }
 
-  private Map<String, String> createCoursesMap(String[] coursesArray) {
+  private Map<String, String> createCoursesMap(String[] coursesArray, int courseNum) {
     int i = 0;
     Map<String, String> coursesMap = new LinkedHashMap<>();
     for (String course : coursesArray) {
       String[] courseInfo = (course.trim().split("-", 2));
       coursesMap.put(courseInfo[0].trim(), courseInfo[1]);
       i++;
-      if (i >= coursesNumber) {
+      if (i >= courseNum) {
         break;
       }
     }
     return coursesMap;
   }
+
   public List<Course> getAll() {
     return courseDao.getAll();
   }

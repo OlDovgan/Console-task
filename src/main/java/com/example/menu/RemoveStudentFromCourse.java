@@ -35,6 +35,7 @@ public class RemoveStudentFromCourse implements Menu {
     printTableHeader();
     System.out.println(result.getStudentsWhereCourseIsExists());
     int studentId = service.readInt("Please, select a student ID to delete the course");
+    System.out.println("The action completed successfully");
     System.out.println(result.getStudentsCourse(studentId));
     int courseId = service.readInt("Please, select a course ID to delete");
     studentService.deleteFromCourse(studentId, courseId);

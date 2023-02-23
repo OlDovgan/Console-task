@@ -46,7 +46,7 @@ public class FindStudentsWithCourse implements Menu {
   }
 
   private void printTableHeader(int courseNumber) {
-    String separator= "s| %-";
+    String separator = "s| %-";
     String formatString = "%-3s| %-" + 12 + separator + 12 + separator +
         (result.courses.get(courseNumber - 1).length() + 2) + separator + 10 + "s";
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
