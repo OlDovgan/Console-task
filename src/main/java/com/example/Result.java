@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 public class Result {
 
   @Autowired
-  StudentService studentService;
+  private StudentService studentService;
   @Autowired
-  CourseService courseService;
+  private CourseService courseService;
   private static final String FORMAT = "%-" + 4 + "s| %-" + 12 + "s %-" + 12 + "s";
   public final List<String> courses = new ArrayList<>();
 

@@ -18,33 +18,39 @@ import org.springframework.stereotype.Service;
 @Service
 public class CourseService {
 
-  @Value("${course-name-file}")
-  private String fileCourseName;
-  @Value("${courses}")
+  private String fileName;
   private int coursesNumber;
   private FileReader fileReader;
   private CourseDao courseDao;
 
   @Autowired
-  public CourseService(FileReader fileReader, CourseDao courseDao) {
+  public CourseService(FileReader fileReader, CourseDao courseDao,
+      @Value("${courses}") int coursesNumber, @Value("${course-name-file}") String fileName) {
     this.fileReader = fileReader;
     this.courseDao = courseDao;
+    this.coursesNumber = coursesNumber;
+    this.fileName = fileName;
   }
 
-  public void createNewData(int course) throws IOException, URISyntaxException {
+  public void createData() throws IOException, URISyntaxException {
     courseDao.clearAll();
-    courseDao.add(createCoursesList(course));
+    courseDao.add(createCoursesList(coursesNumber));
   }
 
-  private List<Course> createCoursesList(int course)
+  private List<Course> createCoursesList(int courseNum)
       throws IOException, URISyntaxException {
-
-    String[] courseArray = createCourseArray(fileCourseName);
-    Map<String, String> coursesMap = createCoursesMap(courseArray, course);
-
+    String[] courseArray = createCourseArray(fileName);
     List<Course> courseList = new ArrayList<>();
-    for (Entry<String, String> entry : coursesMap.entrySet()) {
-      courseList.add(new Course(entry.getKey(), entry.getValue()));
+    int i = 0;
+    if (courseArray != null) {
+      for (String course : courseArray) {
+        String[] courseInfo = (course.trim().split("-", 2));
+        courseList.add(new Course(courseInfo[0].trim(), courseInfo[1]));
+        i++;
+        if (i >= courseNum) {
+          break;
+        }
+      }
     }
     return courseList;
   }
@@ -54,20 +60,6 @@ public class CourseService {
     List<String> element = fileReader.readFile(coursesNameFile);
     String join = String.join(" ", element);
     return join.split(";");
-  }
-
-  private Map<String, String> createCoursesMap(String[] coursesArray, int courseNum) {
-    int i = 0;
-    Map<String, String> coursesMap = new LinkedHashMap<>();
-    for (String course : coursesArray) {
-      String[] courseInfo = (course.trim().split("-", 2));
-      coursesMap.put(courseInfo[0].trim(), courseInfo[1]);
-      i++;
-      if (i >= courseNum) {
-        break;
-      }
-    }
-    return coursesMap;
   }
 
   public List<Course> getAll() {

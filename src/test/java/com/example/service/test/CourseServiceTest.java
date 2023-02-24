@@ -30,8 +30,6 @@ class CourseServiceTest {
   @Value("${courses}")
   private int coursesTest;
   @Autowired
-  JdbcTemplate jdbcTemplate;
-  @Autowired
   CourseService courseService;
   @MockBean
   CourseDao courseDao;
@@ -40,7 +38,6 @@ class CourseServiceTest {
 
   @Test
   void createData_ShouldAddedSetQuantityCoursesToDb() throws IOException, URISyntaxException {
-    courseService.createNewData(coursesTest);
     List<Course> list = new ArrayList<>();
     for (int i = 0; i < coursesTest; i++) {
       list.add(null);

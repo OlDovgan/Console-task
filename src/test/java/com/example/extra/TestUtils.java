@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.test.annotation.DirtiesContext;
 
 @Service
 public class TestUtils {
@@ -154,7 +153,7 @@ public class TestUtils {
   private int studentsTotalNumber;
 
   public void createCourse() throws IOException, URISyntaxException {
-    courseService.createNewData(coursesNumber);
+    courseService.createData();
   }
 
   public void createGroup() {

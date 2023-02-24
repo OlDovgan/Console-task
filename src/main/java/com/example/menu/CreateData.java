@@ -38,7 +38,7 @@ public class CreateData implements Menu {
   public void executeMenu() {
     try {
       System.out.println("Please wait...");
-      courseService.createNewData(coursesNumber);
+      courseService.createData();
       groupService.createData();
       studentService.createData();
       System.out.println("Data entered into database successfully" + System.lineSeparator());

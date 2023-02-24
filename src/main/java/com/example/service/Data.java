@@ -13,8 +13,6 @@ public class Data implements ApplicationRunner {
 
   @Value("${students-courses-max}")
   private String studentsCoursesMax;
-  @Value("${courses}")
-  private int coursesNumber;
   private final CourseService courseService;
   private final GroupService groupService;
   private final StudentService studentService;
@@ -35,8 +33,9 @@ public class Data implements ApplicationRunner {
   }
 
   private void createData() throws IOException, URISyntaxException {
-    if (courseService.getAll().size() < Integer.valueOf(studentsCoursesMax)) {
-      courseService.createNewData(coursesNumber);
+  // if (courseService.getAll().size() < Integer.valueOf(studentsCoursesMax)) {
+    if (courseService.getAll().isEmpty()) {
+      courseService.createData();
     }
     if (groupService.getAll().isEmpty()) {
       groupService.createData();

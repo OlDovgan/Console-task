@@ -44,8 +44,6 @@ class GroupServiceTest {
 
   @Test
   void createData_ShouldAddedSetQuantityGroupsToDb() {
-
-    groupService.createData();
     List<Group> list = new ArrayList<>();
     for (int i = 0; i < groupsTest; i++) {
       list.add(null);

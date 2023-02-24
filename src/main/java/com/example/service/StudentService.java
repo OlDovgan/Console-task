@@ -96,7 +96,7 @@ public class StudentService {
 
   private int randomInt(Random random, int origin, int bound) {
     if (origin >= bound) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("Error");
     }
     return origin + random.nextInt(bound);
   }
@@ -153,6 +153,11 @@ public class StudentService {
 
       while (i < k) {
         int course = randomInt(random, 1, coursesNumber);
+        if (course > courseList.size()) {
+          course = courseList.size();
+          courseListAfterAdditionCourses.add(courseList.get(course - 1));
+          break;
+        }
         if (!bitSet.get(course)) {
           bitSet.set(course);
           i++;
