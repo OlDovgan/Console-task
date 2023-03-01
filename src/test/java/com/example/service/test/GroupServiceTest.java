@@ -8,12 +8,8 @@ import com.example.dao.GroupDao;
 import com.example.dao.StudentDao;
 import com.example.TestConfig;
 import com.example.model.Group;
-import com.example.model.Student;
-import com.example.service.Data;
 import com.example.service.GroupService;
 import com.example.service.StudentService;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -37,8 +33,7 @@ class GroupServiceTest {
   StudentDao studentDao;
   @MockBean
   StudentService studentService;
-  @MockBean
-  Data data;
+
   @Autowired
   GroupService groupService;
 

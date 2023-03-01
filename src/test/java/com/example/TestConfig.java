@@ -2,8 +2,10 @@ package com.example;
 
 
 
+import com.example.service.AutoRun;
 import java.util.Random;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
@@ -19,5 +21,7 @@ public class TestConfig {
   public Random randomTest() {
     return new Random(42);
   }
+  @MockBean
+  AutoRun autoRun;
 
 }

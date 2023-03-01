@@ -9,8 +9,6 @@ import com.example.TestConfig;
 import com.example.model.Course;
 import com.example.service.CourseService;
 import com.example.service.StudentService;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = TestConfig.class)
@@ -37,7 +34,7 @@ class CourseServiceTest {
   StudentService studentService;
 
   @Test
-  void createData_ShouldAddedSetQuantityCoursesToDb() throws IOException, URISyntaxException {
+  void createData_ShouldAddedSetQuantityCoursesToDb()  {
     List<Course> list = new ArrayList<>();
     for (int i = 0; i < coursesTest; i++) {
       list.add(null);
@@ -48,8 +45,8 @@ class CourseServiceTest {
   }
 
   @Test
-  void getAll_ShouldCallCourseDaoMethodGetAll() throws IOException, URISyntaxException {
+  void getAll_ShouldCallCourseDaoMethodGetAll()  {
     courseService.getAll();
-    verify(courseDao, times(2)).getAll();
+    verify(courseDao, times(1)).getAll();
   }
 }

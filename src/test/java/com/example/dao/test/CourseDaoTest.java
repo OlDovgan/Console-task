@@ -1,5 +1,6 @@
 package com.example.dao.test;
 
+import com.example.TestConfig;
 import com.example.dao.CourseDao;
 import com.example.extra.TestUtils;
 import com.example.model.Course;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest()
+@SpringBootTest(classes = TestConfig.class)
 @ActiveProfiles("Test")
 class CourseDaoTest {
 

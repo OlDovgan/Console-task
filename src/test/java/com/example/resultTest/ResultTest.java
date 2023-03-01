@@ -2,7 +2,6 @@ package com.example.resultTest;
 
 import com.example.Result;
 import com.example.TestConfig;
-import com.example.service.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,8 +15,6 @@ class ResultTest {
 
   @MockBean
   Result result;
-  @MockBean
-  Data data;
   private final String separator = System.lineSeparator();
 
   @Test
