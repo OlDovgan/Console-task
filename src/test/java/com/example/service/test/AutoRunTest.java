@@ -1,22 +1,26 @@
 package com.example.service.test;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import com.example.TestConfig;
-import com.example.service.AutoRun;
+import com.example.menu.AppMenu;
+import com.example.service.Data;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = TestConfig.class)
+@SpringBootTest()
 @ActiveProfiles("Test")
-public class AutoRunTest {
- @SpyBean
-  AutoRun autoRun;
+class AutoRunTest {
+
+  @MockBean
+  Data data;
+  @MockBean
+  AppMenu menu;
+
   @Test
   void whenContextLoads_thenRunnersRun() throws Exception {
-    verify(autoRun, times(1)).run(any());
+    verify(data, times(1)).createData();
+    verify(menu, times(1)).run();
   }
 }

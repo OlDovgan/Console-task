@@ -5,6 +5,10 @@
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <layout class="ch.qos.logback.classic.PatternLayout">
+      <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <level>INFO</level>
+        <level>DEBUG</level>
+      </filter>
       <Pattern>
         %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
       </Pattern>
@@ -13,6 +17,10 @@
 
   <appender name="FILE-DEBUG"
     class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>DEBUG</level>
+    </filter>
     <file>${DEV_HOME}/debug.log</file>
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
       <Pattern>
@@ -53,34 +61,10 @@
 
   </appender>
 
-  <appender name="FILE-TRACE"
-    class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${DEV_HOME}/trace.log</file>
-    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <Pattern>
-        %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
-      </Pattern>
-    </encoder>
-
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!-- rollover daily -->
-      <fileNamePattern>${DEV_HOME}/archived/trace.%d{yyyy-MM-dd}.%i.log
-      </fileNamePattern>
-      <timeBasedFileNamingAndTriggeringPolicy
-        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-        <maxFileSize>10MB</maxFileSize>
-      </timeBasedFileNamingAndTriggeringPolicy>
-    </rollingPolicy>
-
-  </appender>
-
-  <!-- Send logs to both console and file audit -->
-
   <!--Dao -->
   <logger name="com.example.dao" level="info" >
     <appender-ref ref="STDOUT" />
-  </logger>
-
+   </logger>
   <logger name="com.example.dao" level="error" >
      <appender-ref ref="STDOUT" />
      <appender-ref ref="FILE-ERROR" />
@@ -88,11 +72,8 @@
   <logger name="com.example.dao" level="debug" >
     <appender-ref ref="STDOUT" />
     <appender-ref ref="FILE-DEBUG" />
-  </logger>
-  <logger name="com.example.dao" level="trace" >
-    <appender-ref ref="STDOUT" />
-    <appender-ref ref="FILE-TRACE" />
-  </logger>
+    </logger>
+
   <!--Service -->
   <logger name="com.example.service" level="info" >
     <appender-ref ref="STDOUT" />
@@ -100,14 +81,10 @@
   <logger name="com.example.service" level="error" >
     <appender-ref ref="STDOUT" />
     <appender-ref ref="FILE-ERROR" />
-  </logger>
+    </logger>
   <logger name="com.example.service" level="debug" >
     <appender-ref ref="STDOUT" />
     <appender-ref ref="FILE-DEBUG" />
-  </logger>
-  <logger name="com.example.service" level="trace">
-    <appender-ref ref="STDOUT" />
-    <appender-ref ref="FILE-TRACE" />
   </logger>
 
   <root level="info">

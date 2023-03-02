@@ -1,7 +1,7 @@
 package com.example.service;
 
 
-import com.example.menu.MainMenu;
+import com.example.menu.AppMenu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -11,18 +11,13 @@ import org.springframework.stereotype.Component;
 public class AutoRun implements ApplicationRunner {
 
   @Autowired
-  Data data;
+  private Data data;
   @Autowired
-  MainMenu firstMenu;
-  @Autowired
-  MainMenu secondMenu;
+  private AppMenu appMenu;
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
     data.createData();
-    firstMenu.executeMenu();
-    while (true) {
-      secondMenu.executeMenu();
-    }
+    appMenu.run();
   }
 }
