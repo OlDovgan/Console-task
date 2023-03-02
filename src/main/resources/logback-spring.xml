@@ -7,7 +7,6 @@
     <layout class="ch.qos.logback.classic.PatternLayout">
       <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
         <level>INFO</level>
-        <level>DEBUG</level>
       </filter>
       <Pattern>
         %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
@@ -19,7 +18,7 @@
     class="ch.qos.logback.core.rolling.RollingFileAppender">
 
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>DEBUG</level>
+      <level>ERROR</level>
     </filter>
     <file>${DEV_HOME}/debug.log</file>
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -27,7 +26,6 @@
         %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
       </Pattern>
     </encoder>
-
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <!-- rollover daily -->
       <fileNamePattern>${DEV_HOME}/archived/debug.%d{yyyy-MM-dd}.%i.log
@@ -40,51 +38,12 @@
 
   </appender>
 
-  <appender name="FILE-ERROR"
-    class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${DEV_HOME}/error.log</file>
-    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <Pattern>
-        %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
-      </Pattern>
-    </encoder>
-
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!-- rollover daily -->
-      <fileNamePattern>${DEV_HOME}/archived/errorTest.%d{yyyy-MM-dd}.%i.log
-      </fileNamePattern>
-      <timeBasedFileNamingAndTriggeringPolicy
-        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-        <maxFileSize>10MB</maxFileSize>
-      </timeBasedFileNamingAndTriggeringPolicy>
-    </rollingPolicy>
-
-  </appender>
-
-  <!--Dao -->
-  <logger name="com.example.dao" level="info" >
+   <logger name="com.example" level="info" >
     <appender-ref ref="STDOUT" />
    </logger>
-  <logger name="com.example.dao" level="error" >
+  <logger name="com.example" level="error" >
      <appender-ref ref="STDOUT" />
-     <appender-ref ref="FILE-ERROR" />
-  </logger>
-  <logger name="com.example.dao" level="debug" >
-    <appender-ref ref="STDOUT" />
-    <appender-ref ref="FILE-DEBUG" />
-    </logger>
-
-  <!--Service -->
-  <logger name="com.example.service" level="info" >
-    <appender-ref ref="STDOUT" />
-  </logger>
-  <logger name="com.example.service" level="error" >
-    <appender-ref ref="STDOUT" />
-    <appender-ref ref="FILE-ERROR" />
-    </logger>
-  <logger name="com.example.service" level="debug" >
-    <appender-ref ref="STDOUT" />
-    <appender-ref ref="FILE-DEBUG" />
+     <appender-ref ref="FILE-DEBUG" />
   </logger>
 
   <root level="info">

@@ -1,12 +1,9 @@
-package com.example.service.test;
+package com.example.serviceTest;
 
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
 import com.example.dao.GroupDao;
 import com.example.dao.StudentDao;
-import com.example.TestConfig;
 import com.example.model.Group;
 import com.example.service.GroupService;
 import com.example.service.StudentService;
@@ -21,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = TestConfig.class)
+@SpringBootTest(classes = GroupServiceConfig.class)
 @ActiveProfiles("Test")
 class GroupServiceTest {
 

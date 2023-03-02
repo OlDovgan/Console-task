@@ -1,24 +1,29 @@
 package com.example.resultTest;
 
 import com.example.Result;
-import com.example.TestConfig;
+import com.example.serviceTest.StopConfig;
+import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = TestConfig.class)
+@SpringBootTest(classes = StopConfig.class)
 @ActiveProfiles("Test")
 class ResultTest {
-
+  @Autowired
+  private ApplicationContext appContext;
   @MockBean
   Result result;
   private final String separator = System.lineSeparator();
 
   @Test
   void studentsWithCourse_ShouldFindStudentWithCourseNumber() {
+    System.out.println("Bean "+ Arrays.asList(appContext.getBeanDefinitionNames()));
     String expect =
         "1  | Adele       | Reilly      | Maths  | nA-51" + separator
             + "3  | Gabrielle   | Ferguson    | Maths  | nA-51" + separator

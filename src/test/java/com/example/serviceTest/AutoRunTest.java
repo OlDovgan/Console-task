@@ -1,4 +1,4 @@
-package com.example.service.test;
+package com.example.serviceTest;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -9,10 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest()
+@SpringBootTest(classes = AutoRunConfig.class)
 @ActiveProfiles("Test")
 class AutoRunTest {
-
   @MockBean
   Data data;
   @MockBean

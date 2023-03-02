@@ -1,8 +1,6 @@
-package com.example.dao.test;
+package com.example.dao;
 
 import com.example.TestConfig;
-import com.example.dao.GroupDao;
-import com.example.dao.StudentDao;
 import com.example.extra.TestUtils;
 import com.example.model.Group;
 import com.example.model.Student;

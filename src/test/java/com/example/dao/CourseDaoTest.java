@@ -1,7 +1,6 @@
-package com.example.dao.test;
+package com.example.dao;
 
 import com.example.TestConfig;
-import com.example.dao.CourseDao;
 import com.example.extra.TestUtils;
 import com.example.model.Course;
 import java.util.ArrayList;

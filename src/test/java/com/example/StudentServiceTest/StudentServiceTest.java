@@ -1,10 +1,10 @@
-package com.example.service.test;
+package com.example.StudentServiceTest;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.example.TestConfig;
 import com.example.dao.StudentDao;
+import com.example.TestConfig;
 import com.example.extra.TestUtils;
 import com.example.model.Course;
 import com.example.model.Student;
