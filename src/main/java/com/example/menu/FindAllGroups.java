@@ -2,7 +2,7 @@ package com.example.menu;
 
 import com.example.Utility;
 import com.example.model.Group;
-import com.example.service.GroupService;
+import com.example.layer.service.GroupService;
 import java.sql.SQLException;
 import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.example.dao;
+package com.example.layer.dao;
 
 import com.example.mapper.GroupMapper;
 import com.example.model.Group;

@@ -1,6 +1,6 @@
-package com.example.service;
+package com.example.layer.service;
 
-import com.example.dao.GroupDao;
+import com.example.layer.dao.GroupDao;
 import com.example.model.Group;
 import java.util.ArrayList;
 import java.util.List;

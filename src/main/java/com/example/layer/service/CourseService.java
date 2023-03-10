@@ -1,16 +1,13 @@
-package com.example.service;
+package com.example.layer.service;
 
 import com.example.FileReader;
-import com.example.dao.CourseDao;
+import com.example.layer.dao.CourseDao;
 import com.example.model.Course;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

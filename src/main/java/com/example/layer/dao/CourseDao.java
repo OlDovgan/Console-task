@@ -1,4 +1,4 @@
-package com.example.dao;
+package com.example.layer.dao;
 
 import com.example.mapper.CourseMapper;
 import com.example.model.Course;

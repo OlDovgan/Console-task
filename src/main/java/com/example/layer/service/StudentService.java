@@ -1,9 +1,9 @@
-package com.example.service;
+package com.example.layer.service;
 
 import com.example.FileReader;
-import com.example.dao.CourseDao;
-import com.example.dao.GroupDao;
-import com.example.dao.StudentDao;
+import com.example.layer.dao.CourseDao;
+import com.example.layer.dao.GroupDao;
+import com.example.layer.dao.StudentDao;
 import com.example.model.Course;
 import com.example.model.Group;
 import com.example.model.Student;

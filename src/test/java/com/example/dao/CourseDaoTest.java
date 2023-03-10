@@ -2,6 +2,7 @@ package com.example.dao;
 
 import com.example.TestConfig;
 import com.example.extra.TestUtils;
+import com.example.layer.dao.CourseDao;
 import com.example.model.Course;
 import java.util.ArrayList;
 import java.util.List;

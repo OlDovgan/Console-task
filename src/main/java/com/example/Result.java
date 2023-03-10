@@ -2,8 +2,8 @@ package com.example;
 
 import com.example.model.Course;
 import com.example.model.Student;
-import com.example.service.CourseService;
-import com.example.service.StudentService;
+import com.example.layer.service.CourseService;
+import com.example.layer.service.StudentService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;

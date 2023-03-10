@@ -10,10 +10,12 @@ import java.util.List;
 import java.util.Random;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
+@EnableAspectJAutoProxy
 public class SpringConfig {
   @Bean
   public Random random() {

@@ -2,12 +2,10 @@ package com.example.serviceTest;
 
 
 import com.example.FileReader;
-import com.example.dao.CourseDao;
-import com.example.service.AutoRun;
-import com.example.service.CourseService;
+import com.example.layer.dao.CourseDao;
+import com.example.layer.service.CourseService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
@@ -28,6 +26,4 @@ public class CourseServiceConfig {
   public CourseService courseService() {
     return new CourseService(fileReader, courseDao,coursesNumber , fileName);
   }
-  @MockBean
-  AutoRun autoRun;
 }

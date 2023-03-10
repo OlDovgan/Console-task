@@ -1,4 +1,4 @@
-package com.example.dao;
+package com.example.layer.dao;
 
 
 import com.example.mapper.CourseMapper;
@@ -35,7 +35,6 @@ public class StudentDao {
   }
 
   public void add(List<Student> studentList) {
-
     for (Student student : studentList) {
       add(student);
     }
@@ -57,6 +56,7 @@ public class StudentDao {
 
 
   public void add(Student student) {
+
     student.setId(keyId(student));
     List<Integer[]> studentsCoursesList = new ArrayList<>();
     if (student.getCourse() != null) {
@@ -64,17 +64,17 @@ public class StudentDao {
         studentsCoursesList.add(new Integer[]{student.getId(), course.getId()});
       }
       jdbcTemplate.batchUpdate(query,
-      new BatchPreparedStatementSetter() {
-        public void setValues(PreparedStatement ps, int i) throws SQLException {
+          new BatchPreparedStatementSetter() {
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
 
-          ps.setInt(1, studentsCoursesList.get(i)[0]);
-          ps.setInt(2, studentsCoursesList.get(i)[1]);
-        }
+              ps.setInt(1, studentsCoursesList.get(i)[0]);
+              ps.setInt(2, studentsCoursesList.get(i)[1]);
+            }
 
-        public int getBatchSize() {
-          return studentsCoursesList.size();
-        }
-      });
+            public int getBatchSize() {
+              return studentsCoursesList.size();
+            }
+          });
     }
   }
 
@@ -120,7 +120,7 @@ public class StudentDao {
   }
 
   public Student getStudentById(int id) {
-    String sql = "SELECT * FROM students WHERE student_id = ?;";
+    String sql = "SELECT * FROM students WHERE student_id = ?";
     Student student = jdbcTemplate.queryForObject(sql, mapperStudent, id);
     if (student != null) {
       setStudentsGroupsName(student);

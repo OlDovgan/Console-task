@@ -3,9 +3,9 @@ package com.example.serviceTest;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import com.example.dao.CourseDao;
+import com.example.layer.dao.CourseDao;
 import com.example.model.Course;
-import com.example.service.CourseService;
+import com.example.layer.service.CourseService;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;

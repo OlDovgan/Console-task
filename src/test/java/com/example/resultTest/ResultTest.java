@@ -15,15 +15,12 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest(classes = StopConfig.class)
 @ActiveProfiles("Test")
 class ResultTest {
-  @Autowired
-  private ApplicationContext appContext;
-  @MockBean
+   @MockBean
   Result result;
   private final String separator = System.lineSeparator();
 
   @Test
   void studentsWithCourse_ShouldFindStudentWithCourseNumber() {
-    System.out.println("Bean "+ Arrays.asList(appContext.getBeanDefinitionNames()));
     String expect =
         "1  | Adele       | Reilly      | Maths  | nA-51" + separator
             + "3  | Gabrielle   | Ferguson    | Maths  | nA-51" + separator
