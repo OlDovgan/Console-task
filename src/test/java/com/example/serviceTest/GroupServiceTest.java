@@ -2,11 +2,11 @@ package com.example.serviceTest;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import com.example.layer.dao.GroupDao;
-import com.example.layer.dao.StudentDao;
+import com.example.dao.GroupDao;
+import com.example.dao.StudentDao;
 import com.example.model.Group;
-import com.example.layer.service.GroupService;
-import com.example.layer.service.StudentService;
+import com.example.service.GroupService;
+import com.example.service.StudentService;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;

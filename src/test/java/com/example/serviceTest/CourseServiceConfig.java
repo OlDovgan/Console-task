@@ -2,8 +2,8 @@ package com.example.serviceTest;
 
 
 import com.example.FileReader;
-import com.example.layer.dao.CourseDao;
-import com.example.layer.service.CourseService;
+import com.example.dao.CourseDao;
+import com.example.service.CourseService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.SpyBean;

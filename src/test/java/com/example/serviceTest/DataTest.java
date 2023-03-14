@@ -4,9 +4,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.example.menu.AppMenu;
-import com.example.layer.service.CourseService;
-import com.example.layer.service.GroupService;
-import com.example.layer.service.StudentService;
+import com.example.service.CourseService;
+import com.example.service.GroupService;
+import com.example.service.StudentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

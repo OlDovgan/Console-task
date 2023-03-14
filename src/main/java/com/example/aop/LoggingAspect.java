@@ -14,47 +14,40 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class LoggingAspect {
 
-  private Logger loggerLayer
-      = LoggerFactory.getLogger("com.example.layer");
-  private Logger logger
+
+  private final Logger loggerExample
       = LoggerFactory.getLogger("com.example");
-  private Logger loggerDao
+  private final Logger loggerDao
       = LoggerFactory.getLogger("com.example.dao");
-  private Logger loggerService
+  private final Logger loggerService
       = LoggerFactory.getLogger("com.example.service");
 
-
-  @Pointcut("execution (* com.example.layer.*.*.*(..))")
-  public void pointCutLayer() {
-  }
-
-  @Pointcut("execution (* com.example.*.*.*.*(..))")
+  @Pointcut("execution (* com.example.*.*.*(..))")
   public void pointCutExample() {
   }
 
-  @Pointcut("execution (* com.example.layer.dao.*.*(..))")
-  public void pointCutLayerDao() {}
-  @Pointcut("execution (* com.example.layer.service.*.*(..))")
-  public void pointCutLayerService() {}
+  @Pointcut("execution (* com.example.dao.*.*(..))")
+  public void pointCutDao() {
+  }
 
+  @Pointcut("execution (* com.example.service.*.*(..))")
+  public void pointCutService() {
+  }
 
-  @Before("pointCutLayer()")
-  public void beforeLayerAdvice(JoinPoint joinPoint) {
-    loggerLayer.info("{}", joinPoint);
-    loggerLayer.debug("{} ", joinPoint);
+  @Before("pointCutDao()")
+  public void beforeDaoAdvice(JoinPoint joinPoint) {
+    loggerDao.debug("{} ", joinPoint);
+    loggerDao.info("{} ", joinPoint);
    }
-  @Before("pointCutLayerDao()")
-  public void beforeLayerDaoAdvice(JoinPoint joinPoint) {
-     loggerDao.trace("{} ", joinPoint);
-  }
-  @Before("pointCutLayerService()")
-  public void beforeLayerServiceAdvice(JoinPoint joinPoint) {
-     loggerService.trace("{} ", joinPoint);
-  }
 
-  @AfterThrowing("pointCutExample()")
-  public void beforeErrorAdvice(JoinPoint joinPoint) {
-    loggerLayer.error("{} ", joinPoint);
-
+  @Before("pointCutService()")
+  public void beforeServiceAdvice(JoinPoint joinPoint) {
+    loggerService.debug("{} ", joinPoint);
+    loggerService.info("{} ", joinPoint);
+  }
+  @AfterThrowing(pointcut = "pointCutExample()", throwing = "ex")
+  public void afterThrowingAdvice(JoinPoint joinPoint, Throwable ex) {
+    loggerExample.error("Method {} failed with exception", joinPoint.getSignature().getName(), ex);
   }
 }
+

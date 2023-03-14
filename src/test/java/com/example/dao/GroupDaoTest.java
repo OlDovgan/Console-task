@@ -2,8 +2,6 @@ package com.example.dao;
 
 import com.example.TestConfig;
 import com.example.extra.TestUtils;
-import com.example.layer.dao.GroupDao;
-import com.example.layer.dao.StudentDao;
 import com.example.model.Group;
 import com.example.model.Student;
 import java.util.ArrayList;

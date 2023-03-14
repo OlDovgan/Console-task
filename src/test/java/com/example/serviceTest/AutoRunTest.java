@@ -3,7 +3,7 @@ package com.example.serviceTest;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import com.example.menu.AppMenu;
-import com.example.layer.service.Data;
+import com.example.service.Data;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

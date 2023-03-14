@@ -1,7 +1,7 @@
-package com.example.layer.service;
+package com.example.service;
 
 import com.example.FileReader;
-import com.example.layer.dao.CourseDao;
+import com.example.dao.CourseDao;
 import com.example.model.Course;
 import java.io.FileNotFoundException;
 import java.io.IOException;

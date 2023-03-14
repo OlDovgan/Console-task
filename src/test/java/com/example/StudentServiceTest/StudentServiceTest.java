@@ -2,13 +2,12 @@ package com.example.StudentServiceTest;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
-import com.example.layer.dao.StudentDao;
+import com.example.dao.StudentDao;
 import com.example.TestConfig;
 import com.example.extra.TestUtils;
 import com.example.model.Course;
 import com.example.model.Student;
-import com.example.layer.service.StudentService;
+import com.example.service.StudentService;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;

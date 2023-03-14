@@ -2,7 +2,7 @@ package com.example.menu;
 
 import com.example.Utility;
 import com.example.model.Student;
-import com.example.layer.service.StudentService;
+import com.example.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;

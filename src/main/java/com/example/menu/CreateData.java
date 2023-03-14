@@ -1,9 +1,9 @@
 package com.example.menu;
 
 
-import com.example.layer.service.CourseService;
-import com.example.layer.service.GroupService;
-import com.example.layer.service.StudentService;
+import com.example.service.CourseService;
+import com.example.service.GroupService;
+import com.example.service.StudentService;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import org.springframework.beans.factory.annotation.Autowired;

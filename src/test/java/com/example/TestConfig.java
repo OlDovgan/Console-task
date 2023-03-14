@@ -2,7 +2,7 @@ package com.example;
 
 
 
-import com.example.layer.service.AutoRun;
+import com.example.service.AutoRun;
 import java.util.Random;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;

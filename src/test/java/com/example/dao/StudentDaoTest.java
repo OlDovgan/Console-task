@@ -4,7 +4,6 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFOR
 
 import com.example.TestConfig;
 import com.example.extra.TestUtils;
-import com.example.layer.dao.StudentDao;
 import com.example.model.Student;
 import java.io.IOException;
 import java.net.URISyntaxException;
