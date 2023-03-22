@@ -17,8 +17,8 @@ public class LoggingInfoAspect {
 
   @AfterReturning("com.example.aop.AppPointCut.pointCutCreate()")
   public void afterReturningCourseService(JoinPoint joinPoint) {
-    logger.info("Method {}  was executed successfully. Signature {}",
-        joinPoint.getSignature().getName(),joinPoint.getSignature());
+    logger.info("Method {}  was executed successfully,{}",
+        joinPoint.getSignature().getName(), joinPoint.getSignature());
   }
 }
 
