@@ -30,15 +30,15 @@ public class Data {
 
   public void createData() throws IOException, URISyntaxException {
     if (courseService.getAll().isEmpty()) {
-      logger.warn("Courses table is empty");
+      logger.info("Courses table is empty");
       courseService.createData();
     }
     if (groupService.getAll().isEmpty()) {
-      logger.warn("Groups table is empty");
+      logger.info("Groups table is empty");
       groupService.createData();
     }
     if (studentService.getAll().isEmpty()) {
-      logger.warn("Students table is empty");
+      logger.info("Students table is empty");
       studentService.createData();
     }
   }

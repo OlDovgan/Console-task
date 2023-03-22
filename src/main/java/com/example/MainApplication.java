@@ -13,12 +13,9 @@ public class
 MainApplication {
 
   public static void main(String[] args) {
-    final Logger logger
-        = LoggerFactory.getLogger(MainApplication.class);
     try {
       SpringApplication.run(MainApplication.class, args);
     } catch (Exception exception) {
-      logger.error(" Exception " + exception);
     }
   }
 }

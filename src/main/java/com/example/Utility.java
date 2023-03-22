@@ -12,7 +12,6 @@ public class Utility {
 
   public void numberCheck() {
     while (!scanner.hasNextInt()) {
-      logger.debug("Method numberCheck() - invalid data type");
       System.out.print("Please, enter number ");
       scanner.next();
     }
@@ -28,8 +27,6 @@ public class Utility {
     numberCheck();
     int menuItem = scanner.nextInt();
     while (!(menuItem > 0 && menuItem <= num)) {
-      logger.debug("Method readInt(int num) - number out of range."
-          + " The range should be from 0 to " + num + ". The entered value was " + menuItem + ".");
       System.out.println("Please make your choice");
       numberCheck();
       menuItem = scanner.nextInt();
@@ -52,8 +49,6 @@ public class Utility {
     System.out.println(message);
     String resultString = scanner.nextLine();
     while (!resultString.matches(pattern)) {
-      logger.debug("Method readString - the entered string does not match the format."
-          + "Entered value " + resultString);
       System.out.print("Please enter name and surname of the student ");
       resultString = scanner.nextLine();
     }

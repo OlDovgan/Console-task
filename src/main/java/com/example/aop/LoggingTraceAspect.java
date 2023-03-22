@@ -35,20 +35,18 @@ public class LoggingTraceAspect {
 
   private final Logger loggerGroupDao
       = LoggerFactory.getLogger(GroupDao.class);
-  private final  String method = "createData";
-  private static final  String BEFORE = "Starting {} ";
-  private static final  String AFTER = "Method  {}  was executed successfully";
+  private static final String BEFORE = "Starting {} ";
+  private static final String AFTER = "Method  {}  was executed successfully";
 
   @Before("com.example.aop.AppPointCut.pointCutCourseService()")
   public void beforeCourseServiceAdvice(JoinPoint joinPoint) {
     loggerCourseService.trace(BEFORE, joinPoint);
   }
 
-  @AfterReturning("com.example.aop.AppPointCut.pointCutCourseService()")
+  @AfterReturning("com.example.aop.AppPointCut.pointCutCourseService() &&"
+      + "!com.example.aop.AppPointCut.pointCutCreate()")
   public void afterReturningCourseServiceAdvice(JoinPoint joinPoint) {
-    if (!joinPoint.getSignature().getName().equals(method)) {
-      loggerCourseService.trace(AFTER, joinPoint.getSignature().getName());
-    }
+    loggerCourseService.trace(AFTER, joinPoint.getSignature().getName());
   }
 
   @Before("com.example.aop.AppPointCut.pointCutGroupService()")
@@ -56,11 +54,10 @@ public class LoggingTraceAspect {
     loggerGroupService.trace(BEFORE, joinPoint);
   }
 
-  @AfterReturning("com.example.aop.AppPointCut.pointCutGroupService()")
+  @AfterReturning("com.example.aop.AppPointCut.pointCutGroupService() &&"
+      + "!com.example.aop.AppPointCut.pointCutCreate()")
   public void afterReturningGroupServiceAdvice(JoinPoint joinPoint) {
-    if (!joinPoint.getSignature().getName().equals(method)) {
-      loggerGroupService.trace(AFTER, joinPoint.getSignature().getName());
-    }
+    loggerGroupService.trace(AFTER, joinPoint.getSignature().getName());
   }
 
   @Before("com.example.aop.AppPointCut.pointCutStudentService()")
@@ -68,11 +65,11 @@ public class LoggingTraceAspect {
     loggerStudentService.trace(BEFORE, joinPoint);
   }
 
-  @AfterReturning("com.example.aop.AppPointCut.pointCutStudentService()")
+  @AfterReturning("com.example.aop.AppPointCut.pointCutStudentService() &&"
+      + "!com.example.aop.AppPointCut.pointCutCreate()")
   public void afterReturningStudentServiceAdvice(JoinPoint joinPoint) {
-    if (!joinPoint.getSignature().getName().equals(method)) {
-      loggerStudentService.trace(AFTER, joinPoint.getSignature().getName());
-    }
+
+    loggerStudentService.trace(AFTER, joinPoint.getSignature().getName());
   }
 
 

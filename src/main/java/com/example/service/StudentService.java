@@ -64,11 +64,11 @@ public class StudentService {
 
   public void createData() throws IOException, URISyntaxException {
     if (groupDao.getAll().isEmpty()) {
-      loggerStudentService.warn("No data available from group!!! Group table is empty");
+      loggerStudentService.error("No data available from group!!! Group table is empty");
       throw new IllegalArgumentException("No data available from group!!!");
     }
     if (courseDao.getAll().isEmpty()) {
-      loggerStudentService.warn("No data available from group!!! Course table is empty");
+      loggerStudentService.error("No data available from group!!! Course table is empty");
       throw new IllegalArgumentException("No data available from course!!!");
     } else {
       studentDao.clearAll();
