@@ -16,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class GroupDao {
-  private static final Logger logger
-      = LoggerFactory.getLogger(GroupDao.class.getName());
 
   private final JdbcTemplate jdbcTemplate;
   private final GroupMapper groupMapper;
@@ -30,13 +28,10 @@ public class GroupDao {
   }
 
   public void add(Group group) {
-    logger.trace("Start add(Group group)");
     jdbcTemplate.update("INSERT INTO groups (group_name) VALUES (?);", group.getName());
-    logger.trace("Finish add(Group group)");
   }
 
   public void add(List<Group> groupList) {
-    logger.trace("Start add(List<Group> groupList)");
     jdbcTemplate.batchUpdate("INSERT INTO groups (group_name) VALUES (?);",
         new BatchPreparedStatementSetter() {
           public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -48,13 +43,9 @@ public class GroupDao {
           }
         }
     );
-    logger.trace("Finish add(List<Group> groupList)");
-
   }
 
   public List<Group> getAll() {
-    logger.trace("Start getAll");
-
     String sql = "SELECT group_id,  group_name, number_student "
         + "FROM(SELECT groups.group_name AS group_name, groups.group_id, "
         + "COUNT (students.group_id) AS number_student "
@@ -65,7 +56,6 @@ public class GroupDao {
   }
 
   public List<Group> getGroupsByStudentCount(int number) {
-    logger.trace("Start getGroupsByStudentCount(int number)");
     String sql = "SELECT group_id,  group_name, number_student "
         + "FROM(SELECT groups.group_name AS group_name, groups.group_id, "
         + "COUNT (students.group_id) AS number_student "
@@ -74,11 +64,9 @@ public class GroupDao {
         + "ORDER BY number_student;";
     return jdbcTemplate.query(sql, groupMapper, number);
   }
-  public void clearAll() {
-    logger.trace("Start clearAll() - TRUNCATE  groups RESTART IDENTITY;");
-    jdbcTemplate.update("TRUNCATE  groups RESTART IDENTITY;");
-    logger.trace("Finish clearAll() - TRUNCATE  groups RESTART IDENTITY;");
 
+  public void clearAll() {
+    jdbcTemplate.update("TRUNCATE  groups RESTART IDENTITY;");
   }
 }
 

@@ -31,18 +31,10 @@ public class FindStudentsWithCourse implements Menu {
   public void executeMenu() throws SQLException {
     System.out.println(result.coursesInfo());
     int courseNumber = 0;
-    courseNumber = getCourseNumber();
+    courseNumber = service.readInt(result.courses.size());
     printTableHeader(courseNumber);
     System.out.println(result.studentsWithCourse(result.courses.get(courseNumber - 1)));
     service.endExecution();
-  }
-
-  private int getCourseNumber() {
-    int courseNumber = 0;
-    while (courseNumber < 1 || courseNumber > result.courses.size()) {
-      courseNumber = service.readInt("Please select a course name from the list");
-    }
-    return courseNumber;
   }
 
   private void printTableHeader(int courseNumber) {

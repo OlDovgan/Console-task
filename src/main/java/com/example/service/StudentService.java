@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -25,6 +27,8 @@ import org.springframework.stereotype.Service;
 @PropertySource("classpath:generation.properties")
 public class StudentService {
 
+  private final Logger loggerStudentService
+      = LoggerFactory.getLogger(StudentService.class);
   @Value("${first-name-file}")
   private String fileFirstName;
   @Value("${last-name-file}")
@@ -60,9 +64,11 @@ public class StudentService {
 
   public void createData() throws IOException, URISyntaxException {
     if (groupDao.getAll().isEmpty()) {
+      loggerStudentService.warn("No data available from group!!! Group table is empty");
       throw new IllegalArgumentException("No data available from group!!!");
     }
     if (courseDao.getAll().isEmpty()) {
+      loggerStudentService.warn("No data available from group!!! Course table is empty");
       throw new IllegalArgumentException("No data available from course!!!");
     } else {
       studentDao.clearAll();
@@ -208,6 +214,7 @@ public class StudentService {
   }
 
   public void addStudentsCourse(int studId, int courseNumber) {
+    loggerStudentService.debug("Start addStudentsCourse(" + studId + ", " + courseNumber + ")");
     studentDao.addStudentsCourse(studId, courseNumber);
   }
 }

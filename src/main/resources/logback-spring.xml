@@ -22,7 +22,7 @@
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 
       <Pattern>
-        %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+        %d{yyyy-MM-dd HH:mm:ss:ms} [%thread] %-5level %logger{36} - %msg%n
       </Pattern>
     </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -37,18 +37,14 @@
 
   </appender>
 
-  <logger name="com.example.dao" level="trace" additivity="false">
-    <appender-ref ref="FILE-TRACE"/>
-    <appender-ref ref="STDOUT"/>
-  </logger>
-  <logger name="com.example.service" level="trace" additivity="false">
+  <logger name="com.example" level="trace" additivity="false">
     <appender-ref ref="FILE-TRACE"/>
     <appender-ref ref="STDOUT"/>
   </logger>
 
-  <root level="error">
+
+  <root level="info">
     <appender-ref ref="STDOUT"/>
-    <appender-ref ref="FILE-TRACE"/>
-  </root>
+   </root>
 
 </configuration>

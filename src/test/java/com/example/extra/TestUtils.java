@@ -201,7 +201,7 @@ public class TestUtils {
   }
 
   public void clearData() {
-    jdbcTemplate.update("TRUNCATE students, courses, groups, students_courses RESTART IDENTITY");
+    jdbcTemplate.update("TRUNCATE students, courses, groups, students_courses RESTART IDENTITY;");
   }
 
   public void clearCourse() {

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AutoRun implements ApplicationRunner {
+
+
   @Autowired
   private Data data;
   @Autowired
@@ -16,7 +18,7 @@ public class AutoRun implements ApplicationRunner {
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
-     data.createData();
+    data.createData();
     appMenu.run();
   }
 }

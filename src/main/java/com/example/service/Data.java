@@ -2,12 +2,17 @@ package com.example.service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Data {
+
+  private final Logger logger
+      = LoggerFactory.getLogger(Data.class);
 
   @Value("${students-courses-max}")
   private String studentsCoursesMax;
@@ -25,12 +30,15 @@ public class Data {
 
   public void createData() throws IOException, URISyntaxException {
     if (courseService.getAll().isEmpty()) {
+      logger.warn("Courses table is empty");
       courseService.createData();
     }
     if (groupService.getAll().isEmpty()) {
+      logger.warn("Groups table is empty");
       groupService.createData();
     }
     if (studentService.getAll().isEmpty()) {
+      logger.warn("Students table is empty");
       studentService.createData();
     }
   }

@@ -9,6 +9,8 @@ import com.example.service.StudentService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Component;
 @Order(5)
 public class AddStudentToCourse implements Menu {
 
+  private final Logger logger
+      = LoggerFactory.getLogger(this.getClass());
   private final CourseService courseService;
   private final StudentService studentService;
   final String separator = System.lineSeparator();
@@ -41,7 +45,7 @@ public class AddStudentToCourse implements Menu {
   @Override
   public void executeMenu() {
     System.out.println(result.coursesInfo());
-    int courseNumber = getCourseNumber();
+    int courseNumber = service.readInt(courseService.getAll().size());
     printTableHeader();
     printInfo(courseNumber);
     int studId = getStudentIdWithOutCourse(courseNumber);
@@ -57,20 +61,14 @@ public class AddStudentToCourse implements Menu {
       studIdList.add(student.getId());
     }
     while (!studIdList.contains(studId)) {
+      logger.debug("Student with ID=" + studId + " already have course - "
+          + result.courses.get(courseNumber - 1));
       studId = service.readInt("Please, select a student ID to add to course of "
           + result.courses.get(courseNumber - 1));
     }
+    logger.debug(
+        "private int getStudentIdWithOutCourse(" + courseNumber + ") return studId=" + studId);
     return studId;
-  }
-
-  private int getCourseNumber() {
-    int courseNumber = 0;
-
-    while (courseNumber < 1 || courseNumber > courseService.getAll().size()) {
-      courseNumber = service.readInt(
-          "Please, select the course you want to add the student to" + separator);
-    }
-    return courseNumber;
   }
 
   private void printTableHeader() {
