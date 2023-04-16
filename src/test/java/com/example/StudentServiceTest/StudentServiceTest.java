@@ -2,11 +2,12 @@ package com.example.StudentServiceTest;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import com.example.dao.StudentDao;
+
 import com.example.TestConfig;
-import com.example.extra.TestUtils;
+import com.example.dao.StudentDao;
 import com.example.model.Course;
 import com.example.model.Student;
+import com.example.extra.TestUtils;
 import com.example.service.StudentService;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,9 +77,9 @@ class StudentServiceTest {
   @Test
   void delete_ShouldCallStudentDaoMethodDelete() {
     var id = 1;
-    Mockito.doNothing().when(studentDao).delete(id);
+    Mockito.doNothing().when(studentDao).deleteById(id);
     studentService.delete(id);
-    verify(studentDao, times(1)).delete(id);
+    verify(studentDao, times(1)).deleteById(id);
   }
 
   @Test

@@ -26,10 +26,10 @@ public class Result {
     String format =
         "%-3d| %-" + 12 + "s| %-" + 12 + "s| %-" + (course.length() + 2) + "s| %s";
     for (Student stud : studentService.getWithCourse(course)) {
-      if (stud.getGroupName() == null) {
+      if (stud.getGroup().getName() == null) {
         groupName = "without a group";
       } else {
-        groupName = stud.getGroupName();
+        groupName = stud.getGroup().getName();
       }
       stringJoiner.add(String.format(format, stud.getId(), stud.getFirstName(),
           stud.getLastName(), course, groupName));
@@ -80,14 +80,13 @@ public class Result {
     String separator = System.lineSeparator();
     StringJoiner joiner = new StringJoiner(separator);
 
-    if (student.getCourse() != null) {
-      for (Course course : student.getCourse()) {
+    if (student.getCourseList()!= null) {
+      for (Course course : student.getCourseList()) {
         joiner.add(student.getId() + " | " + student.getFirstName() + "  "
             + student.getLastName() + " |  " + course.getId() + " |  "
             + course.getName());
       }
     }
-
     return joiner.toString();
   }
 

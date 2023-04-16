@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 @Order(1)
 @FirstMenu
 public class CreateData implements Menu {
+
   @Value("${courses}")
   private int coursesNumber;
 
@@ -41,6 +42,7 @@ public class CreateData implements Menu {
       courseService.createData();
       groupService.createData();
       studentService.createData();
+
       System.out.println("Data entered into database successfully" + System.lineSeparator());
     } catch (URISyntaxException | IOException e) {
       throw new RuntimeException(e);

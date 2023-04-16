@@ -52,6 +52,7 @@ public class StudentService {
   private Random random;
   private int studentsWithGroup;
 
+
   @Autowired
   public StudentService(FileReader fileReader, CourseDao courseDao, GroupDao groupDao,
       StudentDao studentDao, Random random) {
@@ -73,7 +74,33 @@ public class StudentService {
     } else {
       studentDao.clearAll();
       studentDao.add(createStudentsList());
-      studentDao.addStudentsCourse(createStudentsCourseList());
+
+      List<Student> list = createStudentsCourseList();
+      studentDao.add(list);
+
+      for (Student student: list) {
+    //    studentDao.add(student);
+        String courseSting = "";
+        for (Course course:student.getCourseList()) {
+          courseSting = courseSting +"| Course id="+course.getId()+", name ="+course.getName();
+        }
+        loggerStudentService.info("student id={}, "
+                + " group_id = {},"
+                + " first name = {},"
+                + " last name = {},"
+                + " number courses = {},"
+                + " group name = {}"
+                + " course ={}",
+            student.getId(),
+            student.getGroupId(),
+            student.getFirstName(),
+            student.getLastName(),
+            student.getCourseList().size(),
+            student.getGroup().getName(),
+            courseSting);
+
+      }
+
     }
   }
 
@@ -122,11 +149,6 @@ public class StudentService {
         student.setGroupId(d);
         student.setFirstName(firstNames[randomInt(random, 0, firstNames.length - 1)]);
         student.setLastName(lastNames[randomInt(random, 0, lastNames.length - 1)]);
-        for (Group group : groupDao.getAll()) {
-          if (group.getId() == d) {
-            student.setGroupName(group.getName());
-          }
-        }
         studentList.add(student);
         studentsWithGroup++;
         i++;
@@ -139,6 +161,7 @@ public class StudentService {
     List<Student> studentList = new ArrayList<>();
     for (int i = 0; i < studentsTotalNumber - studentsWithGroup; i++) {
       Student student = new Student();
+      student.setGroupId(1);
       student.setFirstName(firstNames[randomInt(random, 0, firstNames.length - 1)]);
       student.setLastName(lastNames[randomInt(random, 0, lastNames.length - 1)]);
       studentList.add(student);
@@ -152,7 +175,7 @@ public class StudentService {
     List<Student> studentListNew = new ArrayList<>();
 
     for (Student student : studentDao.getAll()) {
-      List<Course> courseListAfterAdditionCourses = new ArrayList<>();
+  //   List<Course> courseListAfterAdditionCourses = new ArrayList<>();
       int k = randomInt(random, studentsCoursesMin, studentsCoursesMax);
       int i = 0;
       bitSet.clear();
@@ -161,17 +184,20 @@ public class StudentService {
         int course = randomInt(random, 1, coursesNumber);
         if (course > courseList.size()) {
           course = courseList.size();
-          courseListAfterAdditionCourses.add(courseList.get(course - 1));
+          student.addCourseToStudent(courseList.get(course - 1));
+      //    studentDao.add(student);
+        //  courseList.get(course - 1).getStudentList().add(student);
+
           break;
         }
         if (!bitSet.get(course)) {
           bitSet.set(course);
           i++;
-          courseListAfterAdditionCourses.add(courseList.get(course - 1));
+          student.addCourseToStudent(courseList.get(course - 1));
+       //   studentDao.add(student);
+     //     courseList.get(course - 1).getStudentList().add(student);
         }
-
       }
-      student.setCourse(courseListAfterAdditionCourses);
       studentListNew.add(student);
     }
     return studentListNew;
@@ -202,7 +228,7 @@ public class StudentService {
   }
 
   public void delete(int id) {
-    studentDao.delete(id);
+    studentDao.deleteById(id);
   }
 
   public void deleteFromCourse(int studentId, int courseId) {
@@ -210,6 +236,7 @@ public class StudentService {
   }
 
   public Student getStudentById(int id) {
+    loggerStudentService.debug("getStudentById({})",id);
     return studentDao.getStudentById(id);
   }
 

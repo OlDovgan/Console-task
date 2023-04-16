@@ -1,8 +1,8 @@
 package com.example.dao;
 
 import com.example.TestConfig;
-import com.example.extra.TestUtils;
 import com.example.model.Course;
+import com.example.extra.TestUtils;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;

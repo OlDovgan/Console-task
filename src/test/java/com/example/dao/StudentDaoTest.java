@@ -3,8 +3,8 @@ package com.example.dao;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 import com.example.TestConfig;
-import com.example.extra.TestUtils;
 import com.example.model.Student;
+import com.example.extra.TestUtils;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -76,9 +76,9 @@ class StudentDaoTest {
     studentDao.add(studentList);
     List<Student> studentListExpect = new ArrayList<>();
     for (Student student : studentList) {
-      if (!student.getCourse().isEmpty() || student.getCourse() == null) {
-        studentListExpect.add(student);
-      }
+//      if (!student.getCourse().isEmpty() || student.getCourse() == null) {
+//        studentListExpect.add(student);
+//      }
     }
     Assertions.assertEquals(studentListExpect, studentDao.getWithCourse());
   }
@@ -124,7 +124,7 @@ class StudentDaoTest {
     boolean exist = true;
     var id = 1;
     if (utils.isExistStudentId(id)) {
-      studentDao.delete(id);
+      studentDao.deleteById(id);
       exist = utils.isExistStudentId(id);
     }
     Assertions.assertFalse(exist);

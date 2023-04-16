@@ -1,9 +1,9 @@
 package com.example.dao;
 
 import com.example.TestConfig;
-import com.example.extra.TestUtils;
 import com.example.model.Group;
 import com.example.model.Student;
+import com.example.extra.TestUtils;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -100,11 +100,11 @@ class GroupDaoTest {
 
     Group firstGroup = new Group();
     firstGroup.setName("cP-50");
-    firstGroup.setNumberStudent(0);
+ //   firstGroup.setNumberStudent(0);
     firstGroup.setId(1);
     Group secondGroup = new Group();
     secondGroup.setName("Jp-04");
-    secondGroup.setNumberStudent(1);
+ //   secondGroup.setNumberStudent(1);
     secondGroup.setId(2);
     groupList.add(firstGroup);
     groupList.add(secondGroup);

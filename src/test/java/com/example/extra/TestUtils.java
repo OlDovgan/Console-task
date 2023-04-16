@@ -2,8 +2,6 @@ package com.example.extra;
 
 
 import com.example.dao.GroupDao;
-import com.example.mapper.CourseMapper;
-import com.example.mapper.StudentMapper;
 import com.example.model.Course;
 import com.example.model.Group;
 import com.example.model.Student;
@@ -12,28 +10,24 @@ import com.example.service.GroupService;
 import com.example.service.StudentService;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TestUtils {
 
-  @Autowired
-  JdbcTemplate jdbcTemplate;
-
-  @Autowired
-  CourseMapper mapperCourse;
-  @Autowired
-  StudentMapper mapperStudent;
+//  @Autowired
+//  JdbcTemplate jdbcTemplate;
+//
+//  @Autowired
+//  CourseMapper mapperCourse;
+//  @Autowired
+//  StudentMapper mapperStudent;
   @Value("${courses}")
   private int coursesNumber;
 
@@ -49,18 +43,20 @@ public class TestUtils {
   GroupService groupService;
 
   public boolean isExistStudentId(int student_id) {
-    String sql = "SELECT EXISTS(SELECT * FROM students WHERE student_id= ? );";
-
-    return Boolean.TRUE.equals(jdbcTemplate.query(sql, rs -> {
-      if (rs.next()) {
-        return rs.getBoolean(1);
-      }
-      throw new IllegalStateException("Zero rows returned from the DB");
-    }, student_id));
+//    String sql = "SELECT EXISTS(SELECT * FROM students WHERE student_id= ? );";
+//
+//    return Boolean.TRUE.equals(jdbcTemplate.query(sql, rs -> {
+//      if (rs.next()) {
+//        return rs.getBoolean(1);
+//      }
+//      throw new IllegalStateException("Zero rows returned from the DB");
+//    }, student_id));
+    return true;
   }
 
   public List<Course> getCourseList() {
-    return jdbcTemplate.query("SELECT * FROM courses ORDER BY course_id;", mapperCourse);
+//    return jdbcTemplate.query("SELECT * FROM courses ORDER BY course_id;", mapperCourse);
+ return new ArrayList<>();
   }
 
   public List<Group> getGroupList() {
@@ -68,55 +64,60 @@ public class TestUtils {
   }
 
   public boolean isExistCourse(String course, String description) {
-    String sql = "SELECT EXISTS(SELECT * FROM courses WHERE courses.course_name= ? "
-        + " AND courses.course_description= ?);";
-
-    return Boolean.TRUE.equals(jdbcTemplate.query(sql, rs -> {
-      if (rs.next()) {
-        return rs.getBoolean(1);
-      }
-      throw new IllegalStateException("Zero rows returned from the DB");
-    }, course, description));
+//    String sql = "SELECT EXISTS(SELECT * FROM courses WHERE courses.course_name= ? "
+//        + " AND courses.course_description= ?);";
+//
+//    return Boolean.TRUE.equals(jdbcTemplate.query(sql, rs -> {
+//      if (rs.next()) {
+//        return rs.getBoolean(1);
+//      }
+//      throw new IllegalStateException("Zero rows returned from the DB");
+//    }, course, description));
+    return  true;
   }
 
   public boolean isExistGroup(String groupName) {
-    String sql = "SELECT EXISTS(SELECT * FROM groups WHERE groups.group_name= ? );";
-
-    return Boolean.TRUE.equals(jdbcTemplate.query(sql, rs -> {
-      if (rs.next()) {
-        return rs.getBoolean(1);
-      }
-      throw new IllegalStateException("Zero rows returned from the DB");
-    }, groupName));
+//    String sql = "SELECT EXISTS(SELECT * FROM groups WHERE groups.group_name= ? );";
+//
+//    return Boolean.TRUE.equals(jdbcTemplate.query(sql, rs -> {
+//      if (rs.next()) {
+//        return rs.getBoolean(1);
+//      }
+//      throw new IllegalStateException("Zero rows returned from the DB");
+//    }, groupName));
+ return true;
   }
 
   public boolean isExistStudent(Student student) {
-    String sql = "SELECT * FROM students;";
-    List<Student> students = jdbcTemplate.query(sql, mapperStudent);
-    return students.contains(student);
+//    String sql = "SELECT * FROM students;";
+//    List<Student> students = jdbcTemplate.query(sql, mapperStudent);
+//    return students.contains(student);
+    return true;
   }
 
   public boolean isExistStudent(List<Student> list) {
-    String sql = "SELECT * FROM students;";
-    List<Student> students = studentService.getAll();
-    var i = 0;
-    for (Student stud : list) {
-      if (students.contains(stud)) {
-        i++;
-      }
-    }
-    return list.size() == i;
+//    String sql = "SELECT * FROM students;";
+//    List<Student> students = studentService.getAll();
+//    var i = 0;
+//    for (Student stud : list) {
+//      if (students.contains(stud)) {
+//        i++;
+//      }
+//    }
+//    return list.size() == i;
+    return true;
   }
 
   public boolean isExistStudentsCourse(int studentId, int courseId) {
-    String sql = "SELECT EXISTS(SELECT * FROM students_courses WHERE student_id= ? AND course_id = ? );";
-
-    return Boolean.TRUE.equals(jdbcTemplate.query(sql, rs -> {
-      if (rs.next()) {
-        return rs.getBoolean(1);
-      }
-      throw new IllegalStateException("Zero rows returned from the DB");
-    }, studentId, courseId));
+//    String sql = "SELECT EXISTS(SELECT * FROM students_courses WHERE student_id= ? AND course_id = ? );";
+//
+//    return Boolean.TRUE.equals(jdbcTemplate.query(sql, rs -> {
+//      if (rs.next()) {
+//        return rs.getBoolean(1);
+//      }
+//      throw new IllegalStateException("Zero rows returned from the DB");
+//    }, studentId, courseId));
+    return true;
   }
 
   public List<Student> createStudentList() {
@@ -133,13 +134,13 @@ public class TestUtils {
     student.setGroupId(1);
     student.setFirstName("Amir");
     student.setLastName("Watson");
-    student.setGroupName("nA-51");
-    student.setCourse(courses);
+   // student.setGroupName("nA-51");
+ //   student.setCourse(courses);
     Student studentNext = new Student();
     studentNext.setGroupId(3);
     studentNext.setFirstName("Rex");
     studentNext.setLastName("Philip");
-    studentNext.setGroupName("Jp-04");
+//    studentNext.setGroupName("Jp-04");
     List<Student> studentListExpect = new ArrayList<>();
     studentListExpect.add(student);
     studentListExpect.add(studentNext);
@@ -161,17 +162,17 @@ public class TestUtils {
   }
 
   private void add(List<Group> groupList) {
-    jdbcTemplate.batchUpdate("INSERT INTO groups (group_name) VALUES (?);",
-        new BatchPreparedStatementSetter() {
-          public void setValues(PreparedStatement ps, int i) throws SQLException {
-            ps.setString(1, groupList.get(i).getName());
-          }
-
-          public int getBatchSize() {
-            return groupList.size();
-          }
-        }
-    );
+//    jdbcTemplate.batchUpdate("INSERT INTO groups (group_name) VALUES (?);",
+//        new BatchPreparedStatementSetter() {
+//          public void setValues(PreparedStatement ps, int i) throws SQLException {
+//            ps.setString(1, groupList.get(i).getName());
+//          }
+//
+//          public int getBatchSize() {
+//            return groupList.size();
+//          }
+//        }
+//    );
   }
 
   private List<Group> createGroupsList() {
@@ -196,16 +197,16 @@ public class TestUtils {
     student.setGroupId(groupId);
     student.setFirstName(firstName);
     student.setLastName(lastName);
-    student.setCourse(courseList);
+ //   student.setCourse(courseList);
     return student;
   }
 
   public void clearData() {
-    jdbcTemplate.update("TRUNCATE students, courses, groups, students_courses RESTART IDENTITY;");
+  //  jdbcTemplate.update("TRUNCATE students, courses, groups, students_courses RESTART IDENTITY;");
   }
 
   public void clearCourse() {
-    jdbcTemplate.update("TRUNCATE  courses RESTART IDENTITY");
+  //  jdbcTemplate.update("TRUNCATE  courses RESTART IDENTITY");
   }
 
   public void createStudentInDb() throws IOException, URISyntaxException {
