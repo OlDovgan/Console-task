@@ -49,17 +49,17 @@ public class Group {
     }
 
     Group group = (Group) obj;
-    if (!this.name.equals(group.getName())){
+    if (!this.name.equals(group.getName())) {
       System.err.println("if (!this.name.equals(group.getName()))");
-      return  false;
+      return false;
     }
     return this.id == group.getId();
   }
+
   @Override
   public int hashCode() {
     int result = name == null ? 0 : name.hashCode();
     result = 31 * result + id;
-    // result = 31 * result + studentList.hashCode();
     return result;
   }
 }

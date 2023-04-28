@@ -38,12 +38,11 @@ public class GroupDao {
 
   public List<Group> getGroupsByStudentCount(int number) {
 
-    String queryHql = "from Group group  join fetch group.students as stud "
+    String query = "from Group group  join fetch group.students as stud "
         + "where size(stud) <= :number order by size(stud)";
-      List<Group> groupList = entityManager.createQuery(queryHql)
-        .setParameter("number", number).getResultList();
 
-    return groupList;
+    return entityManager.createQuery(query, Group.class)
+        .setParameter("number", number).getResultList();
   }
 
   public void clearAll() {

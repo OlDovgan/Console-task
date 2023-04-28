@@ -39,7 +39,6 @@ public class GroupService {
   private List<Group> createGroupsList() {
     logger.debug("Start createGroupsList()");
     List<Group> groupList = new ArrayList<>();
-    // groupList.add(new Group());
     for (int i = 0;
         i < Math.min(groupsNumber, studentsTotalNumber); i++) {
       groupList.add(new Group(groupName(random, 2, 2)));
@@ -55,7 +54,6 @@ public class GroupService {
         + RandomStringUtils.random(digitCount, 0, 0, false, true, null, random);
   }
 
-  //@Transactional
   public List<Group> getGroupsByStudentCount(int number) {
     return groupDao.getGroupsByStudentCount(number);
   }

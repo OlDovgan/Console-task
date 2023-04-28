@@ -77,7 +77,7 @@ public class Course {
   public int hashCode() {
     int result = name == null ? 0 : name.hashCode();
     result = 31 * result + id;
-    result = 31 * result + description == null ? 0 : description.hashCode();
+    result = 31 * result +  description.hashCode();
     return result;
   }
 }

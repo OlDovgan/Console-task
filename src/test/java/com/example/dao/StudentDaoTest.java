@@ -43,7 +43,6 @@ class StudentDaoTest {
   void start() throws IOException, URISyntaxException {
     utils.clearData();
     utils.createCourse();
- //   utils.createGroup();
   }
 
   @Test
@@ -78,26 +77,17 @@ class StudentDaoTest {
   @Transactional
   @Test
   void getWithCourse_ShouldFindStudentsWithCourseFromDB() {
-    // utils.clearData();
-    List<Student> studentList = utils.createStudentList();
-    //List<Course> courses = courseDao.getAll();
-    studentList.get(0).setCourses(courseDao.getAll());
-    studentDao.add(studentList);
-    studentList.get(0).setId(1);
-    studentList.get(1).setId(2);
-    System.err.println("studentList " + studentList);
-    List<Student> studentListExpect = new ArrayList<>();
-    for (Student student : studentList) {
-      if (student.getCourses() != null) {
-        studentListExpect.add(student);
+    List<Student> students = utils.createStudentList();
+    studentDao.add(students);
+    students.get(0).setId(1);
+    students.get(1).setId(2);
+    List<Student> studentsWithCourse = new ArrayList<>();
+    for (Student stud : students) {
+      if (stud.getCourses() != null && !stud.getCourses().isEmpty()) {
+        studentsWithCourse.add(stud);
       }
     }
-    System.err.println("1. studentList  " + studentList);
-    System.err.println("2. studentDao.getWithCourse() " + studentListExpect);
-    System.err.println("boolean " + studentList.equals(studentDao.getAll()));
-
-    System.err.println("3. studentDao.getWithCourse() " + studentDao.getWithCourse());
-    Assertions.assertEquals(studentListExpect, studentDao.getWithCourse());
+    Assertions.assertEquals(studentsWithCourse, studentDao.getWithCourse());
   }
 
   @Test

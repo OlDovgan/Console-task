@@ -73,39 +73,8 @@ public class StudentService {
       throw new IllegalArgumentException("No data available from course!!!");
     } else {
       studentDao.clearAll();
-      //   List<Student> studentList = createStudentsList();
-      //  studentDao.add(studentList);
-
       List<Student> list = createStudentsCourseList(createStudentsList());
       studentDao.add(list);
-      String groupName = null;
-      for (Student student : list) {
-        //    studentDao.add(student);
-        String courseSting = "";
-        for (Course course : student.getCourses()) {
-          courseSting =
-              courseSting + "| Course id=" + course.getId() + ", name =" + course.getName();
-        }
-        if(student.getGroup()==null) {
-          groupName= "without group";
-        }
-        loggerStudentService.info("student id={}, "
-                + " group_id = {},"
-                + " first name = {},"
-                + " last name = {},"
-                + " number courses = {},"
-                + " group name = {}"
-                + " course ={}",
-            student.getId(),
-            student.getGroupId(),
-            student.getFirstName(),
-            student.getLastName(),
-            student.getCourses().size(),
-            groupName,
-            courseSting);
-
-      }
-
     }
   }
 
@@ -166,7 +135,6 @@ public class StudentService {
     List<Student> studentList = new ArrayList<>();
     for (int i = 0; i < studentsTotalNumber - studentsWithGroup; i++) {
       Student student = new Student();
-      //  student.setGroupId(1);
       student.setFirstName(firstNames[randomInt(random, 0, firstNames.length - 1)]);
       student.setLastName(lastNames[randomInt(random, 0, lastNames.length - 1)]);
       studentList.add(student);
@@ -180,7 +148,6 @@ public class StudentService {
     List<Student> studentListNew = new ArrayList<>();
 
     for (Student student : studentList) {
-      //   List<Course> courseListAfterAdditionCourses = new ArrayList<>();
       int k = randomInt(random, studentsCoursesMin, studentsCoursesMax);
       int i = 0;
       bitSet.clear();
@@ -190,17 +157,12 @@ public class StudentService {
         if (course > courseList.size()) {
           course = courseList.size();
           student.addCourseToStudent(courseList.get(course - 1));
-          //    studentDao.add(student);
-          //  courseList.get(course - 1).getStudentList().add(student);
-
           break;
         }
         if (!bitSet.get(course)) {
           bitSet.set(course);
           i++;
           student.addCourseToStudent(courseList.get(course - 1));
-          //   studentDao.add(student);
-          //     courseList.get(course - 1).getStudentList().add(student);
         }
       }
       studentListNew.add(student);

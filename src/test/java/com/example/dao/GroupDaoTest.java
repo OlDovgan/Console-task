@@ -34,10 +34,10 @@ class GroupDaoTest {
   void add_ShouldAddGroupToDB() {
     boolean exist = false;
     Group group = new Group("FR-t6");
-    if(!utils.isExistGroup(group.getName())) {
+    if (!utils.isExistGroup(group.getName())) {
       groupDao.add(group);
       System.out.println("groupDao.add(group);");
-      exist=utils.isExistGroup(group.getName());
+      exist = utils.isExistGroup(group.getName());
     }
     Assertions.assertTrue(exist);
   }
@@ -107,6 +107,6 @@ class GroupDaoTest {
     studentSecond.setGroupId(2);
     studentDao.add(studentSecond);
     Assertions.assertEquals(groupList, groupDao.getGroupsByStudentCount(num));
-    
+
   }
 }

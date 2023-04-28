@@ -81,12 +81,10 @@ public class Student {
     }
 
     Student student = (Student) obj;
-   // if (student.groupId!=null&& this.groupId!=null) {
       if (this.groupId!=student.getGroupId()) {
         System.err.println("if (this.groupId==student.getGroupId()) ");
         return false;
       }
-//  }
     if (!this.firstName.equals(student.getFirstName())) {
       return false;
     }
@@ -105,7 +103,7 @@ public class Student {
       groupId=0;
     }
     result = 31 * result + groupId;
-    result = 31 * result + lastName == null ? 0 : lastName.hashCode();
+    result = 31 * result + lastName.hashCode();
     return result;
   }
 

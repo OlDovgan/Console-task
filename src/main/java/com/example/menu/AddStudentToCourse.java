@@ -9,8 +9,6 @@ import com.example.service.StudentService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -20,8 +18,6 @@ import org.springframework.stereotype.Component;
 @Order(5)
 public class AddStudentToCourse implements Menu {
 
-  private final Logger logger
-      = LoggerFactory.getLogger(this.getClass());
   private final CourseService courseService;
   private final StudentService studentService;
   final String separator = System.lineSeparator();
@@ -61,17 +57,11 @@ public class AddStudentToCourse implements Menu {
       studIdList.add(student.getId());
 
     }
-    logger.info("studIdList = {}", studIdList);
     while (!studIdList.contains(studId)) {
-      logger.info("Student with ID=" + studId + " already have course - "
-          + result.courses.get(courseNumber - 1));
       studId = service.readInt("Please, select a student ID to add to course of "
           + result.courses.get(courseNumber - 1));
-      logger.info("studId = {}", studId);
-      studIdList.add( studId);
+      studIdList.add(studId);
     }
-    logger.info(
-        "private int getStudentIdWithOutCourse(" + courseNumber + ") return studId=" + studId);
     return studId;
   }
 

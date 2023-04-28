@@ -32,55 +32,12 @@ public class StudentDao {
     }
   }
 
-  private int keyId(Student student) {
-//    KeyHolder keyHolder = new GeneratedKeyHolder();
-//    String sql = "INSERT INTO students (group_id, first_name, last_name) VALUES(?,?,?);";
-//    jdbcTemplate.update(connection -> {
-//      PreparedStatement ps = connection.prepareStatement(sql,
-//          new String[]{"student_id"});
-//      ps.setInt(1, student.getGroupId());
-//      ps.setString(2, student.getFirstName());
-//      ps.setString(3, student.getLastName());
-//      return ps;
-//    }, keyHolder);
-//    return (int) keyHolder.getKey();
-    return 5;
-  }
-
-
   public void addStudentsCourse(int studentId, int courseId) {
     Student student = entityManager.find(Student.class, studentId);
     Course course = entityManager.find(Course.class, courseId);
     student.addCourseToStudent(course);
     entityManager.persist(student);
   }
-
-//  public void addStudentsCourse(List<Student> studentsList){
-//    for (Student student: studentsList) {
-//      student.setCourseList();
-//    }
-//    List<Integer[]> list = new ArrayList<>();
-//    for (Student student : studentsList) {
-//      if (student.getCourse() != null) {
-//        for (Course course : student.getCourse()) {
-//          list.add(new Integer[]{student.getId(), course.getId()});
-//        }
-//      }
-//    }
-//
-//    jdbcTemplate.batchUpdate(query,
-//        new BatchPreparedStatementSetter() {
-//          public void setValues(PreparedStatement ps, int i) throws SQLException {
-//
-//            ps.setInt(1, list.get(i)[0]);
-//            ps.setInt(2, list.get(i)[1]);
-//          }
-//
-//          public int getBatchSize() {
-//            return list.size();
-//          }
-//        });
-  // }
 
   public List<Student> getAll() {
     return entityManager.createQuery("from Student").getResultList();
@@ -90,20 +47,6 @@ public class StudentDao {
     return entityManager.find(Student.class, id);
   }
 
-//  private List<Student> getAll(List<Student> studentList) {
-//    List<Student> studentListNew = new ArrayList<>();
-//    for (Student student : studentList) {
-//      setStudentsGroupsName(student);
-//      //     student.setCourse(getStudentsCourseByStudentId(student.getId()));
-//      studentListNew.add(student);
-//    }
-//    return studentListNew;
-//  }
-
-  private List<Course> getStudentsCourseByStudentId(int studentId) {
-    Student student = entityManager.find(Student.class, studentId);
-    return student.getCourses();
-  }
 
   public List<Student> getWithOutCourse(int courseId) {
 
@@ -113,16 +56,14 @@ public class StudentDao {
     List<Student> studentList = entityManager.createNativeQuery(sql, Student.class)
         .setParameter(1, courseId)
         .getResultList();
-    logger.info("Student  {}, size {}",studentList, studentList.size());
+    logger.info("Student  {}, size {}", studentList, studentList.size());
     return studentList;
   }
 
   public List<Student> getWithCourse() {
-    String queryHql = "from Student stud join fetch stud.courses as c"
+    String query = "from Student stud join fetch stud.courses as c"
         + " where size(c)>=1";
-    List<Student> studentList = entityManager.createQuery(queryHql).getResultList();
-
-    return studentList;
+    return entityManager.createQuery(query, Student.class).getResultList();
   }
 
   public List<Student> getWithCourse(String courseName) {

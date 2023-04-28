@@ -57,7 +57,7 @@ public class TestUtils {
   }
 
   public List<Course> getCourseList() {
-    return entityManager.createQuery("from Course ").getResultList();
+    return entityManager.createQuery("from Course ", Course.class).getResultList();
   }
 
   public List<Group> getGroupList() {
@@ -102,7 +102,9 @@ public class TestUtils {
   }
 
   public boolean isExistStudent(List<Student> list) {
-    return (entityManager.createQuery("from Student").getResultList().containsAll(list));
+    return (entityManager.createQuery("from Student", Student.class)
+        .getResultList()
+        .containsAll(list));
   }
 
   public boolean isExistStudentsCourse(int studentId, int courseId) {
@@ -151,6 +153,7 @@ public class TestUtils {
     studentNext.setGroupId(3);
     studentNext.setFirstName("Rex");
     studentNext.setLastName("Philip");
+    studentNext.setCourses(new ArrayList<>());
     List<Student> studentListExpect = new ArrayList<>();
     studentListExpect.add(student);
     studentListExpect.add(studentNext);
