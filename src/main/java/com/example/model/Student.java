@@ -15,6 +15,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.Data;
 
 @Entity
@@ -36,8 +37,8 @@ public class Student {
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
       CascadeType.REFRESH}, fetch = FetchType.EAGER)
   @JoinTable(name = "students_courses",
-  joinColumns = @JoinColumn (name = "student_id"),
-  inverseJoinColumns =@JoinColumn (name = "course_id") )
+      joinColumns = @JoinColumn(name = "student_id"),
+      inverseJoinColumns = @JoinColumn(name = "course_id"))
   private List<Course> courses;
 
 
@@ -53,12 +54,12 @@ public class Student {
         ", groupId=" + groupId +
         ", firstName='" + firstName + '\'' +
         ", lastName='" + lastName + '\'' +
-     //   ", Courses='" + courses + '\'' +
-                '}';
+        '}';
   }
 
   public Student() {
   }
+
   public Student(int groupId, String firstName, String lastName) {
     this.groupId = groupId;
     this.firstName = firstName;
@@ -71,6 +72,7 @@ public class Student {
     }
     courses.add(course);
   }
+
   @Override
   public boolean equals(Object obj) {
     if (obj == this) {
@@ -81,10 +83,9 @@ public class Student {
     }
 
     Student student = (Student) obj;
-      if (this.groupId!=student.getGroupId()) {
-        System.err.println("if (this.groupId==student.getGroupId()) ");
-        return false;
-      }
+    if (!Objects.equals(this.groupId, student.getGroupId())) {
+      return false;
+    }
     if (!this.firstName.equals(student.getFirstName())) {
       return false;
     }
@@ -92,19 +93,18 @@ public class Student {
       return false;
     }
 
-    return this.id == student.getId();
+    return Objects.equals(this.id, student.getId());
   }
 
   @Override
   public int hashCode() {
     int result = firstName.hashCode();
     result = 31 * result + id;
-    if(groupId==null){
-      groupId=0;
+    if (groupId == null) {
+      groupId = 0;
     }
     result = 31 * result + groupId;
     result = 31 * result + lastName.hashCode();
     return result;
   }
-
 }

@@ -27,7 +27,7 @@ public class Group {
   private String name;
 
   @OneToMany(mappedBy = "group", cascade = {CascadeType.PERSIST, CascadeType.DETACH,
-      CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER, orphanRemoval = true)
+      CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY, orphanRemoval = true)
 
   private List<Student> students;
 

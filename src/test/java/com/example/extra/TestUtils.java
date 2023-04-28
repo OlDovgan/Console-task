@@ -50,8 +50,6 @@ public class TestUtils {
           .setParameter("id", studentId).getSingleResult();
       return ((Student) result).getId() == studentId;
     } catch (NoResultException noResult) {
-      System.err.println(
-          "No result found in DB for query [from  Student  where id = " + studentId + " ]");
       return false;
     }
   }
@@ -74,8 +72,6 @@ public class TestUtils {
         return true;
       }
     } catch (NoResultException noResult) {
-      System.err.println(
-          "No result found in DB for query [from  Course  where name =  " + name + " ]");
       return false;
     }
     return false;
@@ -90,8 +86,6 @@ public class TestUtils {
         return true;
       }
     } catch (NoResultException noResult) {
-      System.err.println(
-          "No result found in DB for query [from  Group  where name =  " + groupName + " ]");
       return false;
     }
     return false;
@@ -102,8 +96,7 @@ public class TestUtils {
   }
 
   public boolean isExistStudent(List<Student> list) {
-    return (entityManager.createQuery("from Student", Student.class)
-        .getResultList()
+    return (entityManager.createQuery("from Student", Student.class).getResultList()
         .containsAll(list));
   }
 
@@ -117,8 +110,6 @@ public class TestUtils {
         }
       }
     } catch (NoResultException noResult) {
-      System.err.println(
-          "No result found in DB for query [from  Student  where id = " + studentId + " ]");
       return false;
     }
     return false;
@@ -172,8 +163,7 @@ public class TestUtils {
   private List<Group> createGroupsList() {
 
     List<Group> groupList = new ArrayList<>();
-    for (int i = 0;
-        i < Math.min(groupsNumber, studentsTotalNumber); i++) {
+    for (int i = 0; i < Math.min(groupsNumber, studentsTotalNumber); i++) {
       groupList.add(new Group(groupName(randomTest, 2, 2)));
     }
     return groupList;

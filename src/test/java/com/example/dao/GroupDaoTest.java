@@ -36,7 +36,6 @@ class GroupDaoTest {
     Group group = new Group("FR-t6");
     if (!utils.isExistGroup(group.getName())) {
       groupDao.add(group);
-      System.out.println("groupDao.add(group);");
       exist = utils.isExistGroup(group.getName());
     }
     Assertions.assertTrue(exist);

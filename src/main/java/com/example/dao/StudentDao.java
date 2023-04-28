@@ -56,7 +56,7 @@ public class StudentDao {
     List<Student> studentList = entityManager.createNativeQuery(sql, Student.class)
         .setParameter(1, courseId)
         .getResultList();
-    logger.info("Student  {}, size {}", studentList, studentList.size());
+    logger.debug("Student  {}, size {}", studentList, studentList.size());
     return studentList;
   }
 

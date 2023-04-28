@@ -31,7 +31,7 @@ public class Course {
   @Column(name = "description")
   private String description;
   @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH,
-      CascadeType.REFRESH}, fetch = FetchType.EAGER)
+      CascadeType.REFRESH}, fetch = FetchType.LAZY)
   @JoinTable(name = "students_courses",
       joinColumns = @JoinColumn(name = "course_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
