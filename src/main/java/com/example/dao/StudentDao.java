@@ -84,16 +84,10 @@ public class StudentDao {
         .executeUpdate();
   }
 
-
   public void deleteFromCourse(int studentId, int courseId) {
     Student student = entityManager.find(Student.class, studentId);
-    List<Course> courseNew = new ArrayList<>();
-    for (Course course : student.getCourses()) {
-      if (course.getId() != courseId) {
-        courseNew.add(course);
-      }
-    }
-    student.setCourses(courseNew);
+    Course course = entityManager.find(Course.class,courseId);
+    student.getCourses().remove(course);
     entityManager.merge(student);
   }
 

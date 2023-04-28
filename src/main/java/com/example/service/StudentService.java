@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @PropertySource("classpath:generation.properties")
@@ -63,6 +64,7 @@ public class StudentService {
     this.random = random;
   }
 
+  @Transactional
   public void createData() throws IOException, URISyntaxException {
     if (groupDao.getAll().isEmpty()) {
       loggerStudentService.error("No data available from group!!! Group table is empty");

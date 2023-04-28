@@ -64,31 +64,18 @@ public class TestUtils {
 
   public boolean isExistCourse(String name, String description) {
 
-    try {
-      Course course = (Course) entityManager.createQuery("from  Course  where name = :name")
-          .setParameter("name", name).getSingleResult();
-
-      if (course.getName().equals(name) && course.getDescription().equals(description)) {
-        return true;
-      }
-    } catch (NoResultException noResult) {
-      return false;
-    }
-    return false;
+      List<Course> courses =  entityManager.createQuery("from  Course  where name = :name "
+              + "and description = :description")
+          .setParameter("name", name)
+          .setParameter("description", description)
+          .getResultList();
+    return courses.size()>0;
   }
 
   public boolean isExistGroup(String groupName) {
-    try {
-      Group group = (Group) entityManager.createQuery("from  Group  where name = :name")
-          .setParameter("name", groupName).getSingleResult();
-
-      if (group.getName().equals(groupName)) {
-        return true;
-      }
-    } catch (NoResultException noResult) {
-      return false;
-    }
-    return false;
+    List<Group> groups =  entityManager.createQuery("from  Group  where name = :name", Group.class)
+          .setParameter("name", groupName).getResultList();
+    return groups.size() > 0;
   }
 
   public boolean isExistStudent(Student student) {
@@ -99,7 +86,7 @@ public class TestUtils {
     return (entityManager.createQuery("from Student", Student.class).getResultList()
         .containsAll(list));
   }
-
+@Transactional
   public boolean isExistStudentsCourse(int studentId, int courseId) {
     try {
       Student result = (Student) entityManager.createQuery("from  Student  where id = :id")

@@ -16,11 +16,17 @@ import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "students")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Student {
 
   @Id
@@ -35,36 +41,17 @@ public class Student {
   @Column(name = "last_name")
   private String lastName;
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
-      CascadeType.REFRESH}, fetch = FetchType.EAGER)
+      CascadeType.REFRESH}, fetch = FetchType.LAZY)
   @JoinTable(name = "students_courses",
       joinColumns = @JoinColumn(name = "student_id"),
       inverseJoinColumns = @JoinColumn(name = "course_id"))
-  private List<Course> courses;
 
+  private List<Course> courses;
 
   @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
       CascadeType.REFRESH})
   @JoinColumn(name = "group_id", insertable = false, updatable = false)
   private Group group;
-
-  @Override
-  public String toString() {
-    return "Student{" +
-        "id=" + id +
-        ", groupId=" + groupId +
-        ", firstName='" + firstName + '\'' +
-        ", lastName='" + lastName + '\'' +
-        '}';
-  }
-
-  public Student() {
-  }
-
-  public Student(int groupId, String firstName, String lastName) {
-    this.groupId = groupId;
-    this.firstName = firstName;
-    this.lastName = lastName;
-  }
 
   public void addCourseToStudent(Course course) {
     if (courses == null) {
@@ -106,5 +93,14 @@ public class Student {
     result = 31 * result + groupId;
     result = 31 * result + lastName.hashCode();
     return result;
+  }
+  @Override
+  public String toString() {
+    return "Student{" +
+        "id=" + id +
+        ", groupId=" + groupId +
+        ", firstName='" + firstName + '\'' +
+        ", lastName='" + lastName + '\'' +
+        '}';
   }
 }

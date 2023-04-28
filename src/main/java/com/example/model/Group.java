@@ -11,11 +11,15 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.util.List;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "groups")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Group {
 
   @Id
@@ -30,9 +34,6 @@ public class Group {
       CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY, orphanRemoval = true)
 
   private List<Student> students;
-
-  public Group() {
-  }
 
   public Group(String name) {
     this.name = name;
@@ -50,7 +51,6 @@ public class Group {
 
     Group group = (Group) obj;
     if (!this.name.equals(group.getName())) {
-      System.err.println("if (!this.name.equals(group.getName()))");
       return false;
     }
     return this.id == group.getId();

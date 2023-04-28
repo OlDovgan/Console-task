@@ -12,13 +12,17 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
 import java.util.List;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 
 @Entity
 @Table(name = "courses")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Course {
 
   @Id
@@ -36,10 +40,8 @@ public class Course {
       joinColumns = @JoinColumn(name = "course_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
 
+  @NonNull
   private List<Student> studentList;
-
-  public Course() {
-  }
 
   public Course(String name, String description) {
     this.name = name;
@@ -47,9 +49,6 @@ public class Course {
   }
 
   public void addStudentToCourse(Student student) {
-    if (studentList == null) {
-      studentList = new ArrayList<>();
-    }
     studentList.add(student);
   }
 
@@ -77,7 +76,7 @@ public class Course {
   public int hashCode() {
     int result = name == null ? 0 : name.hashCode();
     result = 31 * result + id;
-    result = 31 * result +  description.hashCode();
+    result = 31 * result + description.hashCode();
     return result;
   }
 }
