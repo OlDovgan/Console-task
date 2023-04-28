@@ -73,16 +73,21 @@ public class StudentService {
       throw new IllegalArgumentException("No data available from course!!!");
     } else {
       studentDao.clearAll();
-      studentDao.add(createStudentsList());
+      //   List<Student> studentList = createStudentsList();
+      //  studentDao.add(studentList);
 
-      List<Student> list = createStudentsCourseList();
+      List<Student> list = createStudentsCourseList(createStudentsList());
       studentDao.add(list);
-
-      for (Student student: list) {
-    //    studentDao.add(student);
+      String groupName = null;
+      for (Student student : list) {
+        //    studentDao.add(student);
         String courseSting = "";
-        for (Course course:student.getCourseList()) {
-          courseSting = courseSting +"| Course id="+course.getId()+", name ="+course.getName();
+        for (Course course : student.getCourses()) {
+          courseSting =
+              courseSting + "| Course id=" + course.getId() + ", name =" + course.getName();
+        }
+        if(student.getGroup()==null) {
+          groupName= "without group";
         }
         loggerStudentService.info("student id={}, "
                 + " group_id = {},"
@@ -95,8 +100,8 @@ public class StudentService {
             student.getGroupId(),
             student.getFirstName(),
             student.getLastName(),
-            student.getCourseList().size(),
-            student.getGroup().getName(),
+            student.getCourses().size(),
+            groupName,
             courseSting);
 
       }
@@ -161,7 +166,7 @@ public class StudentService {
     List<Student> studentList = new ArrayList<>();
     for (int i = 0; i < studentsTotalNumber - studentsWithGroup; i++) {
       Student student = new Student();
-      student.setGroupId(1);
+      //  student.setGroupId(1);
       student.setFirstName(firstNames[randomInt(random, 0, firstNames.length - 1)]);
       student.setLastName(lastNames[randomInt(random, 0, lastNames.length - 1)]);
       studentList.add(student);
@@ -169,13 +174,13 @@ public class StudentService {
     return studentList;
   }
 
-  private List<Student> createStudentsCourseList() {
+  private List<Student> createStudentsCourseList(List<Student> studentList) {
     List<Course> courseList = courseDao.getAll();
     BitSet bitSet = new BitSet(Integer.valueOf(coursesNumber));
     List<Student> studentListNew = new ArrayList<>();
 
-    for (Student student : studentDao.getAll()) {
-  //   List<Course> courseListAfterAdditionCourses = new ArrayList<>();
+    for (Student student : studentList) {
+      //   List<Course> courseListAfterAdditionCourses = new ArrayList<>();
       int k = randomInt(random, studentsCoursesMin, studentsCoursesMax);
       int i = 0;
       bitSet.clear();
@@ -185,8 +190,8 @@ public class StudentService {
         if (course > courseList.size()) {
           course = courseList.size();
           student.addCourseToStudent(courseList.get(course - 1));
-      //    studentDao.add(student);
-        //  courseList.get(course - 1).getStudentList().add(student);
+          //    studentDao.add(student);
+          //  courseList.get(course - 1).getStudentList().add(student);
 
           break;
         }
@@ -194,8 +199,8 @@ public class StudentService {
           bitSet.set(course);
           i++;
           student.addCourseToStudent(courseList.get(course - 1));
-       //   studentDao.add(student);
-     //     courseList.get(course - 1).getStudentList().add(student);
+          //   studentDao.add(student);
+          //     courseList.get(course - 1).getStudentList().add(student);
         }
       }
       studentListNew.add(student);
@@ -236,7 +241,7 @@ public class StudentService {
   }
 
   public Student getStudentById(int id) {
-    loggerStudentService.debug("getStudentById({})",id);
+    loggerStudentService.debug("getStudentById({})", id);
     return studentDao.getStudentById(id);
   }
 

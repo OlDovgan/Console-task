@@ -2,7 +2,6 @@ package com.example.dao;
 
 import com.example.model.Course;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,13 +31,12 @@ public class CourseDao {
   }
 
   public List<Course> getAll() {
-    String query = "SELECT i FROM Course i";
-    TypedQuery<Course> typedQuery = entityManager.createQuery(query, Course.class);
-    return typedQuery.getResultList();
+    return entityManager.createQuery("from Course ").getResultList();
   }
+
   public void clearAll() {
-     String query = "TRUNCATE  courses RESTART IDENTITY CASCADE;";
-      entityManager.createNativeQuery(query).executeUpdate();
+    String query = "TRUNCATE  courses RESTART IDENTITY CASCADE;";
+    entityManager.createNativeQuery(query).executeUpdate();
   }
 }
 

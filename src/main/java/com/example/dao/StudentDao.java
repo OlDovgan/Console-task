@@ -4,7 +4,6 @@ package com.example.dao;
 import com.example.model.Course;
 import com.example.model.Student;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -27,6 +26,7 @@ public class StudentDao {
   }
 
   public void add(List<Student> studentList) {
+
     for (Student student : studentList) {
       entityManager.merge(student);
     }
@@ -83,14 +83,7 @@ public class StudentDao {
   // }
 
   public List<Student> getAll() {
-  //  String query = "SELECT i FROM Student i";
-    String query = "from Student";
-    Query query1 = entityManager.createQuery(query);
-
-  //  TypedQuery<Student> typedQuery = entityManager.createQuery(query, Student.class);
-
-   // return typedQuery.getResultList();
-    return query1.getResultList();
+    return entityManager.createQuery("from Student").getResultList();
   }
 
   public Student getStudentById(int id) {
@@ -109,49 +102,33 @@ public class StudentDao {
 
   private List<Course> getStudentsCourseByStudentId(int studentId) {
     Student student = entityManager.find(Student.class, studentId);
-    return student.getCourseList();
+    return student.getCourses();
   }
-
-//  private void setStudentsGroupsName(Student student) {
-//
-////    if (student.getGroupId() != 0) {
-////      var groupName = jdbcTemplate.queryForObject(
-////          "SELECT group_name FROM groups WHERE group_id = ? ;",
-////          String.class, student.getGroupId());
-////      student.setGroupName(groupName);
-////    }
-//  }
 
   public List<Student> getWithOutCourse(int courseId) {
 
-//    List<Student> studentList;
-//    String sql = "SELECT * FROM students WHERE NOT EXISTS (SELECT * FROM students_courses "
-//        + " WHERE students_courses.student_id=students.student_id "
-//        + " AND students_courses.course_id = ? );";
-//    studentList = jdbcTemplate.query(sql, mapperStudent, courseId);
-//    return getAll(studentList);
-    return new ArrayList<>();
+    String sql = "SELECT * FROM students WHERE NOT EXISTS (SELECT * FROM students_courses "
+        + " WHERE students_courses.student_id=students.id "
+        + " AND students_courses.course_id = ? );";
+    List<Student> studentList = entityManager.createNativeQuery(sql, Student.class)
+        .setParameter(1, courseId)
+        .getResultList();
+    logger.info("Student  {}, size {}",studentList, studentList.size());
+    return studentList;
   }
 
   public List<Student> getWithCourse() {
+    String queryHql = "from Student stud join fetch stud.courses as c"
+        + " where size(c)>=1";
+    List<Student> studentList = entityManager.createQuery(queryHql).getResultList();
 
-    //    List<Student> studentList;
-    String query = "SELECT * FROM students WHERE  EXISTS (SELECT * FROM students_courses "
-        + " WHERE students_courses.student_id=students.id );";
-  List<Student>  studentList = entityManager.createNativeQuery(query).getResultList();
-    for (Student student:studentList) {
-      logger.info("student id={}, group={}", student.getId(),student.getGroup());
-    }
-
-//    studentList = jdbcTemplate.query(sql, mapperStudent);
-//    return getAll(studentList);
-    return  studentList;
+    return studentList;
   }
 
   public List<Student> getWithCourse(String courseName) {
     List<Student> studentList = new ArrayList<>();
     for (Student stud : getWithCourse()) {
-      for (Course course : stud.getCourseList()) {
+      for (Course course : stud.getCourses()) {
         if (course.getName().equals(courseName)) {
           studentList.add(stud);
         }
@@ -164,40 +141,24 @@ public class StudentDao {
     entityManager.createQuery("delete from Student where id = :id")
         .setParameter("id", id)
         .executeUpdate();
-  //  Student student = new Student();
- //   entityManager.merge(student);
-//    Student student = entityManager.find(Student.class,id);
-//    logger.info("Student = {}",student);
-//    entityManager.remove(student);
-
-
-  //  entityManager.flush();
   }
 
 
   public void deleteFromCourse(int studentId, int courseId) {
-//    entityManager.createQuery("delete from Student where id = :id")
-//        .setParameter("id", id)
-//        .executeUpdate();
-
     Student student = entityManager.find(Student.class, studentId);
-    List<Course> courseList = student.getCourseList();
-    List<Course> courseNew = student.getCourseList();
-    for (Course course:courseList) {
-      if(course.getId()!=studentId) {
+    List<Course> courseNew = new ArrayList<>();
+    for (Course course : student.getCourses()) {
+      if (course.getId() != courseId) {
         courseNew.add(course);
       }
     }
-    student.setCourseList(courseNew);
+    student.setCourses(courseNew);
     entityManager.merge(student);
-    //   jdbcTemplate.update("DELETE FROM students_courses WHERE student_id =? AND  course_id=? ;",
-    //      studentId, courseId);
   }
 
-  // @Query( value = "TRUNCATE   students_courses,students RESTART IDENTITY;", nativeQuery = true)
   public void clearAll() {
-    String query = "TRUNCATE students RESTART IDENTITY CASCADE;";
+    String query = "TRUNCATE  students  RESTART IDENTITY CASCADE;";
     entityManager.createNativeQuery(query).executeUpdate();
-    logger.info("End entityManager.createNativeQuery({})", query);
+    logger.debug("End entityManager.createNativeQuery({})", query);
   }
 }

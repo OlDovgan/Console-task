@@ -36,12 +36,37 @@
     </rollingPolicy>
 
   </appender>
+  <appender name="FILE-TRACE-SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>DEBUG</level>
+    </filter>
+    <file>${DEV_HOME}/trace_sql.log</file>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+
+      <Pattern>
+        %d{yyyy-MM-dd HH:mm:ss:ms} [%thread] %-5level %logger{36} - %msg%n
+      </Pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- rollover daily -->
+      <fileNamePattern>${DEV_HOME}/archived/sql_trace.%d{yyyy-MM-dd}.%i.log
+      </fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>10MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+
+  </appender>
 
   <logger name="com.example" level="trace" additivity="false">
     <appender-ref ref="FILE-TRACE"/>
     <appender-ref ref="STDOUT"/>
   </logger>
 
+  <logger name="com.example.config" level="debug" additivity="false">
+     <appender-ref ref="FILE-TRACE-SQL"/>
+  </logger>
 
   <root level="info">
     <appender-ref ref="STDOUT"/>

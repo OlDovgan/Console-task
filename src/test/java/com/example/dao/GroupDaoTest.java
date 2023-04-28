@@ -32,19 +32,24 @@ class GroupDaoTest {
 
   @Test
   void add_ShouldAddGroupToDB() {
+    boolean exist = false;
     Group group = new Group("FR-t6");
-    groupDao.add(group);
-    Assertions.assertTrue(utils.isExistGroup(group.getName()));
+    if(!utils.isExistGroup(group.getName())) {
+      groupDao.add(group);
+      System.out.println("groupDao.add(group);");
+      exist=utils.isExistGroup(group.getName());
+    }
+    Assertions.assertTrue(exist);
   }
 
   @Test
   void add_ShouldAddGroupListToDB() {
     Group firstGroup = new Group();
     firstGroup.setName("FR-05");
-    firstGroup.setId(1);
+    firstGroup.setStudents(new ArrayList<>());
     Group secondGroup = new Group();
     secondGroup.setName("sP-11");
-    secondGroup.setId(2);
+    secondGroup.setStudents(new ArrayList<>());
     groupList.add(firstGroup);
     groupList.add(secondGroup);
     groupDao.add(groupList);
@@ -56,10 +61,8 @@ class GroupDaoTest {
   void getAll_ShouldFindAllGroupsFromDbWhereTableStudentsIsEmpty() {
     Group firstGroup = new Group();
     firstGroup.setName("FR-05");
-    firstGroup.setId(1);
     Group secondGroup = new Group();
     secondGroup.setName("sP-11");
-    secondGroup.setId(2);
     groupList.add(firstGroup);
     groupList.add(secondGroup);
     groupDao.add(groupList);
@@ -74,10 +77,8 @@ class GroupDaoTest {
     studentDao.add(student);
     Group firstGroup = new Group();
     firstGroup.setName("FR-05");
-    firstGroup.setId(1);
     Group secondGroup = new Group();
     secondGroup.setName("sP-11");
-    secondGroup.setId(2);
     groupList.add(firstGroup);
     groupList.add(secondGroup);
     groupDao.add(groupList);
@@ -88,7 +89,15 @@ class GroupDaoTest {
   void getGroupsByStudentCount_ShouldFindGroupsFromDbWhereNumberStudentLessEqualThan() {
 
     int num = 3;
+    Group firstGroup = new Group();
+    firstGroup.setName("cP-50");
+    Group secondGroup = new Group();
+    secondGroup.setName("Jp-04");
+    groupList.add(firstGroup);
+    groupList.add(secondGroup);
+    groupDao.add(groupList);
     Student student = new Student();
+    student.setGroupId(1);
     student.setFirstName("Max");
     student.setLastName("Smith");
     studentDao.add(student);
@@ -97,19 +106,6 @@ class GroupDaoTest {
     studentSecond.setLastName("Smith1");
     studentSecond.setGroupId(2);
     studentDao.add(studentSecond);
-
-    Group firstGroup = new Group();
-    firstGroup.setName("cP-50");
- //   firstGroup.setNumberStudent(0);
-    firstGroup.setId(1);
-    Group secondGroup = new Group();
-    secondGroup.setName("Jp-04");
- //   secondGroup.setNumberStudent(1);
-    secondGroup.setId(2);
-    groupList.add(firstGroup);
-    groupList.add(secondGroup);
-    groupDao.add(groupList);
-
     Assertions.assertEquals(groupList, groupDao.getGroupsByStudentCount(num));
     
   }

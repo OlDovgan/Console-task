@@ -5,9 +5,8 @@ import static org.mockito.Mockito.verify;
 
 import com.example.TestConfig;
 import com.example.dao.StudentDao;
-import com.example.model.Course;
-import com.example.model.Student;
 import com.example.extra.TestUtils;
+import com.example.model.Student;
 import com.example.service.StudentService;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,26 +49,16 @@ class StudentServiceTest {
 
   @Test
   void add_ShouldCallStudentDaoMethodAddForStudent() {
-    List<Course> course = new ArrayList<>();
-    Course courseFirst = new Course("Maths", "Maths");
-    Course courseSecond = new Course("Java", "Java");
-    course.add(courseFirst);
-    course.add(courseSecond);
-    Student student = utils.createStudent(2, "Max", "Smith", course);
+    Student student = utils.createStudent(2, "Max", "Smith");
     studentService.add(student);
     verify(studentDao, times(1)).add(student);
   }
 
   @Test
   void add_ShouldCallStudentDaoMethodAddForStudentList() {
-    List<Course> course = new ArrayList<>();
     List<Student> studentList = new ArrayList<>();
-        Course courseFirst = new Course("Maths", "Maths");
-    Course courseSecond = new Course("Java", "Java");
-    course.add(courseFirst);
-    course.add(courseSecond);
-    studentList.add(utils.createStudent(2, "Max", "Smith", course));
-    studentList.add(utils.createStudent(3, "Next", "Pit", course));
+    studentList.add(utils.createStudent(2, "Max", "Smith"));
+    studentList.add(utils.createStudent(3, "Next", "Pit"));
     studentService.add(studentList);
     verify(studentDao, times(1)).add(studentList);
   }

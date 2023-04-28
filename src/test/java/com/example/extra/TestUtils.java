@@ -1,6 +1,7 @@
 package com.example.extra;
 
 
+import com.example.dao.CourseDao;
 import com.example.dao.GroupDao;
 import com.example.model.Course;
 import com.example.model.Group;
@@ -8,6 +9,8 @@ import com.example.model.Student;
 import com.example.service.CourseService;
 import com.example.service.GroupService;
 import com.example.service.StudentService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -17,22 +20,21 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TestUtils {
 
-//  @Autowired
-//  JdbcTemplate jdbcTemplate;
-//
-//  @Autowired
-//  CourseMapper mapperCourse;
-//  @Autowired
-//  StudentMapper mapperStudent;
+  @Autowired
+  private EntityManager entityManager;
+
   @Value("${courses}")
   private int coursesNumber;
 
   @Autowired
   GroupDao groupDao;
+  @Autowired
+  CourseDao courseDao;
   @Autowired
   private StudentService studentService;
   @Autowired
@@ -42,109 +44,116 @@ public class TestUtils {
   @Autowired
   GroupService groupService;
 
-  public boolean isExistStudentId(int student_id) {
-//    String sql = "SELECT EXISTS(SELECT * FROM students WHERE student_id= ? );";
-//
-//    return Boolean.TRUE.equals(jdbcTemplate.query(sql, rs -> {
-//      if (rs.next()) {
-//        return rs.getBoolean(1);
-//      }
-//      throw new IllegalStateException("Zero rows returned from the DB");
-//    }, student_id));
-    return true;
+  public boolean isExistStudentId(int studentId) {
+    try {
+      Object result = entityManager.createQuery("from  Student  where id = :id")
+          .setParameter("id", studentId).getSingleResult();
+      return ((Student) result).getId() == studentId;
+    } catch (NoResultException noResult) {
+      System.err.println(
+          "No result found in DB for query [from  Student  where id = " + studentId + " ]");
+      return false;
+    }
   }
 
   public List<Course> getCourseList() {
-//    return jdbcTemplate.query("SELECT * FROM courses ORDER BY course_id;", mapperCourse);
- return new ArrayList<>();
+    return entityManager.createQuery("from Course ").getResultList();
   }
 
   public List<Group> getGroupList() {
     return groupDao.getAll();
   }
 
-  public boolean isExistCourse(String course, String description) {
-//    String sql = "SELECT EXISTS(SELECT * FROM courses WHERE courses.course_name= ? "
-//        + " AND courses.course_description= ?);";
-//
-//    return Boolean.TRUE.equals(jdbcTemplate.query(sql, rs -> {
-//      if (rs.next()) {
-//        return rs.getBoolean(1);
-//      }
-//      throw new IllegalStateException("Zero rows returned from the DB");
-//    }, course, description));
-    return  true;
+  public boolean isExistCourse(String name, String description) {
+
+    try {
+      Course course = (Course) entityManager.createQuery("from  Course  where name = :name")
+          .setParameter("name", name).getSingleResult();
+
+      if (course.getName().equals(name) && course.getDescription().equals(description)) {
+        return true;
+      }
+    } catch (NoResultException noResult) {
+      System.err.println(
+          "No result found in DB for query [from  Course  where name =  " + name + " ]");
+      return false;
+    }
+    return false;
   }
 
   public boolean isExistGroup(String groupName) {
-//    String sql = "SELECT EXISTS(SELECT * FROM groups WHERE groups.group_name= ? );";
-//
-//    return Boolean.TRUE.equals(jdbcTemplate.query(sql, rs -> {
-//      if (rs.next()) {
-//        return rs.getBoolean(1);
-//      }
-//      throw new IllegalStateException("Zero rows returned from the DB");
-//    }, groupName));
- return true;
+    try {
+      Group group = (Group) entityManager.createQuery("from  Group  where name = :name")
+          .setParameter("name", groupName).getSingleResult();
+
+      if (group.getName().equals(groupName)) {
+        return true;
+      }
+    } catch (NoResultException noResult) {
+      System.err.println(
+          "No result found in DB for query [from  Group  where name =  " + groupName + " ]");
+      return false;
+    }
+    return false;
   }
 
   public boolean isExistStudent(Student student) {
-//    String sql = "SELECT * FROM students;";
-//    List<Student> students = jdbcTemplate.query(sql, mapperStudent);
-//    return students.contains(student);
-    return true;
+    return (entityManager.createQuery("from Student").getResultList().contains(student));
   }
 
   public boolean isExistStudent(List<Student> list) {
-//    String sql = "SELECT * FROM students;";
-//    List<Student> students = studentService.getAll();
-//    var i = 0;
-//    for (Student stud : list) {
-//      if (students.contains(stud)) {
-//        i++;
-//      }
-//    }
-//    return list.size() == i;
-    return true;
+    return (entityManager.createQuery("from Student").getResultList().containsAll(list));
   }
 
   public boolean isExistStudentsCourse(int studentId, int courseId) {
-//    String sql = "SELECT EXISTS(SELECT * FROM students_courses WHERE student_id= ? AND course_id = ? );";
-//
-//    return Boolean.TRUE.equals(jdbcTemplate.query(sql, rs -> {
-//      if (rs.next()) {
-//        return rs.getBoolean(1);
-//      }
-//      throw new IllegalStateException("Zero rows returned from the DB");
-//    }, studentId, courseId));
-    return true;
+    try {
+      Student result = (Student) entityManager.createQuery("from  Student  where id = :id")
+          .setParameter("id", studentId).getSingleResult();
+      for (Course c : result.getCourses()) {
+        if (c.getId() == courseId) {
+          return true;
+        }
+      }
+    } catch (NoResultException noResult) {
+      System.err.println(
+          "No result found in DB for query [from  Student  where id = " + studentId + " ]");
+      return false;
+    }
+    return false;
   }
 
   public List<Student> createStudentList() {
+    List<Group> groupList = new ArrayList<>();
     List<Course> courses = new ArrayList<>();
     String description = " English is a language—originally the language of the people of England";
     String description2 = " Probability theory is the branch of mathematics concerned with probability";
     Course first = new Course("English", description);
     Course second = new Course("Probability theory", description2);
-    first.setId(2);
-    second.setId(4);
     courses.add(first);
     courses.add(second);
+    courseDao.add(courses);
+    Group firstGroup = new Group();
+    firstGroup.setName("cP-50");
+    Group secondGroup = new Group();
+    secondGroup.setName("Jp-04");
+    Group thirdGroup = new Group();
+    thirdGroup.setName("fG-08");
+    groupList.add(firstGroup);
+    groupList.add(secondGroup);
+    groupList.add(thirdGroup);
+    groupDao.add(groupList);
     Student student = new Student();
     student.setGroupId(1);
     student.setFirstName("Amir");
     student.setLastName("Watson");
-   // student.setGroupName("nA-51");
- //   student.setCourse(courses);
+    student.setCourses(courses);
     Student studentNext = new Student();
     studentNext.setGroupId(3);
     studentNext.setFirstName("Rex");
     studentNext.setLastName("Philip");
-//    studentNext.setGroupName("Jp-04");
     List<Student> studentListExpect = new ArrayList<>();
     studentListExpect.add(student);
     studentListExpect.add(studentNext);
-
     return studentListExpect;
   }
 
@@ -155,24 +164,6 @@ public class TestUtils {
 
   public void createCourse() throws IOException, URISyntaxException {
     courseService.createData();
-  }
-
-  public void createGroup() {
-    add(createGroupsList());
-  }
-
-  private void add(List<Group> groupList) {
-//    jdbcTemplate.batchUpdate("INSERT INTO groups (group_name) VALUES (?);",
-//        new BatchPreparedStatementSetter() {
-//          public void setValues(PreparedStatement ps, int i) throws SQLException {
-//            ps.setString(1, groupList.get(i).getName());
-//          }
-//
-//          public int getBatchSize() {
-//            return groupList.size();
-//          }
-//        }
-//    );
   }
 
   private List<Group> createGroupsList() {
@@ -191,25 +182,29 @@ public class TestUtils {
   }
 
 
-  public Student createStudent(int groupId, String firstName, String lastName,
-      List<Course> courseList) {
+  public Student createStudent(int groupId, String firstName, String lastName) {
     Student student = new Student();
     student.setGroupId(groupId);
     student.setFirstName(firstName);
     student.setLastName(lastName);
- //   student.setCourse(courseList);
     return student;
   }
 
+  @Transactional
   public void clearData() {
-  //  jdbcTemplate.update("TRUNCATE students, courses, groups, students_courses RESTART IDENTITY;");
+    String query = "TRUNCATE students, courses, groups, students_courses RESTART IDENTITY;";
+    entityManager.createNativeQuery(query).executeUpdate();
   }
 
+  @Transactional
   public void clearCourse() {
-  //  jdbcTemplate.update("TRUNCATE  courses RESTART IDENTITY");
+    String query = "TRUNCATE  courses RESTART IDENTITY CASCADE;";
+    entityManager.createNativeQuery(query).executeUpdate();
+
   }
 
   public void createStudentInDb() throws IOException, URISyntaxException {
+    groupService.createData();
     studentService.createData();
   }
 }

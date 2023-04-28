@@ -10,7 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +24,11 @@ public class Student {
 
   @Id
   @Column(name = "id")
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  @SequenceGenerator(name = "sequence_student", sequenceName = "students_seq", allocationSize = 200)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence_student")
+  private Integer id;
   @Column(name = "group_id")
-  private int groupId;
+  private Integer groupId;
   @Column(name = "first_name")
   private String firstName;
   @Column(name = "last_name")
@@ -36,11 +38,11 @@ public class Student {
   @JoinTable(name = "students_courses",
   joinColumns = @JoinColumn (name = "student_id"),
   inverseJoinColumns =@JoinColumn (name = "course_id") )
-  private List<Course> courseList;
+  private List<Course> courses;
 
 
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
-      CascadeType.REFRESH}, orphanRemoval = true)
+  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
+      CascadeType.REFRESH})
   @JoinColumn(name = "group_id", insertable = false, updatable = false)
   private Group group;
 
@@ -51,12 +53,12 @@ public class Student {
         ", groupId=" + groupId +
         ", firstName='" + firstName + '\'' +
         ", lastName='" + lastName + '\'' +
-        '}';
+     //   ", Courses='" + courses + '\'' +
+                '}';
   }
 
   public Student() {
   }
-
   public Student(int groupId, String firstName, String lastName) {
     this.groupId = groupId;
     this.firstName = firstName;
@@ -64,9 +66,47 @@ public class Student {
   }
 
   public void addCourseToStudent(Course course) {
-    if (courseList == null) {
-      courseList = new ArrayList<>();
+    if (courses == null) {
+      courses = new ArrayList<>();
     }
-    courseList.add(course);
+    courses.add(course);
   }
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+    if (obj == null || obj.getClass() != this.getClass()) {
+      return false;
+    }
+
+    Student student = (Student) obj;
+   // if (student.groupId!=null&& this.groupId!=null) {
+      if (this.groupId!=student.getGroupId()) {
+        System.err.println("if (this.groupId==student.getGroupId()) ");
+        return false;
+      }
+//  }
+    if (!this.firstName.equals(student.getFirstName())) {
+      return false;
+    }
+    if (!this.lastName.equals(student.getLastName())) {
+      return false;
+    }
+
+    return this.id == student.getId();
+  }
+
+  @Override
+  public int hashCode() {
+    int result = firstName.hashCode();
+    result = 31 * result + id;
+    if(groupId==null){
+      groupId=0;
+    }
+    result = 31 * result + groupId;
+    result = 31 * result + lastName == null ? 0 : lastName.hashCode();
+    return result;
+  }
+
 }

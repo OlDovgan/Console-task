@@ -59,14 +59,18 @@ public class AddStudentToCourse implements Menu {
     List<Integer> studIdList = new ArrayList<>();
     for (Student student : studentService.getWithOutCourse(courseNumber)) {
       studIdList.add(student.getId());
+
     }
+    logger.info("studIdList = {}", studIdList);
     while (!studIdList.contains(studId)) {
-      logger.debug("Student with ID=" + studId + " already have course - "
+      logger.info("Student with ID=" + studId + " already have course - "
           + result.courses.get(courseNumber - 1));
       studId = service.readInt("Please, select a student ID to add to course of "
           + result.courses.get(courseNumber - 1));
+      logger.info("studId = {}", studId);
+      studIdList.add( studId);
     }
-    logger.debug(
+    logger.info(
         "private int getStudentIdWithOutCourse(" + courseNumber + ") return studId=" + studId);
     return studId;
   }

@@ -41,4 +41,5 @@ public class SpringConfig {
     items.forEach(menu::addMenuItem);
     return menu;
   }
+
 }

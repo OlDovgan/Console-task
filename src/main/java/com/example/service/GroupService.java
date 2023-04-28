@@ -1,5 +1,6 @@
 package com.example.service;
 
+
 import com.example.dao.GroupDao;
 import com.example.model.Group;
 import java.util.ArrayList;
@@ -38,11 +39,12 @@ public class GroupService {
   private List<Group> createGroupsList() {
     logger.debug("Start createGroupsList()");
     List<Group> groupList = new ArrayList<>();
-   // groupList.add(new Group());
+    // groupList.add(new Group());
     for (int i = 0;
         i < Math.min(groupsNumber, studentsTotalNumber); i++) {
       groupList.add(new Group(groupName(random, 2, 2)));
-      logger.debug("groupsNumber = {}, studentsTotalNumber = {}",groupsNumber,studentsTotalNumber);
+      logger.debug("groupsNumber = {}, studentsTotalNumber = {}", groupsNumber,
+          studentsTotalNumber);
       logger.debug("groupList.add = {}", groupList);
     }
     return groupList;
@@ -53,6 +55,7 @@ public class GroupService {
         + RandomStringUtils.random(digitCount, 0, 0, false, true, null, random);
   }
 
+  //@Transactional
   public List<Group> getGroupsByStudentCount(int number) {
     return groupDao.getGroupsByStudentCount(number);
   }

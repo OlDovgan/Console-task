@@ -1,8 +1,8 @@
 package com.example.dao;
 
 import com.example.TestConfig;
-import com.example.model.Course;
 import com.example.extra.TestUtils;
+import com.example.model.Course;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -42,22 +42,23 @@ class CourseDaoTest {
   void add_ShouldAddCourseListToDB() {
     List<Course> courseList = new ArrayList<>();
     Course courseFirst = new Course("Pascal", "Pascal");
-    courseFirst.setId(1);
     Course courseSecond = new Course("Python", "Python");
-    courseSecond.setId(2);
+    courseFirst.setStudentList(new ArrayList<>());
+    courseSecond.setStudentList(new ArrayList<>());
     courseList.add(courseFirst);
     courseList.add(courseSecond);
     courseDao.add(courseList);
-    Assertions.assertEquals(courseList, utils.getCourseList());
+    List<Course> courses = utils.getCourseList();
+    Assertions.assertEquals(courseList, courses);
   }
 
   @Test
   void getAll_ShouldFindAllCoursesFromDB() {
     List<Course> courseList = new ArrayList<>();
     Course courseFirst = new Course("Pascal", "Pascal");
-    courseFirst.setId(1);
+    courseFirst.setStudentList(new ArrayList<>());
     Course courseSecond = new Course("Python", "Python");
-    courseSecond.setId(2);
+    courseSecond.setStudentList(new ArrayList<>());
     courseList.add(courseFirst);
     courseList.add(courseSecond);
     courseDao.add(courseList);

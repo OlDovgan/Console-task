@@ -7,11 +7,15 @@ import com.example.service.StudentService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Result {
+  private final Logger logger
+      = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
   private StudentService studentService;
@@ -20,13 +24,15 @@ public class Result {
   private static final String FORMAT = "%-" + 4 + "s| %-" + 12 + "s %-" + 12 + "s";
   public final List<String> courses = new ArrayList<>();
 
+
   public String studentsWithCourse(String course) {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     String groupName;
     String format =
         "%-3d| %-" + 12 + "s| %-" + 12 + "s| %-" + (course.length() + 2) + "s| %s";
     for (Student stud : studentService.getWithCourse(course)) {
-      if (stud.getGroup().getName() == null) {
+      logger.info("Stud {}", stud);
+      if (stud.getGroup() == null) {
         groupName = "without a group";
       } else {
         groupName = stud.getGroup().getName();
@@ -41,6 +47,7 @@ public class Result {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     String format = "%-" + 3 + "s| %-" + 12 + "s| %-" + 12 + "s";
     for (Student stud : studentService.getWithOutCourse(course)) {
+      logger.info("ResultStudent {}",stud);
       stringJoiner.add(String.format(format, stud.getId(), stud.getFirstName(),
           stud.getLastName()));
     }
@@ -80,8 +87,8 @@ public class Result {
     String separator = System.lineSeparator();
     StringJoiner joiner = new StringJoiner(separator);
 
-    if (student.getCourseList()!= null) {
-      for (Course course : student.getCourseList()) {
+    if (student.getCourses()!= null) {
+      for (Course course : student.getCourses()) {
         joiner.add(student.getId() + " | " + student.getFirstName() + "  "
             + student.getLastName() + " |  " + course.getId() + " |  "
             + course.getName());
@@ -93,6 +100,7 @@ public class Result {
   public String coursesInfo() {
     StringJoiner joiner = new StringJoiner(System.lineSeparator());
     for (Course course : courseService.getAll()) {
+
       joiner.add(course.getId() + ". " + course.getName());
       courses.add(course.getName());
     }
