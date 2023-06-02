@@ -1,11 +1,8 @@
 package com.example.dao;
 
 import com.example.model.Course;
-import jakarta.persistence.EntityManager;
+import com.example.repository.CourseRepository;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,30 +10,26 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CourseDao {
 
-  private final Logger logger
-      = LoggerFactory.getLogger(CourseDao.class);
+  private final CourseRepository repository;
 
-  @Autowired
-  private EntityManager entityManager;
+  public CourseDao(CourseRepository repository) {
+    this.repository = repository;
+  }
 
   public void add(Course course) {
-    entityManager.persist(course);
+    repository.save(course);
   }
 
   public void add(List<Course> courseList) {
-    for (Course course : courseList) {
-      logger.trace("entityManager.persist({})", course);
-      entityManager.persist(course);
-    }
+    repository.saveAll(courseList);
   }
 
   public List<Course> getAll() {
-    return entityManager.createQuery("from Course ").getResultList();
+    return repository.findAll();
   }
 
   public void clearAll() {
-    String query = "TRUNCATE  courses RESTART IDENTITY CASCADE;";
-    entityManager.createNativeQuery(query).executeUpdate();
+  repository.truncateTable();
   }
 }
 

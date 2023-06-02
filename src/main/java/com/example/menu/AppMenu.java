@@ -1,6 +1,5 @@
 package com.example.menu;
 
-import java.sql.SQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +9,7 @@ public class AppMenu {
   private MainMenu firstMenu;
   @Autowired
   private MainMenu secondMenu;
-  public void run() throws SQLException {
+  public void run() throws Exception {
     firstMenu.executeMenu();
     while (true) {
       secondMenu.executeMenu();

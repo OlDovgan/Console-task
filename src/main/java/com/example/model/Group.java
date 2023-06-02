@@ -26,7 +26,7 @@ public class Group {
   @Column(name = "id")
   @SequenceGenerator(name = "sequence_group", sequenceName = "groups_seq", allocationSize = 10)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence_group")
-  private int id;
+  private Integer id;
   @Column(name = "name")
   private String name;
 
@@ -61,5 +61,13 @@ public class Group {
     int result = name == null ? 0 : name.hashCode();
     result = 31 * result + id;
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return "Group{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        '}';
   }
 }

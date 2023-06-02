@@ -68,7 +68,7 @@ class ResultTest {
   }
 
   @Test
-  void getStudentsCourse_ShouldFindStudentsCourse() {
+  void getStudentsCourse_ShouldFindStudentsCourse() throws Exception {
     String expect =
         "1   | Tabitha  Richardson |  8 |  Theory of machines and mechanisms" + separator
             + "1   | Tabitha  Richardson |  4 |  Probability theory" + separator

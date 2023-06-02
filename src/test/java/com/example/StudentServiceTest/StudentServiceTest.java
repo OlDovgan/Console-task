@@ -72,7 +72,7 @@ class StudentServiceTest {
   }
 
   @Test
-  void deleteFromCourse_ShouldCallStudentDaoMethodDeleteFromCourse() {
+  void deleteFromCourse_ShouldCallStudentDaoMethodDeleteFromCourse() throws Exception {
     int courseId = 2;
     int studentId = 2;
     Mockito.doNothing().when(studentDao).addStudentsCourse(studentId, courseId);

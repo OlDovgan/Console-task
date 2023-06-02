@@ -3,11 +3,11 @@ package com.example.dao;
 
 import com.example.model.Course;
 import com.example.model.Student;
-import jakarta.persistence.EntityManager;
+import com.example.repository.CourseRepository;
+import com.example.repository.StudentRepository;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,54 +16,64 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class StudentDao {
 
-  private final Logger logger
-      = LoggerFactory.getLogger(this.getClass());
+  private final StudentRepository repository;
+
   @Autowired
-  private EntityManager entityManager;
+  private CourseRepository courseRepository;
+
+  public StudentDao(StudentRepository repository) {
+    this.repository = repository;
+  }
+
 
   public void add(Student student) {
-    entityManager.merge(student);
+    repository.save(student);
   }
 
+  @Transactional
   public void add(List<Student> studentList) {
-
-    for (Student student : studentList) {
-      entityManager.merge(student);
-    }
+    repository.saveAllAndFlush(studentList);
   }
 
-  public void addStudentsCourse(int studentId, int courseId) {
-    Student student = entityManager.find(Student.class, studentId);
-    Course course = entityManager.find(Course.class, courseId);
+  public void addStudentsCourse(int studentId, int courseId) throws Exception {
+
+    Optional<Student> studentOptional = repository.findById(studentId);
+    Optional<Course> courseOptional = courseRepository.findById(courseId);
+    if (studentOptional.isEmpty()) {
+      throw new IllegalStateException("Processing fail. Got a null response from students,"
+          + "method - addStudentsCourse");
+    }
+    if (courseOptional.isEmpty()) {
+      throw new IllegalStateException("Processing fail. Got a null response from courses,"
+          + "method - addStudentsCourse");
+    }
+    Student student = studentOptional.get();
+    Course course = courseOptional.get();
     student.addCourseToStudent(course);
-    entityManager.persist(student);
+    repository.save(student);
   }
 
   public List<Student> getAll() {
-    return entityManager.createQuery("from Student").getResultList();
+    return repository.findAll();
   }
 
-  public Student getStudentById(int id) {
-    return entityManager.find(Student.class, id);
+  public Student getStudentById(int id) throws Exception {
+    Optional<Student> studentOptional = repository.findById(id);
+    if (studentOptional.isEmpty()) {
+      throw new IllegalStateException("Processing fail. Got a null response from students,"
+          + " method -getStudentById");
+    }
+    return studentOptional.get();
   }
 
 
   public List<Student> getWithOutCourse(int courseId) {
 
-    String sql = "SELECT * FROM students WHERE NOT EXISTS (SELECT * FROM students_courses "
-        + " WHERE students_courses.student_id=students.id "
-        + " AND students_courses.course_id = ? );";
-    List<Student> studentList = entityManager.createNativeQuery(sql, Student.class)
-        .setParameter(1, courseId)
-        .getResultList();
-    logger.debug("Student  {}, size {}", studentList, studentList.size());
-    return studentList;
+    return repository.findWithOutCourse(courseId);
   }
 
   public List<Student> getWithCourse() {
-    String query = "from Student stud join fetch stud.courses as c"
-        + " where size(c)>=1";
-    return entityManager.createQuery(query, Student.class).getResultList();
+    return repository.findWithCourse();
   }
 
   public List<Student> getWithCourse(String courseName) {
@@ -79,21 +89,23 @@ public class StudentDao {
   }
 
   public void deleteById(int id) {
-    entityManager.createQuery("delete from Student where id = :id")
-        .setParameter("id", id)
-        .executeUpdate();
+    repository.deleteById(id);
   }
 
-  public void deleteFromCourse(int studentId, int courseId) {
-    Student student = entityManager.find(Student.class, studentId);
-    Course course = entityManager.find(Course.class,courseId);
-    student.getCourses().remove(course);
-    entityManager.merge(student);
+  public void deleteFromCourse(int studentId, int courseId) throws Exception {
+    Optional<Student> studentOptional = repository.findById(studentId);
+    if (studentOptional.isEmpty()) {
+      throw new IllegalStateException("Processing fail. Got a null response from students, "
+          + "method -deleteFromCourse");
+    }
+    Student student = studentOptional.get();
+    List<Course> courses = student.getCourses();
+    courses.removeIf(c -> c.getId() == courseId);
+    student.setCourses(courses);
+    repository.save(student);
   }
 
   public void clearAll() {
-    String query = "TRUNCATE  students  RESTART IDENTITY CASCADE;";
-    entityManager.createNativeQuery(query).executeUpdate();
-    logger.debug("End entityManager.createNativeQuery({})", query);
+    repository.truncateTable();
   }
 }

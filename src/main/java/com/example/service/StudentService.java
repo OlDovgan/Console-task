@@ -200,16 +200,16 @@ public class StudentService {
     studentDao.deleteById(id);
   }
 
-  public void deleteFromCourse(int studentId, int courseId) {
+  public void deleteFromCourse(int studentId, int courseId) throws Exception {
     studentDao.deleteFromCourse(studentId, courseId);
   }
 
-  public Student getStudentById(int id) {
+  public Student getStudentById(int id) throws Exception {
     loggerStudentService.debug("getStudentById({})", id);
     return studentDao.getStudentById(id);
   }
 
-  public void addStudentsCourse(int studId, int courseNumber) {
+  public void addStudentsCourse(int studId, int courseNumber) throws Exception {
     loggerStudentService.debug("Start addStudentsCourse(" + studId + ", " + courseNumber + ")");
     studentDao.addStudentsCourse(studId, courseNumber);
   }

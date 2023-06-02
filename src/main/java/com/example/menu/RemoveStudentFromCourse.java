@@ -31,7 +31,7 @@ public class RemoveStudentFromCourse implements Menu {
   }
 
   @Override
-  public void executeMenu() {
+  public void executeMenu() throws Exception {
     printTableHeader();
     System.out.println(result.getStudentsWhereCourseIsExists());
     int studentId = service.readInt("Please, select a student ID to delete the course");

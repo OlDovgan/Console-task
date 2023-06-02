@@ -79,4 +79,13 @@ public class Course {
     result = 31 * result + description.hashCode();
     return result;
   }
+
+  @Override
+  public String toString() {
+    return "Course{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        ", description='" + description + '\'' +
+        '}';
+  }
 }

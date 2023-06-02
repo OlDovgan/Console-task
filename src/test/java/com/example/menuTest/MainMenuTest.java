@@ -4,13 +4,13 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
 import com.example.Utility;
 import com.example.menu.MainMenu;
 import com.example.menu.Menu;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.sql.SQLException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,7 +18,7 @@ import org.mockito.Mockito;
 class MainMenuTest {
 
   @Test
-  void addMenuItem_ShouldAddMenuItemAndRunMenuItem() throws SQLException {
+  void addMenuItem_ShouldAddMenuItemAndRunMenuItem() throws Exception {
     System.setIn(new ByteArrayInputStream(String.format("1%n").getBytes()));
     MainMenu menu = new MainMenu(new Utility());
     Menu test = mock(Menu.class);
@@ -30,7 +30,7 @@ class MainMenuTest {
   }
 
   @Test
-  void executeMenu() throws SQLException {
+  void executeMenu() throws Exception {
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     String separator = System.lineSeparator();
     System.setOut(new PrintStream(output));

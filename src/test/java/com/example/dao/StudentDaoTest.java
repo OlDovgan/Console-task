@@ -33,10 +33,6 @@ class StudentDaoTest {
   TestUtils utils;
   @Autowired
   StudentDao studentDao;
-  @Autowired
-  GroupDao groupDao;
-  @Autowired
-  CourseDao courseDao;
 
   @BeforeEach
   void start() throws IOException, URISyntaxException {
@@ -56,10 +52,9 @@ class StudentDaoTest {
 
   @Test
   void add_ShouldAddStudentsListToDB() {
+
     List<Student> students = utils.createStudentList();
     studentDao.add(students);
-    students.get(0).setId(1);
-    students.get(1).setId(2);
     Assertions.assertTrue(utils.isExistStudent(students));
   }
 
@@ -68,8 +63,6 @@ class StudentDaoTest {
 
     List<Student> students = utils.createStudentList();
     studentDao.add(students);
-    students.get(0).setId(1);
-    students.get(1).setId(2);
     Assertions.assertEquals(students, studentDao.getWithOutCourse(1));
   }
 
@@ -78,8 +71,6 @@ class StudentDaoTest {
   void getWithCourse_ShouldFindStudentsWithCourseFromDB() {
     List<Student> students = utils.createStudentList();
     studentDao.add(students);
-    students.get(0).setId(1);
-    students.get(1).setId(2);
     List<Student> studentsWithCourse = new ArrayList<>();
     for (Student stud : students) {
       if (stud.getCourses() != null && !stud.getCourses().isEmpty()) {
@@ -90,7 +81,7 @@ class StudentDaoTest {
   }
 
   @Test
-  void addStudentsCourse_ShouldAddStudentsCourseToDB() throws IOException, URISyntaxException {
+  void addStudentsCourse_ShouldAddStudentsCourseToDB() throws Exception {
     utils.createStudentInDb();
     int courseId = 2;
     int studentId = 1;
@@ -103,7 +94,7 @@ class StudentDaoTest {
   }
 
   @Test
-  void deleteFromCourse_ShouldDeleteStudentsCourseFromDB() throws IOException, URISyntaxException {
+  void deleteFromCourse_ShouldDeleteStudentsCourseFromDB() throws Exception {
     utils.createStudentInDb();
     int courseId = 1;
     int studentId = 1;
@@ -119,8 +110,6 @@ class StudentDaoTest {
   void getAll_ShouldFindAllStudentsFromDB() {
     List<Student> students = utils.createStudentList();
     studentDao.add(students);
-    students.get(0).setId(1);
-    students.get(1).setId(2);
     Assertions.assertEquals(students, studentDao.getAll());
   }
 

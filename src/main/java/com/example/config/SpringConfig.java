@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @EnableAspectJAutoProxy
+//@EnableJpaRepositories
 public class SpringConfig {
   @Bean
   public Random random() {

@@ -1,7 +1,6 @@
 package com.example.menu;
 
 import com.example.Utility;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ public class MainMenu implements Menu {
   }
 
   @Override
-  public void executeMenu() throws SQLException {
+  public void executeMenu() throws Exception {
     printMenu();
      int menuItem = utility.readInt(childMenu.size());
     childMenu.get(menuItem - 1).executeMenu();

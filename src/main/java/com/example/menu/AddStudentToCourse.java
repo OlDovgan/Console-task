@@ -39,7 +39,7 @@ public class AddStudentToCourse implements Menu {
   }
 
   @Override
-  public void executeMenu() {
+  public void executeMenu() throws Exception {
     System.out.println(result.coursesInfo());
     int courseNumber = service.readInt(courseService.getAll().size());
     printTableHeader();

@@ -6,6 +6,6 @@ public interface Menu {
 
   String getItemName();
 
-  void executeMenu() throws SQLException;
+  void executeMenu() throws Exception;
 
 }

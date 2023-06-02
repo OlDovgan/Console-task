@@ -81,7 +81,7 @@ public class Result {
     return joiner;
   }
 
-  public String getStudentsCourse(int studentId) {
+  public String getStudentsCourse(int studentId) throws Exception {
     Student student = studentService.getStudentById(studentId);
 
     String separator = System.lineSeparator();
