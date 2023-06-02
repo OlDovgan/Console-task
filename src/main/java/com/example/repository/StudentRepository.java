@@ -19,6 +19,6 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
       + " AND students_courses.course_id = ? );", nativeQuery = true)
   List<Student> findWithOutCourse(int courseId);
 
-  @Query("SELECT s FROM Student s join  s.courses as c where size(c)>=1 ")
+  @Query("SELECT s FROM Student s join  fetch s.courses as c where size(c)>=1 ")
   List<Student> findWithCourse();
 }

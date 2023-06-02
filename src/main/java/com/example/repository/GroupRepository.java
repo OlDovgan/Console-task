@@ -14,7 +14,7 @@ public interface GroupRepository extends JpaRepository<Group,Integer> {
   @Query(value = "TRUNCATE  groups RESTART IDENTITY CASCADE;", nativeQuery = true)
   void truncateTable();
 
-  @Query("SELECT group from Group group  join  group.students as stud "
+  @Query("SELECT group from Group group  join fetch  group.students as stud "
       + "where size(stud) <= :student order by size(stud)")
   List<Group> getGroupsByStudentCount (@Param("student") int student);
 }
