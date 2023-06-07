@@ -1,5 +1,8 @@
 package com.example;
 
+import com.example.model.Student;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,4 +58,17 @@ public class Utility {
     logger.debug("Method readInt- return value is " + resultString);
     return resultString;
   }
+  public  int getStudentId (List<Student> studentList) {
+    int studId = 0;
+    HashSet<Integer> set = new HashSet<>();
+    for (Student student : studentList) {
+      set.add(student.getId());
+
+    }
+    while (!set.contains(studId)) {
+      studId = readInt("Please, select a student ID to delete the course ");
+    }
+    return studId;
+  }
+
 }

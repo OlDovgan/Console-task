@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class Result {
 
   @Autowired
-  private StudentService studentService;
+  private StudentService studentList;
   @Autowired
   private CourseService courseService;
   private static final String FORMAT = "%-" + 4 + "s| %-" + 12 + "s %-" + 12 + "s";
@@ -28,7 +28,7 @@ public class Result {
     String groupName;
     String format =
         "%-3d| %-" + 12 + "s| %-" + 12 + "s| %-" + (course.length() + 2) + "s| %s";
-    for (Student stud : studentService.getWithCourse(course)) {
+    for (Student stud : studentList.getWithCourse(course)) {
       if (stud.getGroup() == null) {
         groupName = "without a group";
       } else {
@@ -43,7 +43,7 @@ public class Result {
   public String studentsWithOutCourse(int course) {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     String format = "%-" + 3 + "s| %-" + 12 + "s| %-" + 12 + "s";
-    for (Student stud : studentService.getWithOutCourse(course)) {
+    for (Student stud : studentList.getWithOutCourse(course)) {
       stringJoiner.add(String.format(format, stud.getId(), stud.getFirstName(),
           stud.getLastName()));
     }
@@ -52,16 +52,16 @@ public class Result {
 
   public String getStudentsWhereCourseIsExists() {
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
-    for (Student stud : studentService.getWithCourse()) {
+    for (Student stud : studentList.getWithCourse()) {
       stringJoiner.add(String.format(FORMAT, stud.getId(), stud.getFirstName(),
           stud.getLastName()));
     }
     return stringJoiner.toString();
   }
 
-  public String studentInfoPrint() {
+  public String studentInfoPrint(List<Student> studentList) {
     StringJoiner joiner = header();
-    for (Student st : studentService.getAll()) {
+    for (Student st : studentList) {
       joiner.add(String.format(FORMAT, st.getId(),
           st.getFirstName(), st.getLastName()));
     }
@@ -79,7 +79,7 @@ public class Result {
 
   @Transactional
   public String getStudentsCourse(int studentId) {
-    Student student = studentService.getStudentById(studentId);
+    Student student = studentList.getStudentById(studentId);
 
     String separator = System.lineSeparator();
     StringJoiner joiner = new StringJoiner(separator);
@@ -94,15 +94,15 @@ public class Result {
     return joiner.toString();
   }
 
-  public String coursesInfo() {
+  public String coursesInfo(List<Course> courseList) {
     StringJoiner joiner = new StringJoiner(System.lineSeparator());
-    for (Course course : courseService.getAll()) {
+    for (Course course : courseList) {
 
       joiner.add(course.getId() + ". " + course.getName());
     }
     return joiner.toString();
   }
-  public List<String> coursesString(){
+  public List<String> getCourseNames(){
     List<String> courses = new ArrayList<>();
     for (Course course : courseService.getAll()) {
        courses.add(course.getName());

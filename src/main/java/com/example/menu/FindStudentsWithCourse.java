@@ -2,7 +2,9 @@ package com.example.menu;
 
 import com.example.Result;
 import com.example.Utility;
+import com.example.service.CourseService;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -17,6 +19,9 @@ public class FindStudentsWithCourse implements Menu {
   private final Result result;
 
   @Autowired
+  private CourseService courseService;
+
+  @Autowired
   public FindStudentsWithCourse(Utility service, Result result) {
     this.result = result;
     this.service = service;
@@ -29,18 +34,19 @@ public class FindStudentsWithCourse implements Menu {
 
   @Override
   public void executeMenu() throws SQLException {
-    System.out.println(result.coursesInfo());
+    System.out.println(result.coursesInfo(courseService.getAll()));
     int courseNumber = 0;
-    courseNumber = service.readInt(result.coursesString().size());
+    List<String> courseNames = result.getCourseNames();
+    courseNumber = service.readInt(courseNames.size());
     printTableHeader(courseNumber);
-    System.out.println(result.studentsWithCourse(result.coursesString().get(courseNumber - 1)));
+    System.out.println(result.studentsWithCourse(courseNames.get(courseNumber - 1)));
     service.endExecution();
   }
 
   private void printTableHeader(int courseNumber) {
     String separator = "s| %-";
     String formatString = "%-3s| %-" + 12 + separator + 12 + separator +
-        (result.coursesString().get(courseNumber - 1).length() + 2) + separator + 10 + "s";
+        (result.getCourseNames().get(courseNumber - 1).length() + 2) + separator + 10 + "s";
     StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
     stringJoiner.add(
         String.format(formatString, "ID", "First name", "Last name", "Course ",
