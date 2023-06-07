@@ -39,7 +39,7 @@ public class AddStudentToCourse implements Menu {
   }
 
   @Override
-  public void executeMenu()  {
+  public void executeMenu() {
     System.out.println(result.coursesInfo());
     int courseNumber = service.readInt(courseService.getAll().size());
     printTableHeader();
@@ -59,8 +59,7 @@ public class AddStudentToCourse implements Menu {
     }
     while (!studIdList.contains(studId)) {
       studId = service.readInt("Please, select a student ID to add to course of "
-          + result.courses.get(courseNumber - 1));
-      studIdList.add(studId);
+          + result.coursesString().get(courseNumber - 1));
     }
     return studId;
   }
@@ -76,7 +75,8 @@ public class AddStudentToCourse implements Menu {
   private void printInfo(int courseNumber) {
     System.out.println(result.studentsWithOutCourse(courseNumber) + separator);
     System.out.println(
-        "You are going to add a student to course of " + result.courses.get(courseNumber - 1));
+        "You are going to add a student to course of " + result.coursesString()
+            .get(courseNumber - 1));
   }
 }
 
