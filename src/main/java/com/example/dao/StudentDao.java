@@ -35,17 +35,15 @@ public class StudentDao {
     repository.saveAllAndFlush(studentList);
   }
 
-  public void addStudentsCourse(int studentId, int courseId) throws Exception {
+  public void addStudentsCourse(int studentId, int courseId) {
 
     Optional<Student> studentOptional = repository.findById(studentId);
     Optional<Course> courseOptional = courseRepository.findById(courseId);
     if (studentOptional.isEmpty()) {
-      throw new IllegalStateException("Processing fail. Got a null response from students,"
-          + "method - addStudentsCourse");
+      throw new IllegalStateException("Processing fail. Got a null response from students");
     }
     if (courseOptional.isEmpty()) {
-      throw new IllegalStateException("Processing fail. Got a null response from courses,"
-          + "method - addStudentsCourse");
+      throw new IllegalStateException("Processing fail. Got a null response from courses");
     }
     Student student = studentOptional.get();
     Course course = courseOptional.get();
@@ -57,11 +55,10 @@ public class StudentDao {
     return repository.findAll();
   }
 
-  public Student getStudentById(int id) throws Exception {
+  public Student getStudentById(int id) {
     Optional<Student> studentOptional = repository.findById(id);
     if (studentOptional.isEmpty()) {
-      throw new IllegalStateException("Processing fail. Got a null response from students,"
-          + " method -getStudentById");
+      throw new IllegalStateException("Processing fail. Got a null response from students");
     }
     return studentOptional.get();
   }
@@ -92,11 +89,10 @@ public class StudentDao {
     repository.deleteById(id);
   }
 
-  public void deleteFromCourse(int studentId, int courseId) throws Exception {
+  public void deleteFromCourse(int studentId, int courseId) {
     Optional<Student> studentOptional = repository.findById(studentId);
     if (studentOptional.isEmpty()) {
-      throw new IllegalStateException("Processing fail. Got a null response from students, "
-          + "method -deleteFromCourse");
+      throw new IllegalStateException("Processing fail. Got a null response from students");
     }
     Student student = studentOptional.get();
     List<Course> courses = student.getCourses();

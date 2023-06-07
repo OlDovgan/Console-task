@@ -5,6 +5,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFOR
 import com.example.TestConfig;
 import com.example.extra.TestUtils;
 import com.example.model.Student;
+import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -25,9 +25,6 @@ import org.springframework.test.context.ActiveProfiles;
 @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 @ActiveProfiles("Test")
 class StudentDaoTest {
-
-  @Value("${students-total}")
-  private int studentsTotalNumber;
 
   @Autowired
   TestUtils utils;
@@ -51,23 +48,26 @@ class StudentDaoTest {
   }
 
   @Test
+  @Transactional
   void add_ShouldAddStudentsListToDB() {
-
     List<Student> students = utils.createStudentList();
     studentDao.add(students);
     Assertions.assertTrue(utils.isExistStudent(students));
   }
 
   @Test
+  @Transactional
   void getWithOutCourse_ShouldFindStudentsWithOutCourseByIdFromDB() {
-
     List<Student> students = utils.createStudentList();
     studentDao.add(students);
-    Assertions.assertEquals(students, studentDao.getWithOutCourse(1));
+    List<Student> studentListResult = new ArrayList<>();
+    studentListResult.add(students.get(1));
+    Assertions.assertEquals(studentListResult, studentDao.getWithOutCourse(7));
   }
 
 
   @Test
+  @Transactional
   void getWithCourse_ShouldFindStudentsWithCourseFromDB() {
     List<Student> students = utils.createStudentList();
     studentDao.add(students);
@@ -107,6 +107,7 @@ class StudentDaoTest {
   }
 
   @Test
+  @Transactional
   void getAll_ShouldFindAllStudentsFromDB() {
     List<Student> students = utils.createStudentList();
     studentDao.add(students);

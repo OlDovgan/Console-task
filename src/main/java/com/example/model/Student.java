@@ -60,6 +60,10 @@ public class Student {
     courses.add(course);
   }
 
+  public void setCourses(List<Course> courses) {
+    this.courses = courses;
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (obj == this) {
@@ -94,6 +98,7 @@ public class Student {
     result = 31 * result + lastName.hashCode();
     return result;
   }
+
   @Override
   public String toString() {
     return "Student{" +
@@ -101,6 +106,7 @@ public class Student {
         ", groupId=" + groupId +
         ", firstName='" + firstName + '\'' +
         ", lastName='" + lastName + '\'' +
+        ", courses=" + courses +
         '}';
   }
 }

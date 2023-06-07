@@ -123,13 +123,11 @@ public class TestUtils {
     groupList.add(thirdGroup);
     groupDao.add(groupList);
     Student student = new Student();
-    student.setId(1);
     student.setGroupId(1);
     student.setFirstName("Amir");
     student.setLastName("Watson");
     student.setCourses(courses);
     Student studentNext = new Student();
-    studentNext.setId(2);
     studentNext.setGroupId(3);
     studentNext.setFirstName("Rex");
     studentNext.setLastName("Philip");

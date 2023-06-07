@@ -204,12 +204,12 @@ public class StudentService {
     studentDao.deleteFromCourse(studentId, courseId);
   }
 
-  public Student getStudentById(int id) throws Exception {
+  public Student getStudentById(int id) {
     loggerStudentService.debug("getStudentById({})", id);
     return studentDao.getStudentById(id);
   }
 
-  public void addStudentsCourse(int studId, int courseNumber) throws Exception {
+  public void addStudentsCourse(int studId, int courseNumber)  {
     loggerStudentService.debug("Start addStudentsCourse(" + studId + ", " + courseNumber + ")");
     studentDao.addStudentsCourse(studId, courseNumber);
   }

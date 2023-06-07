@@ -15,7 +15,6 @@ import jakarta.persistence.Table;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 
 @Entity
@@ -40,7 +39,6 @@ public class Course {
       joinColumns = @JoinColumn(name = "course_id"),
       inverseJoinColumns = @JoinColumn(name = "student_id"))
 
-  @NonNull
   private List<Student> studentList;
 
   public Course(String name, String description) {
