@@ -33,7 +33,6 @@ public class Utility {
       System.out.println("Please make your choice");
       numberCheck();
       menuItem = scanner.nextInt();
-
     }
     logger.debug("Method readInt(int num)  - return value is " + menuItem);
     return menuItem;
@@ -63,7 +62,6 @@ public class Utility {
     HashSet<Integer> set = new HashSet<>();
     for (Student student : studentList) {
       set.add(student.getId());
-
     }
     while (!set.contains(studId)) {
       studId = readInt("Please, select a student ID to delete the course ");
